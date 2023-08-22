@@ -25,12 +25,12 @@ export const Login = ({ navigation }) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.mainScrollview}>
-            <View style={styles.mainContainer}>
-                <View style={styles.logoContainer}>
-                    <Image source={vetlensLogo} style={styles.logo} />
-                    <Text style={styles.logoText}>VetLens</Text>
-                </View>
+        <ScrollView style={styles.container}>
+            <View style={styles.logoContainer}>
+                <Image source={vetlensLogo} style={styles.logo} />
+                <Text style={styles.logoText}>VetLens</Text>
+            </View>
+            <View style={styles.formContainer}>
                 <View style={styles.formContainerItem}>
                     <InputVetlens
                         placeholder='Nombre de usuario'
@@ -42,8 +42,10 @@ export const Login = ({ navigation }) => {
                         value={username}
                         isValid={isUsernameValid}
                         errorMessage={userErrorMessage}
-                        style={styles.inputStyle}
                     />
+                </View>
+
+                <View style={styles.formContainerItem}>
                     <InputVetlens
                         placeholder='Contraseña'
                         onChange={(text) => loginDispatch({
@@ -54,13 +56,22 @@ export const Login = ({ navigation }) => {
                         value={password}
                         isValid={isPasswordValid}
                         errorMessage={passwordErrorMessage}
-                        passwrd={true}
-                        style={styles.inputStyle}
+                        passwrd
                     />
-                    <ButtonVetLens text={"Iniciar Sesión"} filled={true} />
-                    <Link to={{ screen: 'Home' }} style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Link>
+                </View >
+
+
+                <View style={styles.formContainerItem2}>
+                    {!isLoading && <ButtonVetLens text={"Iniciar Sesión"} filled={true} />}
+                    {isLoading &&
+                        <TouchableOpacity style={styles.spinner}>
+                            <ActivityIndicator color={"#553900"} />
+                        </TouchableOpacity>}
                 </View>
-                <ButtonVetLens text={"Crear una cuenta"} filled={false} style={styles.createAccountStyle} />
+                <Link to={{ screen: 'Bobo' }} style={styles.link}>¿Olvidaste tu contraseña?</Link>
+                <View style={styles.formContainerItem3}>
+                    <ButtonVetLens text={"Crear una cuenta"} filled={false} style={styles.createAccountStyle} />
+                </View>
             </View>
         </ScrollView>
     )
@@ -68,45 +79,85 @@ export const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create(
     {
-        mainScrollview: {
+        container: {
             flex: 1,
             resizeMode: 'cover',
             backgroundColor: '#fff',
-            justifyContent: 'center'
         },
-        mainContainer: {
+        image: {
             flex: 1,
-            flexDirection: 'column',
+            resizeMode: 'cover',
             justifyContent: 'center',
-            justifyContent: 'space-around'
-        },
-        formContainerItem: {
+            marginTop: 40,
+            width: 200,
+            height: 200
+        }
+        ,
+        text: {
+            fontFamily: "PoppinsSemiBold",
+            fontSize: 36,
+            paddingBottom: 10,
+        }
+        ,
+        textContainer: {
+            flex: 1,
+            marginTop: 70,
+            alignItems: 'center'
+        }
+        ,
+        formContainer: {
+            flex: 3,
             paddingLeft: 15,
             paddingRight: 15,
             flexDirection: 'column',
+            justifyContent: 'flex-start',
+            marginBottom: 40
+        }
+        ,
+        formContainerItem: {
+            flex: 2,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            marginVertical: 5
+        }
+        ,
+        formContainerItem2: {
+            flex: 3,
+            flexDirection: 'column',
             justifyContent: 'center',
-            marginBottom: 40,
-            backgroundColor: "#fff"
+            marginTop: 5,
+            marginBottom: 20
         },
-        inputStyle: {
-            marginBottom: 15
+
+        formContainerItem3: {
+            flex: 3,
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            marginTop: 100,
         },
-        forgotPassword: {
+
+        link: {
+            flex: 1,
             fontFamily: 'PoppinsSemiBold',
+            color: '#000',
             textAlign: 'center',
-            marginTop: 20,
-            fontSize: 15
+            fontSize: 16,
+            marginTop: 8
+
         },
-        createAccountStyle: {
-            marginLeft: 15,
-            marginRight: 15
+        spinner: {
+            elevation: 8,
+            backgroundColor: "#F3A200",
+            borderRadius: 15,
+            padding: 15
         },
         logoContainer: {
+            flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-evenly',
             marginTop: 150,
-            marginBottom: 40
+            marginBottom: 150
         },
         logoText: {
             fontSize: 58,
