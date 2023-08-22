@@ -1,10 +1,12 @@
 import React from "react";
 import { loginReducer, initialState } from "./loginReducer";
 import { InputVetlens } from "../common/components/InputVetLens";
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ButtonVetLens } from "../common/components/ButtonVetLens";
 import vetlensLogo from '../assets/icons/png/vetlens-logo.png';
 import { Link } from '@react-navigation/native';
+import { setToken } from "../utils/TokenManager";
+import axios from "axios";
 
 export const Login = ({ navigation }) => {
 
@@ -21,6 +23,23 @@ export const Login = ({ navigation }) => {
             return true;
         } else {
             return false;
+        }
+    }
+
+    const login = async () => {
+        if (areInputsValid()) {
+            setIsLoading(true);
+            try {
+                await setToken(username, password);
+                setIsLoading(false);
+                navigation.navigate('Bobo');
+            }
+            catch (error) {
+                console.log(error);
+                loginDispatch({ type: "usernameError", error: "Usuario Incorrecto" });
+                loginDispatch({ type: "passwordError", error: "Contraseña Incorrecta" });
+                setIsLoading(false);
+            }
         }
     }
 
@@ -62,10 +81,10 @@ export const Login = ({ navigation }) => {
 
 
                 <View style={styles.formContainerItem2}>
-                    {!isLoading && <ButtonVetLens text={"Iniciar Sesión"} filled={true} />}
+                    {!isLoading && <ButtonVetLens callback={login} text={"Iniciar Sesión"} filled={true} />}
                     {isLoading &&
                         <TouchableOpacity style={styles.spinner}>
-                            <ActivityIndicator color={"#553900"} />
+                            <ActivityIndicator color={"#FFF"} />
                         </TouchableOpacity>}
                 </View>
                 <Link to={{ screen: 'Bobo' }} style={styles.link}>¿Olvidaste tu contraseña?</Link>
@@ -146,8 +165,7 @@ const styles = StyleSheet.create(
 
         },
         spinner: {
-            elevation: 8,
-            backgroundColor: "#F3A200",
+            backgroundColor: "#00A6B0",
             borderRadius: 15,
             padding: 15
         },

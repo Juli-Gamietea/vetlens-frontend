@@ -22,7 +22,7 @@ export const InputVetlens = ({placeholder, onChange, value, passwrd, isValid, er
               },
               error: {
                 color:"#FF6D6D", 
-                fontWeight:'bold',
+                fontFamily: 'PoppinsSemiBold',
                 marginLeft: 10,
                 fontSize: 14
               }

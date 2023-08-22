@@ -1,9 +1,35 @@
-export const callBackendAPI = async (url, requestData) => {
-    const backendUrl = "";
-    try {
-        const response = await axios(backendUrl + url, requestData);
-        return response.data;
-    } catch (error) {
-        throw new Error("API Error");
+import axios from "axios";
+import { getToken, renewToken } from "../utils/TokenManager.js";
+
+export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
+  try {
+    const serverAddress = "10.0.2.2";
+    const serverPort = "8080";
+    const token = await getToken();
+
+    const config = {
+      url: `http://${serverAddress}:${serverPort}${url}`,
+      method: method,
+      data: data,
+      headers: {
+        'Content-Type': contentType,
+        'Authorization': `Bearer ${token}`,
+        ...headers,
+      },
     }
+
+    const response = await axios(config);
+
+    if (response.status === 403) {
+      const new_token = await renewToken();
+      const retry_req_res = await axios({ headers: { 'Authorization': `Bearer ${new_token}`, ...config.headers }, ...config })
+      return retry_req_res;
+    }
+
+    return response;
+
+
+  } catch (error) {
+    throw Error(error);
+  }
 }
