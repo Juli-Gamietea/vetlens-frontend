@@ -1,14 +1,13 @@
 import axios from "axios";
 import { getToken, renewToken } from "../utils/TokenManager.js";
+import { BACKEND_URL } from '@env';
 
 export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
   try {
-    const serverAddress = "10.0.2.2";
-    const serverPort = "8080";
     const token = await getToken();
 
     const config = {
-      url: `http://${serverAddress}:${serverPort}${url}`,
+      url: `${BACKEND_URL}${url}`,
       method: method,
       data: data,
       headers: {

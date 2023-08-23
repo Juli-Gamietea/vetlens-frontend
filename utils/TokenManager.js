@@ -1,14 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-
-const backendEndpoint = "http://10.0.2.2:8080/auth/login"
-const backendEndpointRefreshToken = "http://10.0.2.2:8080/auth/refresh"
+import {BACKEND_URL} from '@env';
 
 export async function setToken(username, password) {
     try {
 
         const config = {
-            url: `${backendEndpoint}`,
+            url: `${BACKEND_URL}/auth/login`,
             method: 'post',
             data: {
                 "username": username,
@@ -42,7 +40,7 @@ export async function renewToken() {
 
         const refresh_token = await SecureStore.getItemAsync('refreshToken');
         const config = {
-            url: `${backendEndpointRefreshToken}`,
+            url: `${BACKEND_URL}/auth/refresh`,
             method: 'post',
             data: {},
             headers: {
