@@ -1,17 +1,19 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Login } from './login/Login';
+import { Login } from './components/login/Login';
 import { useFonts } from 'expo-font';
-import { Bobo } from './login/bobo';
+import { Bobo } from './components/login/bobo';
 import { QRCodeScanner } from './diagnosis/QRCodeScanner';
-import { Splashscreen } from './login/Splashscreen';
+import { Splashscreen } from './components/login/Splashscreen';
 import { getToken } from './utils/TokenManager';
 import * as React from 'react';
 import { AuthContext } from './auth/AuthContext';
 import * as SecureStore from 'expo-secure-store';
-
-
+import { Register } from './components/register/Register'
+import { RegisterForm } from './components/register/RegisterForm'
+import { RegisterFormPassword } from './components/register/RegisterFormPassword'
+ 
 const Stack = createNativeStackNavigator();
 
 export default function App()  {
@@ -64,7 +66,12 @@ export default function App()  {
           {isLoading ? (
             <Stack.Screen name="Splashscreen" component={Splashscreen} />
           ) : (!isLoading && !isSignedIn) ? (
-            <Stack.Screen name="Login" component={Login} />
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} />
+              <Stack.Screen name="RegisterForm" component={RegisterForm} />
+              <Stack.Screen name="RegisterFormPassword" component={RegisterFormPassword} />
+            </>
           ) : (
             <>
               <Stack.Screen name="Bobo" component={Bobo} />
