@@ -1,18 +1,21 @@
 import React from "react";
-import { loginReducer, initialState } from "./loginReducer";
+import { loginReducer, initialState } from "./LoginReducer";
 import { InputVetlens } from "../common/components/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ButtonVetLens } from "../common/components/ButtonVetLens";
 import vetlensLogo from '../assets/icons/png/vetlens-logo.png';
 import { Link } from '@react-navigation/native';
 import { setToken } from "../utils/TokenManager";
-import axios from "axios";
+import { AuthContext } from "../auth/AuthContext";
 
 export const Login = ({ navigation }) => {
 
     const [loginState, loginDispatch] = React.useReducer(loginReducer, initialState);
     const { username, password, isUsernameValid, isPasswordValid, userErrorMessage, passwordErrorMessage } = loginState;
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isPendingRequest, setIsPendingRequest] = React.useState(false);
+    const {isLoading, setIsLoading, isSignedIn, setIsSignedIn} = React.useContext(AuthContext);
+    
+    // const [authLoading, setAuthLoading, isSignedIn, setIsSignedIn] = React.useContext(AuthContext);
 
     const areInputsValid = () => {
         if (username === "")
@@ -28,17 +31,17 @@ export const Login = ({ navigation }) => {
 
     const login = async () => {
         if (areInputsValid()) {
-            setIsLoading(true);
+            setIsPendingRequest(true);
             try {
                 await setToken(username, password);
-                setIsLoading(false);
-                navigation.navigate('Bobo');
+                setIsPendingRequest(false);
+                setIsSignedIn(true);
             }
             catch (error) {
                 console.log(error);
                 loginDispatch({ type: "usernameError", error: "Usuario Incorrecto" });
                 loginDispatch({ type: "passwordError", error: "Contraseña Incorrecta" });
-                setIsLoading(false);
+                setIsPendingRequest(false);
             }
         }
     }
@@ -81,8 +84,8 @@ export const Login = ({ navigation }) => {
 
 
                 <View style={styles.formContainerItem2}>
-                    {!isLoading && <ButtonVetLens callback={login} text={"Iniciar Sesión"} filled={true} />}
-                    {isLoading &&
+                    {!isPendingRequest && <ButtonVetLens callback={login} text={"Iniciar Sesión"} filled={true} />}
+                    {isPendingRequest &&
                         <TouchableOpacity style={styles.spinner}>
                             <ActivityIndicator color={"#FFF"} />
                         </TouchableOpacity>}

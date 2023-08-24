@@ -4,6 +4,7 @@ import { API_URL } from '@env';
 
 export async function setToken(username, password) {
     try {
+
         const config = {
             url: `${API_URL}/auth/login`,
             method: 'post',
@@ -15,29 +16,76 @@ export async function setToken(username, password) {
                 'Content-Type': 'application/json'
             }
         }
+
         const res = await axios(config);
-        await storeToken(res.data.access_token, res.data.refresh_token);
+
+        const access_token = {
+            token: res.data.acces_token,
+            expiryDate: Date.now + 86400000,
+        };
+
+        const refresh_token = {
+            token: res.data.refresh_token,
+            expiryDate: Date.now + 31536000000,
+        };
+
+        await storeToken(access_token, refresh_token);
         return res;
 
+
     } catch (error) {
-        throw Error("Codigo: " + error.response.status + ". Credenciales incorrectas.");
+
+        throw Error("error_" + (error) + "_from_setToken()");
     }
 }
 
-async function storeToken(token, refreshToken) {
-    await SecureStore.setItemAsync('token', token);
-    await SecureStore.setItemAsync('refreshToken', refreshToken);
+async function storeToken(acces_token, refresh_token) {
+    await SecureStore.setItemAsync('token', String(acces_token.token));
+    await SecureStore.setItemAsync('tokenExpiryDate', String(acces_token.expiryDate));
+    await SecureStore.setItemAsync('refreshToken', String(refresh_token.token));
+    await SecureStore.setItemAsync('refreshTokenExpiryDate', String(refresh_token.expiryDate));
 }
 
 export async function getToken() {
-    const token = await SecureStore.getItemAsync('token');
-    return token;
+    try {
+
+        const token = await SecureStore.getItemAsync('token');
+        const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
+
+        if (token && expiryDate) {
+            if (Date.now > Date.parse(expiryDate)) {
+                throw Error('token_expired');
+            }
+    
+            return token;
+        } else {
+            throw Error('no_token_saved');
+        }
+
+    } catch (error) {
+        
+        if (error.message === 'token_expired') {
+            const rtExpiryDate = await SecureStore.getItemAsync('refreshTokenExpiryDate');
+
+            if (Date.now > Date.parse(rtExpiryDate)) {
+                throw Error('no_valid_tokens');
+
+            } else {
+                const newToken = await renewToken();
+                return newToken;
+            }
+        }
+        else {
+            throw Error('no_token_saved');
+        }
+    }
 }
 
 export async function renewToken() {
     try {
 
         const refresh_token = await SecureStore.getItemAsync('refreshToken');
+        
         const config = {
             url: `${API_URL}/auth/refresh`,
             method: 'post',
@@ -47,19 +95,31 @@ export async function renewToken() {
                 'Authorization': `Bearer ${refresh_token}`
             }
         }
+        
         const res = await axios(config);
 
         if (res.data) {
-            await SecureStore.setItemAsync('token', res.data.access_token);
-            await SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
+            
+            const access_token = {
+                token: res.data.acces_token,
+                expiryDate: Date.now + 86400000,
+            };
+            
+            const refresh_token = {
+                token: res.data.refresh_token,
+                expiryDate: Date.now + 31536000000,
+            };
+            
+            await storeToken(access_token, refresh_token);
+            return access_token.token;
+
         }
         else {
-            throw Error('No se pudo renovar el')
+            throw Error('refresh_error');
         }
 
-        return res.data.access_token;
-
     } catch (error) {
-        throw Error(error);
+
+        throw Error(error.message);
     }
 }
