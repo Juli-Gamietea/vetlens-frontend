@@ -1,12 +1,11 @@
 import React from "react";
 import { loginReducer, initialState } from "./loginReducer";
-import { InputVetlens } from "../common/components/InputVetLens";
+import { InputVetlens } from "../../common/components/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
-import { ButtonVetLens } from "../common/components/ButtonVetLens";
-import vetlensLogo from '../assets/icons/png/vetlens-logo.png';
+import { ButtonVetLens } from "../../common/components/ButtonVetLens";
+import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 import { Link } from '@react-navigation/native';
-import { setToken } from "../utils/TokenManager";
-import axios from "axios";
+import { setToken } from "../../utils/TokenManager";
 
 export const Login = ({ navigation }) => {
 
@@ -25,8 +24,12 @@ export const Login = ({ navigation }) => {
             return false;
         }
     }
+    const register = () => {
+        navigation.navigate('Register');
+    }
 
     const login = async () => {
+
         if (areInputsValid()) {
             setIsLoading(true);
             try {
@@ -89,7 +92,7 @@ export const Login = ({ navigation }) => {
                 </View>
                 <Link to={{ screen: 'Bobo' }} style={styles.link}>¿Olvidaste tu contraseña?</Link>
                 <View style={styles.formContainerItem3}>
-                    <ButtonVetLens text={"Crear una cuenta"} filled={false} style={styles.createAccountStyle} />
+                    <ButtonVetLens callback={register} text={"Crear una cuenta"} filled={false} style={styles.createAccountStyle} />
                 </View>
             </View>
         </ScrollView>
