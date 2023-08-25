@@ -1,12 +1,9 @@
 import React from "react";
 import { registerReducer, initialState } from "../register/registerReducer";
 import { InputVetlens } from "../../common/components/InputVetLens";
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../../common/components/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
-import { API_URL } from '@env';
-import { getToken } from "../../utils/TokenManager";
-import axios from "axios";
 import { callBackendAPI } from "../../common/CommonFunctions";
 
 export const RegisterForm = ( { route, navigation } ) => {
