@@ -1,12 +1,12 @@
 import React from "react";
 import { loginReducer, initialState } from "./loginReducer";
-import { InputVetlens } from "../../common/components/InputVetLens";
+import { InputVetlens } from "../common/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
-import { ButtonVetLens } from "../../common/components/ButtonVetLens";
+import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 import { Link } from '@react-navigation/native';
-import { setToken } from "../../utils/TokenManager";
-import { AuthContext } from "../../auth/AuthContext";
+import { setToken } from "../../utils/auth/TokenManager";
+import { AuthContext } from "../../utils/auth/AuthContext";
 
 export const Login = ({ navigation }) => {
 
