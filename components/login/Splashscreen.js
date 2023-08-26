@@ -1,7 +1,7 @@
 import { Text, Image, StyleSheet } from 'react-native';
 import * as React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import vetlensLogo from '../assets/icons/png/vetlens-logo.png'
+import vetlensLogo from '../../assets/icons/png/vetlens-logo.png'
 
 export const Splashscreen = ({ navigation }) => {
     

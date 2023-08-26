@@ -4,17 +4,31 @@ import { API_URL } from '@env';
 
 export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
   try {
-    const token = await getToken();
 
-    const config = {
-      url: `${API_URL}${url}`,
-      method: method,
-      data: data,
-      headers: {
-        'Content-Type': contentType,
-        'Authorization': `Bearer ${token}`,
-        ...headers,
-      },
+    const token = await getToken();
+    let config;
+    
+    if (url.includes('/auth')){
+      config = {
+        url: `${API_URL}${url}`,
+        method: method,
+        data: data,
+        headers: {
+          'Content-Type': contentType,
+          ...headers,
+        },
+      }
+    } else {
+      config = {
+        url: `${API_URL}${url}`,
+        method: method,
+        data: data,
+        headers: {
+          'Content-Type': contentType,
+          'Authorization': `Bearer ${token}`,
+          ...headers,
+        },
+      }
     }
 
     const response = await axios(config);
