@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Login } from './components/login/Login';
 import { useFonts } from 'expo-font';
 import { Bobo } from './components/login/bobo';
-import { QRCodeScanner } from './diagnosis/QRCodeScanner';
+import { QRCodeScanner } from './components/diagnosis/QRCodeScanner'
 import { Splashscreen } from './components/login/Splashscreen';
 import { getToken } from './utils/auth/TokenManager';
 import * as React from 'react';
