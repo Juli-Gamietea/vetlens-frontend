@@ -18,88 +18,92 @@ import { Ionicons } from '@expo/vector-icons';
 import { Register } from './components/register/Register'
 import { RegisterForm } from './components/register/RegisterForm'
 import { RegisterFormPassword } from './components/register/RegisterFormPassword'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { View } from 'react-native';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// function Tabs() {
+function TabsVet() {
 
-//   return (
-//     <Tab.Navigator initialRouteName='QRScanner'
-//       screenOptions={{
-//         headerShown: false,
-//         tabBarStyle: {
-//           height: 64,
-//           borderTopColor: "#F7EAB5",
-//           borderTopWidth: 5,
-//           fontFamily: "PoppinsSemiBold"
-//         },
-//         tabBarActiveTintColor: "#00A6B0",
-//         tabBarInactiveTintColor: "#949494"
-//       }}
-//     >
-//       <Tab.Screen
-//         name="Dashboard"
-//         component={QRCodeScanner}
-//         options={{
-//           tabBarLabel: 'Inicio',
-//           tabBarIcon: ({ color }) => (
-//             <Entypo name="home" size={24} color={color} />
-//           ),
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          height: 64,
+          borderTopColor: "rgba(170, 170, 170, .66)",
+          borderTopWidth: 1,
+          fontFamily: "PoppinsSemiBold",
+          paddingBottom: 2
+        },
+        tabBarActiveTintColor: "#00A6B0",
+        tabBarInactiveTintColor: "#949494"
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={Bobo}
+        options={{
+          tabBarLabel: 'Inicio',
+          tabBarIcon: ({ color }) => (
+            <Entypo name="home" size={35} color={color} />
+          ),
 
-//         }}
-//       />
-//       <Tab.Screen
-//         name="History"
-//         component={Bobo}
-//         options={{
-//           tabBarLabel: 'Historial',
-//           tabBarIcon: ({ color }) => (
-//             <Ionicons name="md-file-tray-full-outline" size={24} color={color} />
-//           ),
-
-
-//         }}
-//       />
-//       <Tab.Screen
-//         name="Recipe"
-//         component={Bobo}
-//         options={{
-//           tabBarLabel: '',
-//           tabBarIcon: ({ color }) => (
-//             <View style={{ backgroundColor: "#F3A200", borderRadius: 500, width: 72, height: 72, justifyContent: 'center', alignItems: 'center' }}>
-//               <MaterialIcons name="local-restaurant" size={35} color='white' />
-//             </View>
-//           ),
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={Bobo}
+        options={{
+          tabBarLabel: 'Historial',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="md-file-tray-full-outline" size={35} color={color} />
+          ),
 
 
-//         }}
-//       />
-//       <Tab.Screen
-//         name="Favourites"
-//         component={Bobo}
-//         options={{
-//           tabBarLabel: 'Favoritos',
-//           tabBarIcon: ({ color }) => (
-//             <Feather name="bookmark" size={24} color={color} />
-//           ),
+        }}
+      />
+      <Tab.Screen
+        name="Scan"
+        component={Bobo}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({ color }) => (
+            <View style={{ backgroundColor: "#00A6B0", borderRadius: 500, width: 72, height: 72, justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>
+              <MaterialCommunityIcons name="qrcode-scan" size={35} color="white" />
+            </View>
+          ),
 
 
-//         }}
-//       />
-//       <Tab.Screen
-//         name="Profile"
-//         component={Bobo}
-//         options={{
-//           tabBarLabel: 'Perfil',
-//           tabBarIcon: ({ color }) => (
-//             <Feather name="user" size={24} color={color} />
-//           ),
-//         }}
-//       />
-//     </Tab.Navigator>
-//   );
-// }
+        }}
+      />
+      <Tab.Screen
+        name="Dogs"
+        component={Bobo}
+        options={{
+          tabBarLabel: 'Perros',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="dog" size={35} color={color} />
+          ),
+
+
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Bobo}
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={35} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 
 export default function App() {
@@ -161,7 +165,7 @@ export default function App() {
               </>
             ) : (
               <>
-                <Stack.Screen name="DashboardVet" component={DashboardVet} />
+                <Stack.Screen name="TabsVet" component={TabsVet} />
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
               </>
