@@ -54,6 +54,18 @@ export const RegisterForm = ( { route, navigation } ) => {
         return res.data;
     }
 
+    const nextScreen = () => {
+        if (areInputsValid) {
+            navigation.navigate('RegisterFormPassword', {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                username: username,
+                type: type
+            })
+        }
+    }
+    
     return (
         <ScrollView style={styles.container}>
             <View style={styles.logoContainer}>
@@ -119,7 +131,7 @@ export const RegisterForm = ( { route, navigation } ) => {
                 </View>
 
                 <View style={styles.formContainerItem2}>
-                    <ButtonVetLens callback={areInputsValid} text={"Continuar"} filled={true} />
+                    <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
                 </View>
             </View>
         </ScrollView>
