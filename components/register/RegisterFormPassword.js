@@ -1,8 +1,8 @@
 import React from "react";
 import { registerReducer, initialState } from "../register/registerReducer";
-import { InputVetlens } from "../../common/components/InputVetLens";
+import { InputVetlens } from "../common/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
-import { ButtonVetLens } from "../../common/components/ButtonVetLens";
+import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 
 
