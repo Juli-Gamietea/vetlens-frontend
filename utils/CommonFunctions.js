@@ -5,7 +5,6 @@ import { API_URL } from '@env';
 export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
   try {
 
-    const token = await getToken();
     let config;
     
     if (url.includes('/auth')){
@@ -19,6 +18,7 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
         },
       }
     } else {
+      const token = await getToken();
       config = {
         url: `${API_URL}${url}`,
         method: method,

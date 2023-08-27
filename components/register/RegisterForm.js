@@ -1,5 +1,5 @@
 import React from "react";
-import { registerReducer, initialState } from "../register/registerReducer";
+import { registerReducer, initialState } from "./registerReducer";
 import { InputVetlens } from "../common/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
@@ -17,8 +17,9 @@ export const RegisterForm = ( { route, navigation } ) => {
     const {type} = route.params;
     
     const areInputsValid = async() => {
-        const available =  await checkUsernameAvailability();
         
+        const available =  await checkUsernameAvailability();
+
         if (firstname === "")
             registerDispatch({ type: "firstnameError", error: "No puede dejar este campo vacío" });
         if (lastname === "")
@@ -29,8 +30,8 @@ export const RegisterForm = ( { route, navigation } ) => {
             registerDispatch({ type: "usernameError", error: "No puede dejar este campo vacío" });
         if (!validateEmail(email))
             registerDispatch({ type: "emailSyntaxError", error: "Ingrese un email válido"});
-        if (!available)
-            registerDispatch({ type: "usernameError", error: "El nombre de usuario esta en uso"});
+         if (!available && username !== "")
+             registerDispatch({ type: "usernameError", error: "El nombre de usuario esta en uso"});
 
         if (firstname !== "" && lastname !== "" && validateEmail(email) && username !== "" && available) {
             return true;
@@ -50,10 +51,28 @@ export const RegisterForm = ( { route, navigation } ) => {
     }
 
     const checkUsernameAvailability = async () => {
-        const res = await callBackendAPI(`/auth/available/${username}`)
-        return res.data;
+        if (username === "") {
+            return false;
+        } else {
+            const res = await callBackendAPI(`/auth/available/${username}`)
+            return res.data;
+        }
+        
     }
 
+    const nextScreen = async () => {
+        const inputs = await areInputsValid();
+        if (inputs) {
+            navigation.navigate('RegisterFormPassword', {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                username: username,
+                type: type
+            })
+        }
+    }
+    
     return (
         <ScrollView style={styles.container}>
             <View style={styles.logoContainer}>
@@ -119,7 +138,7 @@ export const RegisterForm = ( { route, navigation } ) => {
                 </View>
 
                 <View style={styles.formContainerItem2}>
-                    <ButtonVetLens callback={areInputsValid} text={"Continuar"} filled={true} />
+                    <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
                 </View>
             </View>
         </ScrollView>

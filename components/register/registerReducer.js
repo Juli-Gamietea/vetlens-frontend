@@ -28,7 +28,9 @@ export function registerReducer (state = initialState, action) {
                 isFirstnameValid: true,
                 isLastnameValid: true,
                 isEmailValid: true,
-                isUsernameValid: true
+                isUsernameValid: true,
+                isPasswordValid: true,
+                isRePasswordValid: true
             };
         case "firstnameError":
             return {
@@ -64,6 +66,14 @@ export function registerReducer (state = initialState, action) {
             return {
                 ...state,
                 isRePasswordValid: false,
+                rePasswordErrorMessage: action.error
+            };
+        case "passwordNotEqualError":
+            return {
+                ...state,
+                isPasswordValid: false,
+                isRePasswordValid: false,
+                passwordErrorMessage: action.error,
                 rePasswordErrorMessage: action.error
             };
         case "emailSyntaxError":
