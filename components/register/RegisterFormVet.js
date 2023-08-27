@@ -26,7 +26,6 @@ export const RegisterFormVet = ({ route, navigation }) => {
     const { firstname, lastname, email, username, type, password } = route.params;
 
     const nextScreen = async () => {
-        console.log(firstname, lastname, email, username, type, password, license)
         if (areInputsValid()) {
             navigation.navigate("TermsAndConditions", {
                 firstname: firstname,

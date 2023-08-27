@@ -8,7 +8,9 @@ export const RegisterSuccess = ({ route, navigation }) => {
     const goHome = async () => {
         navigation.navigate("Login")
     }
+
     const { type } = route.params;
+    
     return (
         <ScrollView style={styles.container}>
             <View style={styles.logoContainer}>

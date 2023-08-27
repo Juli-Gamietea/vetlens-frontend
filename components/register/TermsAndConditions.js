@@ -9,7 +9,6 @@ export const TermsAndConditions = ({ route, navigation }) => {
     const { firstname, lastname, email, username, type, password, license } = route.params;
 
     const register = async () => {
-        console.log(firstname, lastname, email, username, type, password, license)
         try {
             let body;
             if (type === 'vet'){
@@ -32,7 +31,6 @@ export const TermsAndConditions = ({ route, navigation }) => {
                     role: "DEFAULT"
                 } 
             }
-            console.log(body)
             const res = await callBackendAPI("/auth/register", "POST", body)
 
             if (res.status !== 200) {

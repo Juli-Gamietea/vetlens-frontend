@@ -1,7 +1,7 @@
 import React from "react";
 import { registerReducer, initialState } from "./registerReducer";
 import { InputVetlens } from "../common/InputVetLens";
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, Alert  } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 
@@ -12,8 +12,6 @@ export const RegisterFormPassword = ({ route, navigation }) => {
             isPasswordValid, isRePasswordValid,
             passwordErrorMessage, rePasswordErrorMessage
         } = registerState;
-
-    const [isLoading, setIsLoading] = React.useState(false);
 
     const areInputsValid = () => {
         if (password === "")
@@ -32,7 +30,6 @@ export const RegisterFormPassword = ({ route, navigation }) => {
     const { firstname, lastname, email, username, type } = route.params;
 
     const nextScreen = async () => {
-        console.log(firstname, lastname, email, username, type)
         if (areInputsValid()) {
             if (type === "vet") {
                 navigation.navigate("RegisterFormVet", {
@@ -75,6 +72,7 @@ export const RegisterFormPassword = ({ route, navigation }) => {
                         value={password}
                         isValid={isPasswordValid}
                         errorMessage={passwordErrorMessage}
+                        passwrd
                     />
                 </View>
 
