@@ -31,18 +31,20 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
       }
     }
 
-    const response = await axios(config);
+    const response = await axios.request(config);
 
     if (response.status === 403) {
       const new_token = await renewToken();
       const retry_req_res = await axios({ headers: { 'Authorization': `Bearer ${new_token}`, ...config.headers }, ...config })
       return retry_req_res;
+    } else if (response.status === 200) {
+      return response;  
+    } else {
+      throw Error(error);
     }
-
-    return response;
 
 
   } catch (error) {
-    throw Error(error);
+    throw Error("callBackendAPI()_error_" + error);
   }
 }
