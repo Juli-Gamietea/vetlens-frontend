@@ -11,7 +11,7 @@ import { getToken } from './utils/auth/TokenManager';
 import * as React from 'react';
 import { AuthContext } from './utils/auth/AuthContext';
 import * as SecureStore from 'expo-secure-store';
-import { DashboardVet } from './components/dashboards/DashboardVet';
+import { Dashboard } from './components/dashboards/Dashboard';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +27,16 @@ import { RegisterSuccess } from './components/register/RegisterSuccess';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function DashboardTabStack() {
+
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Dashboard" component={Dashboard} />
+    </Stack.Navigator>
+  )
+}
+
 
 function TabsVet() {
 
@@ -46,8 +56,8 @@ function TabsVet() {
       }}
     >
       <Tab.Screen
-        name="Dashboard"
-        component={Bobo}
+        name="DashboardTab"
+        component={DashboardTabStack}
         options={{
           tabBarLabel: 'Inicio',
           tabBarIcon: ({ color }) => (
@@ -130,7 +140,6 @@ export default function App() {
 
         await getToken();
         setTimeout(() => { setIsLoading(false); }, 2000)
-
         setIsSignedIn(true);
 
       } catch (error) {

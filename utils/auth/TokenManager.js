@@ -10,7 +10,7 @@ export async function setToken(username, password) {
             method: 'post',
             data: {
                 "username": username,
-                "password": password
+                "password": password,
             },
             headers: {
                 'Content-Type': 'application/json'
@@ -18,15 +18,15 @@ export async function setToken(username, password) {
         }
 
         const res = await axios(config);
-
+        
         const access_token = {
-            token: res.data.acces_token,
-            expiryDate: Date.now + 86400000,
+            token: res.data.accessToken,
+            expiryDate: Date.now() + 86400000,
         };
 
         const refresh_token = {
-            token: res.data.refresh_token,
-            expiryDate: Date.now + 31536000000,
+            token: res.data.refreshToken,
+            expiryDate: Date.now() + 31536000000,
         };
 
         await storeToken(access_token, refresh_token);
@@ -53,7 +53,7 @@ export async function getToken() {
         const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
 
         if (token && expiryDate) {
-            if (Date.now > Date.parse(expiryDate)) {
+            if (Date.now() > Date.parse(expiryDate)) {
                 throw Error('token_expired');
             }
     
@@ -67,7 +67,7 @@ export async function getToken() {
         if (error.message === 'token_expired') {
             const rtExpiryDate = await SecureStore.getItemAsync('refreshTokenExpiryDate');
 
-            if (Date.now > Date.parse(rtExpiryDate)) {
+            if (Date.now() > Date.parse(rtExpiryDate)) {
                 throw Error('no_valid_tokens');
 
             } else {

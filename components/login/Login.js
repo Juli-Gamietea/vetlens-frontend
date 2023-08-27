@@ -7,6 +7,8 @@ import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 import { Link } from '@react-navigation/native';
 import { setToken } from "../../utils/auth/TokenManager";
 import { AuthContext } from "../../utils/auth/AuthContext";
+import * as CommonFunctions from "../../utils/CommonFunctions";
+import * as SecureStore from "expo-secure-store";
 
 export const Login = ({ navigation }) => {
 
@@ -14,8 +16,6 @@ export const Login = ({ navigation }) => {
     const { username, password, isUsernameValid, isPasswordValid, userErrorMessage, passwordErrorMessage } = loginState;
     const [isPendingRequest, setIsPendingRequest] = React.useState(false);
     const {isLoading, setIsLoading, isSignedIn, setIsSignedIn} = React.useContext(AuthContext);
-    
-    // const [authLoading, setAuthLoading, isSignedIn, setIsSignedIn] = React.useContext(AuthContext);
 
     const areInputsValid = () => {
         if (username === "")
@@ -38,6 +38,9 @@ export const Login = ({ navigation }) => {
             setIsPendingRequest(true);
             try {
                 await setToken(username, password);
+                const res = await CommonFunctions.callBackendAPI(`/users/${username}`, 'GET');
+                await SecureStore.setItemAsync('username', username);
+                await SecureStore.setItemAsync('role', String(res.data.role));
                 setIsPendingRequest(false);
                 setIsSignedIn(true);
             }
