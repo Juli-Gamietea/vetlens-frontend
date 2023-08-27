@@ -1,12 +1,12 @@
 import React from "react";
-import { registerReducer, initialState } from "../register/registerReducer";
+import { registerReducer, initialState } from "./registerReducer";
 import { InputVetlens } from "../common/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 
 
-export const RegisterFormPassword = ({ navigation }) => {
+export const RegisterFormPassword = ({ route, navigation }) => {
 
     const [registerState, registerDispatch] = React.useReducer(registerReducer, initialState);
     const { password, rePassword,
@@ -21,6 +21,8 @@ export const RegisterFormPassword = ({ navigation }) => {
             registerDispatch({ type: "passwordError", error: "No puede dejar este campo vacío" });
         if (rePassword === "")
             registerDispatch({ type: "rePasswordError", error: "No puede dejar este campo vacío" });
+        if (password !== rePassword)
+            registerDispatch({ type: "passwordNotEqualError", error: "Las contraseñas deben coincidir" });
         if (password !== "" && rePassword !== "") {
             return true;
         } else {
@@ -28,11 +30,12 @@ export const RegisterFormPassword = ({ navigation }) => {
         }
     }
 
+    const { firstname, lastname, email, username, type } = route.params;
 
-    const register = async () => {
-
+    const nextScreen = async () => {
+        console.log(firstname, lastname, email, username, type)
         if (areInputsValid()) {
-        
+            console.log("NEXT SCREEN")
         }
     }
 
@@ -64,7 +67,7 @@ export const RegisterFormPassword = ({ navigation }) => {
                         placeholder='Reingresar contraseña'
                         onChange={(text) => registerDispatch({
                             type: "fieldUpdate",
-                            field: "repassword",
+                            field: "rePassword",
                             value: text
                         })}
                         value={rePassword}
@@ -74,7 +77,7 @@ export const RegisterFormPassword = ({ navigation }) => {
                     />
                 </View >
                 <View style={styles.formContainerItem2}>
-                    {!isLoading && <ButtonVetLens callback={register} text={"Continuar"} filled={true} />}
+                    {!isLoading && <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />}
                     {isLoading &&
                         <TouchableOpacity style={styles.spinner}>
                             <ActivityIndicator color={"#FFF"} />
