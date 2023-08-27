@@ -5,18 +5,21 @@ export const initialState = {
     username: "",
     password: "",
     rePassword: "",
+    license: "",
     isFirstnameValid: true,
     isLastnameValid: true,
     isEmailValid: true,
     isUsernameValid: true,
     isPasswordValid: true,
     isRePasswordValid: true,
+    isLicenseValid: true,
     firstnameErrorMessage: "",
     lastnameErrorMessage: "",
     emailErrorMessage: "",
     usernameErrorMessage: "",
     passwordErrorMessage: "",
-    rePasswordErrorMessage: ""
+    rePasswordErrorMessage: "",
+    licenseErrorMessage: ""
 }
 
 export function registerReducer (state = initialState, action) {
@@ -30,7 +33,8 @@ export function registerReducer (state = initialState, action) {
                 isEmailValid: true,
                 isUsernameValid: true,
                 isPasswordValid: true,
-                isRePasswordValid: true
+                isRePasswordValid: true,
+                isLicenseValid: true
             };
         case "firstnameError":
             return {
@@ -82,20 +86,15 @@ export function registerReducer (state = initialState, action) {
                 isEmailValid: false,
                 emailErrorMessage: action.error
             }
+        case "licenseError":
+            return {
+                ...state,
+                isLicenseValid: false,
+                licenseErrorMessage: action.error
+            }
         case "reset":
             return initialState;
         default:
             return state;
     }
 }
-
-export const validateEmail = (email) => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-    if(emailRegex.test(email)){
-        return true;
-    }else{
-        return false;
-    }
-}
-export default validateEmail

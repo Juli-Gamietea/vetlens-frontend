@@ -1,58 +1,42 @@
 import React from "react";
 import { registerReducer, initialState } from "./registerReducer";
 import { InputVetlens } from "../common/InputVetLens";
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, Alert  } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 
-export const RegisterFormPassword = ({ route, navigation }) => {
+export const RegisterFormVet = ({ route, navigation }) => {
 
     const [registerState, registerDispatch] = React.useReducer(registerReducer, initialState);
-    const { password, rePassword,
-            isPasswordValid, isRePasswordValid,
-            passwordErrorMessage, rePasswordErrorMessage
+    const { license,
+            isLicenseValid,
+            licenseErrorMessage
         } = registerState;
 
-    const [isLoading, setIsLoading] = React.useState(false);
-
     const areInputsValid = () => {
-        if (password === "")
-            registerDispatch({ type: "passwordError", error: "No puede dejar este campo vacío" });
-        if (rePassword === "")
-            registerDispatch({ type: "rePasswordError", error: "No puede dejar este campo vacío" });
-        if (password !== rePassword)
-            registerDispatch({ type: "passwordNotEqualError", error: "Las contraseñas deben coincidir" });
-        if (password !== "" && rePassword !== "" && (password === rePassword)) {
+        if (license === "")
+            registerDispatch({ type: "licenseError", error: "No puede dejar este campo vacío" });
+        if (license !== "") {
             return true;
         } else {
             return false;
         }
     }
 
-    const { firstname, lastname, email, username, type } = route.params;
+    const { firstname, lastname, email, username, type, password } = route.params;
 
     const nextScreen = async () => {
-        console.log(firstname, lastname, email, username, type)
+        console.log(firstname, lastname, email, username, type, password, license)
         if (areInputsValid()) {
-            if (type === "vet") {
-                navigation.navigate("RegisterFormVet", {
-                    firstname: firstname,
-                    lastname: lastname,
-                    email: email,
-                    username: username,
-                    type: type,
-                    password: password
-                } )
-            } else {
-                navigation.navigate("TermsAndConditions", {
-                    firstname: firstname,
-                    lastname: lastname,
-                    email: email,
-                    username: username,
-                    type: type,
-                    password: password
-                })
-            }
+            navigation.navigate("TermsAndConditions", {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                username: username,
+                type: type,
+                password: password,
+                license: license
+            })
         }
     }
 
@@ -64,35 +48,20 @@ export const RegisterFormPassword = ({ route, navigation }) => {
             </View>
             <View style={styles.formContainer}>
                 <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> Contraseña </Text>
+                    <Text style={styles.inputTitle}> N° Matrícula </Text>
                     <InputVetlens
-                        placeholder='Contraseña'
+                        placeholder='N° Matrícula'
                         onChange={(text) => registerDispatch({
                             type: "fieldUpdate",
-                            field: "password",
+                            field: "license",
                             value: text
                         })}
-                        value={password}
-                        isValid={isPasswordValid}
-                        errorMessage={passwordErrorMessage}
+                        value={license}
+                        isValid={isLicenseValid}
+                        errorMessage={licenseErrorMessage}
                     />
                 </View>
 
-                <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> Confirmar Contraseña </Text>
-                    <InputVetlens
-                        placeholder='Reingresar contraseña'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "rePassword",
-                            value: text
-                        })}
-                        value={rePassword}
-                        isValid={isRePasswordValid}
-                        errorMessage={rePasswordErrorMessage}
-                        passwrd
-                    />
-                </View >
                 <View style={styles.formContainerItem2}>
                     <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
                 </View>
@@ -140,8 +109,7 @@ const styles = StyleSheet.create(
             paddingRight: 15,
             flexDirection: 'column',
             justifyContent: 'flex-start',
-            marginBottom: 40,
-            marginTop: 50
+            marginBottom: 40
         },
         formContainerItem: {
             flex: 2,
@@ -153,7 +121,7 @@ const styles = StyleSheet.create(
             flex: 3,
             flexDirection: 'column',
             justifyContent: 'center',
-            marginTop: 65,
+            marginTop: 55,
             marginBottom: 40
         },
         logoContainer: {

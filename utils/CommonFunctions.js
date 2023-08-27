@@ -38,7 +38,7 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
       const retry_req_res = await axios({ headers: { 'Authorization': `Bearer ${new_token}`, ...config.headers }, ...config })
       return retry_req_res;
     }
-
+    
     return response;
 
   } catch (error) {

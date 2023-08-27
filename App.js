@@ -21,6 +21,9 @@ import { RegisterFormPassword } from './components/register/RegisterFormPassword
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
+import { RegisterFormVet } from './components/register/RegisterFormVet';
+import { TermsAndConditions } from './components/register/TermsAndConditions';
+import { RegisterSuccess } from './components/register/RegisterSuccess';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -162,6 +165,9 @@ export default function App() {
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="RegisterForm" component={RegisterForm} />
                 <Stack.Screen name="RegisterFormPassword" component={RegisterFormPassword} />
+                <Stack.Screen name="RegisterFormVet" component={RegisterFormVet} />
+                <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
+                <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} />
               </>
             ) : (
               <>
