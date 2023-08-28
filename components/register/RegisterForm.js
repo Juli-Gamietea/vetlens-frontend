@@ -5,6 +5,7 @@ import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 import { callBackendAPI } from "../../utils/CommonFunctions";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const RegisterForm = ( { route, navigation } ) => {
 
@@ -75,72 +76,75 @@ export const RegisterForm = ( { route, navigation } ) => {
     
     return (
         <ScrollView style={styles.container}>
-            <View style={styles.logoContainer}>
-                <Image source={vetlensLogo} style={styles.logo} />
-                <Text style={styles.logoText}>Por favor, completa los {'\n'}siguientes datos</Text>
-            </View>
-            <View style={styles.formContainer}>
-                <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> Nombre y apellido </Text>
-                    <InputVetlens
-                        placeholder='Nombre'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "firstname",
-                            value: text
-                        })}
-                        value={firstname}
-                        isValid={isFirstnameValid}
-                        errorMessage={firstnameErrorMessage}
-                    />
-                </View>
+            <SafeAreaView>
 
-                <View style={styles.formContainerItem}>
-                    <InputVetlens
-                        placeholder='Apellido'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "lastname",
-                            value: text
-                        })}
-                        value={lastname}
-                        isValid={isLastnameValid}
-                        errorMessage={lastnameErrorMessage}
-                    />
-                </View >
-                <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> Correo electrónico </Text>
-                    <InputVetlens
-                        placeholder='Correo electrónico'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "email",
-                            value: text
-                        })}
-                        value={email}
-                        isValid={isEmailValid}
-                        errorMessage={emailErrorMessage}
-                    />
+                <View style={styles.logoContainer}>
+                    <Image source={vetlensLogo} style={styles.logo} />
+                    <Text style={styles.logoText}>Por favor, completa los {'\n'}siguientes datos</Text>
                 </View>
-                <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> Nombre de usuario </Text>
-                    <InputVetlens
-                        placeholder='Nombre de usuario'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "username",
-                            value: text
-                        })}
-                        value={username}
-                        isValid={isUsernameValid}
-                        errorMessage={usernameErrorMessage}
-                    />
-                </View>
+                <View style={styles.formContainer}>
+                    <View style={styles.formContainerItem}>
+                        <Text style={styles.inputTitle}> Nombre y apellido </Text>
+                        <InputVetlens
+                            placeholder='Nombre'
+                            onChange={(text) => registerDispatch({
+                                type: "fieldUpdate",
+                                field: "firstname",
+                                value: text
+                            })}
+                            value={firstname}
+                            isValid={isFirstnameValid}
+                            errorMessage={firstnameErrorMessage}
+                        />
+                    </View>
 
-                <View style={styles.formContainerItem2}>
-                    <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
+                    <View style={styles.formContainerItem}>
+                        <InputVetlens
+                            placeholder='Apellido'
+                            onChange={(text) => registerDispatch({
+                                type: "fieldUpdate",
+                                field: "lastname",
+                                value: text
+                            })}
+                            value={lastname}
+                            isValid={isLastnameValid}
+                            errorMessage={lastnameErrorMessage}
+                        />
+                    </View >
+                    <View style={styles.formContainerItem}>
+                        <Text style={styles.inputTitle}> Correo electrónico </Text>
+                        <InputVetlens
+                            placeholder='Correo electrónico'
+                            onChange={(text) => registerDispatch({
+                                type: "fieldUpdate",
+                                field: "email",
+                                value: text
+                            })}
+                            value={email}
+                            isValid={isEmailValid}
+                            errorMessage={emailErrorMessage}
+                        />
+                    </View>
+                    <View style={styles.formContainerItem}>
+                        <Text style={styles.inputTitle}> Nombre de usuario </Text>
+                        <InputVetlens
+                            placeholder='Nombre de usuario'
+                            onChange={(text) => registerDispatch({
+                                type: "fieldUpdate",
+                                field: "username",
+                                value: text
+                            })}
+                            value={username}
+                            isValid={isUsernameValid}
+                            errorMessage={usernameErrorMessage}
+                        />
+                    </View>
+
+                    <View style={styles.formContainerItem2}>
+                        <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
+                    </View>
                 </View>
-            </View>
+            </SafeAreaView>
         </ScrollView>
     )
 }

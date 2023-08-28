@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import dog from '../../assets/icons/png/dog-smile.png';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const RegisterSuccess = ({ route, navigation }) => {
 
@@ -10,38 +11,28 @@ export const RegisterSuccess = ({ route, navigation }) => {
     }
 
     const { type } = route.params;
-    
+
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
                 <Image source={dog} style={styles.logo} />
                 <Text style={styles.logoText}>¡Muchas gracias por {"\n"}registrarte! </Text>
             </View>
             <View style={styles.formContainer}>
                 <View style={styles.formContainerItem}>
-                    { (type === 'vet') 
-                        ? (<Text style={styles.text}> 
-                            En los siguientes días estaremos{"\n"}
-                            verificando que tus datos sean correctos.{"\n"}
-                            Una vez finalizado el proceso de{"\n"}
-                            validación, recibirás una notificación{"\n"}
-                            en el correo con el que te registraste.
-                            </Text>)
-                        : (<Text style={styles.textInvisible}> 
-                            En los siguientes días estaremos{"\n"}
-                            verificando que tus datos sean correctos.{"\n"}
-                            Una vez finalizado el proceso de{"\n"}
-                            validación, recibirás una notificación{"\n"}
-                            en el correo con el que te registraste.
-                            </Text>)
-                    }
+                    <Text style={type === 'vet' ? (styles.text) : (styles.textInvisible)}>
+                        En los siguientes días estaremos{"\n"}
+                        verificando que tus datos sean correctos.{"\n"}
+                        Una vez finalizado el proceso de{"\n"}
+                        validación, recibirás una notificación{"\n"}
+                        en el correo con el que te registraste.
+                    </Text>
                 </View>
                 <View style={styles.formContainerItem2}>
                     <ButtonVetLens callback={goHome} text={"Finalizar"} filled={true} />
                 </View>
-
             </View>
-        </ScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -49,8 +40,8 @@ const styles = StyleSheet.create(
     {
         container: {
             flex: 1,
-            resizeMode: 'cover',
             backgroundColor: '#fff',
+            flexDirection: 'column',
         },
         image: {
             flex: 1,
@@ -70,7 +61,7 @@ const styles = StyleSheet.create(
             marginTop: 70,
             alignItems: 'center'
         },
-        inputTitle:{
+        inputTitle: {
             fontFamily: "PoppinsBold",
             fontSize: 15,
             paddingBottom: 4,
@@ -78,31 +69,21 @@ const styles = StyleSheet.create(
             color: '#00767D'
         },
         formContainer: {
-            flex: 3,
+            flex: 2,
             paddingLeft: 15,
             paddingRight: 15,
             flexDirection: 'column',
             justifyContent: 'flex-start',
-            marginBottom: 40
         },
         formContainerItem: {
-            flex: 2,
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'center',
         },
         formContainerItem2: {
-            flex: 3,
             flexDirection: 'column',
             justifyContent: 'center',
             marginTop: 40,
-            marginBottom: 10
-        },
-        formContainerItem3: {
-            flex: 3,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            marginTop: 10,
             marginBottom: 10
         },
         logoContainer: {
@@ -110,8 +91,8 @@ const styles = StyleSheet.create(
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'space-evenly',
-            marginTop: 150,
-            marginBottom: 40
+            marginTop: 100,
+            marginBottom: 80,
         },
         logoText: {
             fontSize: 30,
@@ -119,6 +100,7 @@ const styles = StyleSheet.create(
             color: '#00A6B0',
             marginTop: 20,
             textAlign: 'center',
+            marginTop: 50
         },
         logo: {
             width: 240,

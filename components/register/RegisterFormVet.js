@@ -4,6 +4,7 @@ import { InputVetlens } from "../common/InputVetLens";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const RegisterFormVet = ({ route, navigation }) => {
 
@@ -41,31 +42,34 @@ export const RegisterFormVet = ({ route, navigation }) => {
 
     return (
         <ScrollView style={styles.container}>
-            <View style={styles.logoContainer}>
-                <Image source={vetlensLogo} style={styles.logo} />
-                <Text style={styles.logoText}>Por favor, completa los {'\n'}siguientes datos</Text>
-            </View>
-            <View style={styles.formContainer}>
-                <View style={styles.formContainerItem}>
-                    <Text style={styles.inputTitle}> N° Matrícula </Text>
-                    <InputVetlens
-                        placeholder='N° Matrícula'
-                        onChange={(text) => registerDispatch({
-                            type: "fieldUpdate",
-                            field: "license",
-                            value: text
-                        })}
-                        value={license}
-                        isValid={isLicenseValid}
-                        errorMessage={licenseErrorMessage}
-                    />
-                </View>
+            <SafeAreaView>
 
-                <View style={styles.formContainerItem2}>
-                    <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
+                <View style={styles.logoContainer}>
+                    <Image source={vetlensLogo} style={styles.logo} />
+                    <Text style={styles.logoText}>Por favor, completa los {'\n'}siguientes datos</Text>
                 </View>
+                <View style={styles.formContainer}>
+                    <View style={styles.formContainerItem}>
+                        <Text style={styles.inputTitle}> N° Matrícula </Text>
+                        <InputVetlens
+                            placeholder='N° Matrícula'
+                            onChange={(text) => registerDispatch({
+                                type: "fieldUpdate",
+                                field: "license",
+                                value: text
+                            })}
+                            value={license}
+                            isValid={isLicenseValid}
+                            errorMessage={licenseErrorMessage}
+                        />
+                    </View>
 
-            </View>
+                    <View style={styles.formContainerItem2}>
+                        <ButtonVetLens callback={nextScreen} text={"Continuar"} filled={true} />
+                    </View>
+
+                </View>
+            </SafeAreaView>
         </ScrollView>
     )
 }
