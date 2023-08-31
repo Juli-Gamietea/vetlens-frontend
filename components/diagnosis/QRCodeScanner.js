@@ -38,10 +38,9 @@ export const QRCodeScanner = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 {/* <Button title={'go back'} onPress={() => navigation.navigate('Bobo')} /> */}
-                <View style={styles.topContainer}>
+                <View style={[styles.topContainer, {paddingTop: 15, paddingBottom: 15}]}>
                     <AntDesign name={"arrowleft"} size={50} color={"#000"} style={{alignSelf: 'flex-end'}}/>
                     <Text style={[styles.textContainer, { marginTop: 1 }]}>Encontrar diagnóstico</Text>
                     <View style={{height: 50, width: 50}}></View>
@@ -57,7 +56,6 @@ export const QRCodeScanner = ({ navigation }) => {
                 </BarCodeScanner>
                 {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
             </View>
-        </SafeAreaView>
     );
 }
 

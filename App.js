@@ -33,6 +33,7 @@ function DashboardTabStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="QRScanner" component={QRCodeScanner} />
     </Stack.Navigator>
   )
 }
@@ -80,7 +81,7 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Scan"
-        component={Bobo}
+        component={QRCodeScanner}
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color }) => (
