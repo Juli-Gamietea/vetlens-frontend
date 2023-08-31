@@ -11,47 +11,71 @@ import { TouchableOpacity } from "react-native";
 
 export const Dashboard = ({ navigation }) => {
     const insets = useSafeAreaInsets();
-    const [username, setUsername] = React.useState("")
+    const [userData, setUsername] = React.useState({
+        username: "",
+        name: "",
+    })
     const [role, setRole] = React.useState("");
+    const [notValidatedDiagnosisList, setNotValidatedDiagnosisList] = React.useState([]);
 
     React.useEffect(() => {
 
-        const test = async () => {
-            const StoredUsername = await SecureStore.getItemAsync('username');
-            setUsername(StoredUsername);
-            const StoredRole = await SecureStore.getItemAsync('role');
-            setRole(StoredRole);
+        const initialSetup = async () => {
+            try {
+                const StoredUsername = await SecureStore.getItemAsync('username');
+                const StoredRole = await SecureStore.getItemAsync('role');
+                
+                const resUserData = await callBackendAPI(`/users/${StoredUsername}`, 'GET');
+                if (StoredRole === "VET") {
+                    const resDiagnosisValidationData = await callBackendAPI(`/diagnosis/validation/${StoredUsername}/notValidated`, 'GET');
+                    // setNotValidatedDiagnosisList(resDiagnosisValidationData.data);
+                    console.log('updated');
+                }
+                setUsername({username: StoredUsername, name: resUserData.data['first_name']});
+                setRole(StoredRole);
+            } catch(error) {
+                console.log(error)
+            }
         }
-        test();
+        initialSetup();
     }, [])
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>¡Bienvenido, {username}!</Text>
+            <Text style={styles.title}>¡Bienvenido, {userData.name}!</Text>
             <View style={{ width: '100%' }}>
                 <Text style={styles.subsectionText}>Diagnósticos pendientes de validación</Text>
                 <View style={styles.diagnosisScrollContainer}>
                     <ScrollView style={{ width: '100%' }}>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} image={'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2023/07/top-20-small-dog-breeds.jpeg.jpg'}/>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg'}/>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} />
+                        { notValidatedDiagnosisList.length !== 0 ? (
+                            
+                            notValidatedDiagnosisList.map((elem, index) => {
+                                if (index + 1 !== notValidatedDiagnosisList.length) {
+                                    return <WhiteButtonCard title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl}/>
+                                } else {
+                                    return <WhiteButtonCard title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center',marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl}/>
+                                }
+                            }   
+                            )
+                        ): (
+                            <View style={{width: 370,
+                                height: 80,
+                                backgroundColor: '#FDFFFF',
+                                borderRadius: 5,
+                                paddingHorizontal: 15,
+                                paddingVertical: 15,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                elevation: 8,
+                                marginTop: 10,
+                                alignSelf: 'center',
+                                marginBottom: 11}}>
+                                <Text style={{textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 16}}>Actualmente no posee diagnósticos sin validar</Text>
+                            </View>
+                        )
+                        }
+                        
                     </ScrollView>
                 </View>
                 <Text style={[styles.subsectionText, {marginTop: 10}]}>¿Qué desea hacer?</Text>

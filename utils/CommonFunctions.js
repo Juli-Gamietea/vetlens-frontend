@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getToken, renewToken } from "./auth/TokenManager.js";
 import { API_URL } from '@env';
+import { useContext } from "react";
+import { AuthContext } from "./auth/AuthContext.js";
 
 export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
   try {
@@ -33,17 +35,29 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
 
     const response = await axios.request(config);
 
-    if (response.status === 403) {
-      const new_token = await renewToken();
-      const retry_req_res = await axios({ headers: { 'Authorization': `Bearer ${new_token}`, ...config.headers }, ...config })
-      return retry_req_res;
-    } else if (response.status === 200) {
-      return response;  
-    } else {
-      throw Error(error);
-    }
+    return response;
+
+    
   
   } catch (error) {
-    throw Error("callBackendAPI()_error_" + error);
+
+    const config = {
+      url: `${API_URL}${url}`,
+      method: method,
+      data: data,
+      headers: {
+        'Content-Type': contentType,
+        ...headers,
+      },
+    }
+    
+    if (error.response.status === 403) {
+      const new_token = await renewToken();
+      
+      const retry_req_res = await axios({ headers: { 'Authorization': `Bearer ${new_token}`, ...config.headers }, ...config })
+      return retry_req_res;
+    } else {
+      throw Error("callBackendAPI()_error_" + error);
+    }
   }
 }
