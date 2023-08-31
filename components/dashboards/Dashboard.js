@@ -27,16 +27,16 @@ export const Dashboard = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>¡Bienvenido!</Text>
+            <Text style={styles.title}>¡Bienvenido, {username}!</Text>
             <View style={{ width: '100%' }}>
                 <Text style={styles.subsectionText}>Diagnósticos pendientes de validación</Text>
                 <View style={styles.diagnosisScrollContainer}>
                     <ScrollView style={{ width: '100%' }}>
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
-                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
+                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
+                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} image={'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2023/07/top-20-small-dog-breeds.jpeg.jpg'}/>
+                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg'}/>
+                        <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
+                        <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} image={'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*'}/>
                         <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
                         <WhiteButtonCard title={"Diagnóstico - Rocco"} subtext={"20/08/2023"} containerStyle={{ alignSelf: 'center' }} />
                         <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center' }} />
@@ -54,9 +54,7 @@ export const Dashboard = ({ navigation }) => {
                         <WhiteButtonCard title={"Diagnóstico - Rocco"} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} />
                     </ScrollView>
                 </View>
-            </View>
-            <View>
-                <Text style={styles.subsectionText}>¿Qué desea hacer?</Text>
+                <Text style={[styles.subsectionText, {marginTop: 10}]}>¿Qué desea hacer?</Text>
                 <View style={styles.bigButtonsContainer}>
                     <TouchableOpacity style={[styles.bigButton, { marginRight: 20 }]}>
                         <Text style={styles.bigButtonText}>Nuevo Cuestionario</Text>
@@ -82,14 +80,14 @@ const styles = StyleSheet.create({
     },
     diagnosisScrollContainer: {
         alignItems: 'center',
-        width: '100%',
-        height: 300,
-        backgroundColor: '#fff'
+        height: 350,
+        backgroundColor: '#fff',
     },
     title: {
         fontFamily: 'PoppinsRegular',
         fontSize: 48,
-        color: '#00A6B0'
+        color: '#00A6B0',
+        textAlign: 'center',
     },
     subsectionText: {
         fontFamily: 'PoppinsBold',
@@ -100,7 +98,8 @@ const styles = StyleSheet.create({
     bigButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginHorizontal: 15
     },
     bigButton: {
         width: 170,
