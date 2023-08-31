@@ -4,11 +4,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { ButtonVetLens } from "../common/ButtonVetLens";
-import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
+import * as SecureStore from 'expo-secure-store';
+import { callBackendAPI } from "../../utils/CommonFunctions";
 
 export const MyDogs = ({ route, navigation }) => {
-    React.useEffect(() => {
 
+    const [dogs, setDogs] = React.useState([])
+
+    React.useEffect(() => {
+        const getDogs = async () => {
+            try {
+                const StoredUsername = await SecureStore.getItemAsync('username');
+                const dogsData = await callBackendAPI(`/users/dogs/${StoredUsername}`, 'GET');
+                setDogs(dogsData.data)
+            } catch(error) {
+                console.log(error)
+            }
+        }
+        getDogs();
     }, [])
     const goProfile = () => {
 
@@ -21,101 +34,38 @@ export const MyDogs = ({ route, navigation }) => {
                 </View>
                 <View style={styles.mainContainer}>
                     <ScrollView style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.dogCard}>
-                            <View style={styles.buttonsContainer}>
-                                <TouchableOpacity style={styles.button}> 
-                                    <MaterialIcons name="edit" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button}> 
-                                    <FontAwesome name="trash" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.cardInfo}>
-                                <Image source={vetlensLogo} style={styles.dogImage} />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.name}> Rocco </Text>
-                                    <Text style={styles.info}> Golden Retriever </Text>
-                                    <Text style={styles.info}> 13/07/2022 </Text>
-                                    <Text style={styles.info}> Macho </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dogCard}>
-                            <View style={styles.buttonsContainer}>
-                                <TouchableOpacity style={styles.button}> 
-                                    <MaterialIcons name="edit" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button}> 
-                                    <FontAwesome name="trash" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.cardInfo}>
-                                <Image source={vetlensLogo} style={styles.dogImage} />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.name}> Rocco </Text>
-                                    <Text style={styles.info}> Golden Retriever </Text>
-                                    <Text style={styles.info}> 13/07/2022 </Text>
-                                    <Text style={styles.info}> Macho </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dogCard}>
-                            <View style={styles.buttonsContainer}>
-                                <TouchableOpacity style={styles.button}> 
-                                    <MaterialIcons name="edit" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button}> 
-                                    <FontAwesome name="trash" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.cardInfo}>
-                                <Image source={vetlensLogo} style={styles.dogImage} />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.name}> Rocco </Text>
-                                    <Text style={styles.info}> Golden Retriever </Text>
-                                    <Text style={styles.info}> 13/07/2022 </Text>
-                                    <Text style={styles.info}> Macho </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dogCard}>
-                            <View style={styles.buttonsContainer}>
-                                <TouchableOpacity style={styles.button}> 
-                                    <MaterialIcons name="edit" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button}> 
-                                    <FontAwesome name="trash" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.cardInfo}>
-                                <Image source={vetlensLogo} style={styles.dogImage} />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.name}> Rocco </Text>
-                                    <Text style={styles.info}> Golden Retriever </Text>
-                                    <Text style={styles.info}> 13/07/2022 </Text>
-                                    <Text style={styles.info}> Macho </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.dogCard}>
-                            <View style={styles.buttonsContainer}>
-                                <TouchableOpacity style={styles.button}> 
-                                    <MaterialIcons name="edit" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button}> 
-                                    <FontAwesome name="trash" size={24} color="#00767D" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.cardInfo}>
-                                <Image source={vetlensLogo} style={styles.dogImage} />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.name}> Rocco </Text>
-                                    <Text style={styles.info}> Golden Retriever </Text>
-                                    <Text style={styles.info}> 13/07/2022 </Text>
-                                    <Text style={styles.info}> Macho </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
+                        { dogs.length != 0 
+                        ? (
+                            dogs.map((elem, index) => {
+                                return (
+                                    <TouchableOpacity key={index} style={styles.dogCard}>
+                                        <View style={styles.buttonsContainer}>
+                                            <TouchableOpacity style={styles.button}> 
+                                                <MaterialIcons name="edit" size={24} color="#00767D" />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.button}> 
+                                                <FontAwesome name="trash" size={24} color="#00767D" />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.cardInfo}>
+                                            <Image source={{uri:elem.photoUrl}} style={styles.dogImage} />
+                                            <View style={styles.textContainer}>
+                                                <Text style={styles.name}> {elem.name} </Text>
+                                                <Text style={styles.info}> {elem.dog_breed} </Text>
+                                                <Text style={styles.info}> {elem.date_of_birth} </Text>
+                                                { (elem.sex === "MALE")
+                                                    ? <Text style={styles.info}> Macho </Text>
+                                                    : <Text style={styles.info}> Hembra </Text>
+                                                }
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            }
+                        ))
+                        : <Text style={styles.defaultText}> Aún no tiene{'\n'} perros guardados :( </Text>
+                        }
+                        
                     </ScrollView>
                     <ButtonVetLens style={styles.addButton} text={"Agregar"} filled={true} />
                 </View>
@@ -143,6 +93,13 @@ const styles = StyleSheet.create(
             color: '#00A6B0',
             textAlign: 'center',
         },
+        defaultText: {
+            fontSize: 32,
+            fontFamily: 'PoppinsBold',
+            color: '#00767D',
+            textAlign: 'center',
+            marginTop: 220
+        },
         mainContainer:{
             flex:1,
             marginLeft: 15,
@@ -152,7 +109,8 @@ const styles = StyleSheet.create(
         },
         cardContainer: {
             flex: 1,
-            maxHeight: 585
+            maxHeight: 585,
+            minHeight: 585
         },
         addButton: {
             marginTop: 20

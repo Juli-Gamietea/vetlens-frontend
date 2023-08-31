@@ -48,7 +48,6 @@ async function storeToken(acces_token, refresh_token) {
 
 export async function getToken() {
     try {
-
         const token = await SecureStore.getItemAsync('token');
         const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
 
@@ -56,7 +55,6 @@ export async function getToken() {
             if (Date.now() > Date.parse(expiryDate)) {
                 throw Error('token_expired');
             }
-    
             return token;
         } else {
             throw Error('no_token_saved');
@@ -110,9 +108,6 @@ export async function renewToken() {
                 expiryDate: Date.now + 31536000000,
             };
 
-            
-            
-            
             await storeToken(access_token, refresh_token);
             return access_token.token;
 
