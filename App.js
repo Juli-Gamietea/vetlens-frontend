@@ -24,6 +24,7 @@ import { View } from 'react-native';
 import { RegisterFormVet } from './components/register/RegisterFormVet';
 import { TermsAndConditions } from './components/register/TermsAndConditions';
 import { RegisterSuccess } from './components/register/RegisterSuccess';
+import { MyDogs } from './components/dogs/MyDogs';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -94,7 +95,7 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Dogs"
-        component={Bobo}
+        component={MyDogs}
         options={{
           tabBarLabel: 'Perros',
           tabBarIcon: ({ color }) => (
@@ -183,6 +184,7 @@ export default function App() {
                 <Stack.Screen name="TabsVet" component={TabsVet} />
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
+                <Stack.Screen name="MyDogs" component={MyDogs} />
               </>
             )}
           </Stack.Navigator>
