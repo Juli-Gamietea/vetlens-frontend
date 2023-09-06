@@ -25,7 +25,7 @@ export async function setToken(username, password) {
 
         const access_token = {
             token: res.data.accessToken,
-            expiryDate: Date.now() + 20000,
+            expiryDate: Date.now() + 86400000,
         };
 
         console.log("setToken() - token: " + JSON.stringify(access_token));
@@ -118,7 +118,7 @@ export async function renewToken() {
             
             const access_token = {
                 token: res.data.accessToken,
-                expiryDate: Date.now() + 20000,
+                expiryDate: Date.now() + 86400000,
             };
 
             console.log("renewToken() - new token: " + JSON.stringify(access_token))
