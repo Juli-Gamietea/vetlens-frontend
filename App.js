@@ -38,6 +38,22 @@ function DashboardTabStack() {
   )
 }
 
+function ScannerTabStack() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: true}}>
+      <Stack.Screen name="QRScanner" 
+      component={QRCodeScanner}
+      options={{
+        title: "Encontrar un diagnóstico",
+        headerTitleStyle: {
+          fontFamily: "PoppinsRegular"
+        },
+        headerTitleAlign: 'center'
+      }}/>
+    </Stack.Navigator>
+  )
+}
+
 
 function TabsVet() {
 
@@ -81,7 +97,7 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Scan"
-        component={QRCodeScanner}
+        component={ScannerTabStack}
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color }) => (
