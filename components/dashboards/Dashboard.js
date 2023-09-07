@@ -63,18 +63,18 @@ export const Dashboard = ({ navigation }) => {
                         {role === "VET" && cardsList.length !== 0 ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
                                 }
                             }
                             )
                         ) : ( role === "DEFAULT" && cardsList.length !== 0) ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                                 }
                             })
                         ) : (
@@ -102,7 +102,7 @@ export const Dashboard = ({ navigation }) => {
                 </View>
                 <Text style={[styles.subsectionText, { marginTop: 10 }]}>¿Qué desea hacer?</Text>
                 <View style={styles.bigButtonsContainer}>
-                    <TouchableOpacity style={[styles.bigButton, { marginRight: 20 }]}>
+                    <TouchableOpacity style={[styles.bigButton, { marginRight: 20 }]} onPress={() => navigation.navigate("Questions")}>
                         <Text style={styles.bigButtonText}>Nuevo Cuestionario</Text>
                         <MaterialCommunityIcons name="clipboard-list-outline" size={80} color="#00A6B0" />
                     </TouchableOpacity>

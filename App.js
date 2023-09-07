@@ -24,6 +24,7 @@ import { View } from 'react-native';
 import { RegisterFormVet } from './components/register/RegisterFormVet';
 import { TermsAndConditions } from './components/register/TermsAndConditions';
 import { RegisterSuccess } from './components/register/RegisterSuccess';
+import { Questionary } from './components/diagnosis/Questionary';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,8 +32,14 @@ const Tab = createBottomTabNavigator();
 function DashboardTabStack() {
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+    <Stack.Navigator >
+      <Stack.Screen options={{headerShown: false}} name="Dashboard" component={Dashboard} />
+      <Stack.Screen options={{headerShown: true, title: "Cuestionario",
+        headerTitleStyle: {
+          fontFamily: "PoppinsRegular"
+        },
+        headerTitleAlign: 'center'
+      }} name="Questions" component={Questionary}/>
       <Stack.Screen name="QRScanner" component={QRCodeScanner} />
     </Stack.Navigator>
   )
