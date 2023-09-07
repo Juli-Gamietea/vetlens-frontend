@@ -50,7 +50,11 @@ export const questions = [
                     "id": null,
                     "question": "¿Cuando fue la fecha de la última vacunación?",
                     "help": null,
-                    "answers": null
+                    "answers": [
+                        {"answer": "",
+                        "embedded_question": null
+                    }
+                    ]
                 }
             },
             {

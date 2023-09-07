@@ -14,20 +14,46 @@ export const Questionary = ({ navigation }) => {
     const [shownEmbeddedQuestionIdx, setShownEmbeddedQuestionIdx] = React.useState(0);
 
     const handleQuestionSelection = (selectedQuestion) => {
-        setShownAnswers(questionList[selectedQuestion][shownEmbeddedQuestionIdx].answers);
+        setShownEmbeddedQuestionIdx(0);
+        setShownAnswers(questionList[selectedQuestion][0].answers);
         setSelectedQuestion(selectedQuestion);
     }
 
     const handleAnswer = (index, answer) => {
-        if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length ) {
+
+        let currentAnswer = answers[selectedQuestion]; // objeto de la preg principal respondida
+        
+        console.log(questionList[selectedQuestion].length)
+
+        if (Object.keys(currentAnswer).length === 0) {
+            currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
+        }
+        
+
+        const newAnswer = {
+            question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
+            answer: answer.answer,
+        }
+
+        fillStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
+
+        const updatedAnswers = answers;
+        updatedAnswers[selectedQuestion] = currentAnswer;
+
+        setAnswers(updatedAnswers);
+
+        if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length) {
             setShownEmbeddedQuestionIdx(0);
+            setShownAnswers(questionList[selectedQuestion + 1][0].answers);
             setSelectedQuestion(selectedQuestion + 1);
         }
         else {
             if (answer.answer === questionList[selectedQuestion][shownEmbeddedQuestionIdx + 1].associatedAnswer) {
+                setShownAnswers(questionList[selectedQuestion][shownEmbeddedQuestionIdx + 1].answers)
                 setShownEmbeddedQuestionIdx(shownEmbeddedQuestionIdx + 1);
             } else {
                 setShownEmbeddedQuestionIdx(0);
+                setShownAnswers(questionList[selectedQuestion + 1][0].answers);
                 setSelectedQuestion(selectedQuestion + 1);
             }
         }
@@ -56,15 +82,50 @@ export const Questionary = ({ navigation }) => {
         return result;
     }
 
+    const createEmptyStructure = (levels) => {
+        if (levels <= 0) {
+            return null;
+        }
+
+        return {
+            question: "",
+            answers: [
+                {
+                    answer: "",
+                    embedded_question: createEmptyStructure(levels - 1)
+                }
+            ]
+        };
+    }
+
+    const fillStructure = (obj, data, currentLevel) => {
+        if (currentLevel === 0) {
+            // Fill the data at the specified level
+            obj.question = data.question;
+            obj.answers[0].answer = data.answer;
+            return;
+        }
+
+        if (data.answer) {
+            fillStructure(obj.answers[0].embedded_question, data, currentLevel - 1);
+        }
+    }
+
 
     React.useEffect(() => {
         const qlist = []
         for (q of questions) {
             qlist.push(extractEmbeddedQuestions(q));
         }
-        console.log(qlist[0]);
         setQuestionList(qlist);
         setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
+        
+        const auxArray = [];
+        for (let i = 0; i < qlist.length; i++) {
+            auxArray.push({});
+        }
+
+        setAnswers(auxArray);
     }, [])
 
     return (
@@ -84,16 +145,16 @@ export const Questionary = ({ navigation }) => {
                     })}
                 </ScrollView>
             </View>
-            {questionList &&  questionList.length > 0 && <View style={{ flex: 5, backgroundColor: "#FFF", flexDirection: "column" }}>
+            {questionList && questionList.length > 0 && <View style={{ flex: 5, backgroundColor: "#FFF", flexDirection: "column" }}>
                 <View>
                     <Text style={styles.questionTitle}>Pregunta {selectedQuestion + 1}{shownEmbeddedQuestionIdx > 0 ? `.${shownEmbeddedQuestionIdx}` : ""}</Text>
                     <Text style={styles.question}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"]}</Text>
-                    {questions[selectedQuestion].help && <Text style={styles.questionHelp}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx].help}</Text>}
+                    {questionList[selectedQuestion].help && <Text style={styles.questionHelp}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx].help}</Text>}
                 </View>
                 <View>
                     {shownAnswers.map((answer, index) => {
                         return (
-                            <ButtonVetLens callback={() => handleAnswer(index, answer)} text={answer.answer} filled={false} style={styles.answers} />
+                            <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={answer.selected} style={styles.answers} />
                         )
                     })}
                 </View>
