@@ -8,9 +8,9 @@ export const Questionary = ({ navigation }) => {
 
     const [selectedQuestion, setSelectedQuestion] = React.useState(0);
     const [questionList, setQuestionList] = React.useState([]);
-    const [embeddedQuestions, setEmbeddedQuestions] = React.useState({});
     const [shownAnswers, setShownAnswers] = React.useState([]);
     const [answers, setAnswers] = React.useState([]);
+    const [answeredQuestions, setAnsweredQuestions] = React.useState([]);
     const [shownEmbeddedQuestionIdx, setShownEmbeddedQuestionIdx] = React.useState(0);
 
     const handleQuestionSelection = (selectedQuestion) => {
@@ -36,6 +36,13 @@ export const Questionary = ({ navigation }) => {
         const newAnswer = {
             question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
             answer: answer.answer,
+            isLast: questionList[selectedQuestion][shownEmbeddedQuestionIdx].answers[0]["embedded_question"] ? false : true
+        }
+
+        if (newAnswer.isLast) {
+            const answeredQuestionsCopy = [...answeredQuestions];
+            answeredQuestionsCopy[selectedQuestion] = true;
+            setAnsweredQuestions(answeredQuestionsCopy);
         }
 
         fillStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
@@ -53,8 +60,7 @@ export const Questionary = ({ navigation }) => {
             else {
                 if (answer["embedded_question"] !== null) {
                     for (let i = index; i < questionList[selectedQuestion].length; i++) {
-                        console.log("ans: " + JSON.stringify(answer["embedded_question"].question));
-                        console.log("q: " + JSON.stringify(questionList[selectedQuestion][i]["embedded_question"]))
+
                         if (answer["embedded_question"].question === questionList[selectedQuestion][i]["embedded_question"] &&
                             answer.answer === questionList[selectedQuestion][i].associatedAnswer) {
                             const questionListCopy = [...questionList];
@@ -65,6 +71,7 @@ export const Questionary = ({ navigation }) => {
 
                             return;
                         }
+
                     }
                 } else {
 
@@ -74,6 +81,7 @@ export const Questionary = ({ navigation }) => {
                 }
 
             }
+
         } else {
             for (let i = 0; i < answers.length; i++) {
                 if (Object.keys(answers[i]).length === 0) {
@@ -83,7 +91,8 @@ export const Questionary = ({ navigation }) => {
                     return;
                 }
             }
-            navigation.navigate("Dashboard");
+            
+            console.log(JSON.stringify(answers));
         }
     }
 
@@ -140,16 +149,34 @@ export const Questionary = ({ navigation }) => {
         }
     }
 
+    const questionIsAnswered = (obj, level, targetAnswer) => {
+        
+        if (level === 0) {
+            return obj.answers[0].answer === targetAnswer;
+        }
+
+        if (obj["answers"][0]["embedded_question"]) {
+            return questionIsAnswered(obj["answers"][0]["embedded_question"], level - 1, targetAnswer);
+        }
+
+        return false;
+    }
+
 
     React.useEffect(() => {
         const qlist = []
+        const auxList = []
         for (q of questions) {
             qlist.push(extractEmbeddedQuestions(q));
+            auxList.push(false);
         }
         for (q of qlist) {
             q[0].shown = true;
         }
+
+
         setQuestionList(qlist);
+        setAnsweredQuestions(auxList);
         setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
 
         const auxArray = [];
@@ -166,18 +193,18 @@ export const Questionary = ({ navigation }) => {
                 <ScrollView style={styles.questionsContainer} horizontal showsHorizontalScrollIndicator={false}>
                     {questions.map((question, index) => {
                         if (index + 1 !== questions.length) {
-                            return (<TouchableOpacity style={selectedQuestion === index ? styles.selectedQuestionButton : styles.questionButton} onPress={() => handleQuestionSelection(index)} key={index}>
-                                <Text style={selectedQuestion === index ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
+                            return (<TouchableOpacity style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)} key={index}>
+                                <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
                         } else {
-                            return (<TouchableOpacity style={selectedQuestion === index ? [styles.selectedQuestionButton, { marginRight: 15 }] : [styles.questionButton, { marginRight: 15 }]} onPress={() => handleQuestionSelection(index)} key={index}>
-                                <Text style={selectedQuestion === index ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
+                            return (<TouchableOpacity style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : [styles.questionButton, { marginRight: 15 }]} onPress={() => handleQuestionSelection(index)} key={index}>
+                                <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
                         }
                     })}
                 </ScrollView>
             </View>
-            {questionList && questionList.length > 0 &&
+            {questionList && questionList.length > 0 && answers.length > 0 &&
                 <View style={{ flex: 5, backgroundColor: "#FFF", flexDirection: "column", justifyContent: 'space-around' }}>
                     <View>
                         <Text style={styles.questionTitle}>Pregunta {selectedQuestion + 1}{shownEmbeddedQuestionIdx > 0 ? `.${shownEmbeddedQuestionIdx}` : ""}</Text>
@@ -186,8 +213,14 @@ export const Questionary = ({ navigation }) => {
                     </View>
                     <View>
                         {shownAnswers.map((answer, index) => {
+                            let filled = false;
+
+                            if (Object.keys(answers[selectedQuestion]).length > 0) {
+                                filled = questionIsAnswered(answers[selectedQuestion], shownEmbeddedQuestionIdx, answer.answer)
+                            }
+
                             return (
-                                <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={answer.selected} style={styles.answers} />
+                                <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={filled} style={styles.answers} />
                             )
                         })}
                     </View>
@@ -232,6 +265,15 @@ const styles = StyleSheet.create({
     },
     selectedQuestionButton: {
         backgroundColor: "#005D63",
+        borderRadius: 20,
+        width: 90,
+        height: 90,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 15,
+    },
+    completedQuestion: {
+        backgroundColor: "#00A6B0",
         borderRadius: 20,
         width: 90,
         height: 90,
