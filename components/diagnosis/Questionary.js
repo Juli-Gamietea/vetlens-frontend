@@ -32,11 +32,10 @@ export const Questionary = ({ navigation }) => {
             currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
         }
 
-
         const newAnswer = {
             question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
             answer: answer.answer,
-            isLast: questionList[selectedQuestion][shownEmbeddedQuestionIdx].answers[0]["embedded_question"] ? false : true
+            isLast: answer["embedded_question"] ? false : true
         }
 
         if (newAnswer.isLast) {
@@ -51,7 +50,16 @@ export const Questionary = ({ navigation }) => {
         updatedAnswers[selectedQuestion] = currentAnswer;
 
         setAnswers(updatedAnswers);
-        if (selectedQuestion + 1 !== questionList.length) {
+
+        let allQuestionsAnswered = true;
+
+        for(qa of answeredQuestions) {
+            if (!qa) {
+                allQuestionsAnswered = false;
+            }
+        }
+
+        if (selectedQuestion + 1 !== questionList.length && !allQuestionsAnswered) {
             if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length) {
                 setShownEmbeddedQuestionIdx(0);
                 setShownAnswers(questionList[selectedQuestion + 1][0].answers);
@@ -83,16 +91,15 @@ export const Questionary = ({ navigation }) => {
             }
 
         } else {
-            for (let i = 0; i < answers.length; i++) {
-                if (Object.keys(answers[i]).length === 0) {
+            for (let i = 0; i < answeredQuestions.length; i++) {
+                if (!answeredQuestions[i]) {
                     setSelectedQuestion(i);
                     setShownEmbeddedQuestionIdx(0);
                     setShownAnswers(questionList[i][0].answers)
                     return;
                 }
             }
-            
-            console.log(JSON.stringify(answers));
+
         }
     }
 
@@ -150,7 +157,7 @@ export const Questionary = ({ navigation }) => {
     }
 
     const questionIsAnswered = (obj, level, targetAnswer) => {
-        
+
         if (level === 0) {
             return obj.answers[0].answer === targetAnswer;
         }
@@ -185,6 +192,15 @@ export const Questionary = ({ navigation }) => {
         }
 
         setAnswers(auxArray);
+        
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={() => console.log(JSON.stringify(answers))}>
+                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 15 }}>Finalizar</Text>
+                </TouchableOpacity>
+            )
+        })
+        
     }, [])
 
     return (
