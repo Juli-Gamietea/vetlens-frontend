@@ -19,16 +19,21 @@ export const Questionary = ({ navigation }) => {
         setSelectedQuestion(selectedQuestion);
     }
 
+    const handleMiniButtonPress = (index) => {
+        setShownEmbeddedQuestionIdx(index);
+        setShownAnswers(questionList[selectedQuestion][index].answers);
+    }
+
     const handleAnswer = (index, answer) => {
 
         let currentAnswer = answers[selectedQuestion]; // objeto de la preg principal respondida
-        
+
         console.log(questionList[selectedQuestion].length)
 
         if (Object.keys(currentAnswer).length === 0) {
             currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
         }
-        
+
 
         const newAnswer = {
             question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
@@ -41,21 +46,35 @@ export const Questionary = ({ navigation }) => {
         updatedAnswers[selectedQuestion] = currentAnswer;
 
         setAnswers(updatedAnswers);
-
-        if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length) {
-            setShownEmbeddedQuestionIdx(0);
-            setShownAnswers(questionList[selectedQuestion + 1][0].answers);
-            setSelectedQuestion(selectedQuestion + 1);
-        }
-        else {
-            if (answer.answer === questionList[selectedQuestion][shownEmbeddedQuestionIdx + 1].associatedAnswer) {
-                setShownAnswers(questionList[selectedQuestion][shownEmbeddedQuestionIdx + 1].answers)
-                setShownEmbeddedQuestionIdx(shownEmbeddedQuestionIdx + 1);
-            } else {
+        if (selectedQuestion + 1 !== questionList.length) {
+            if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length) {
                 setShownEmbeddedQuestionIdx(0);
                 setShownAnswers(questionList[selectedQuestion + 1][0].answers);
                 setSelectedQuestion(selectedQuestion + 1);
             }
+            else {
+                for (let i = 0; i < questionList[selectedQuestion].length; i++) {
+                    if (answer.answer === questionList[selectedQuestion][i].associatedAnswer) {
+                        setShownAnswers(questionList[selectedQuestion][i].answers)
+                        setShownEmbeddedQuestionIdx(i);
+                        return;
+                    }
+                }
+                setShownEmbeddedQuestionIdx(0);
+                setShownAnswers(questionList[selectedQuestion + 1][0].answers);
+                setSelectedQuestion(selectedQuestion + 1);
+
+            }
+        } else {
+            for (let i = 0; i < answers.length; i++) {
+                if (Object.keys(answers[i]).length === 0) {
+                    setSelectedQuestion(i);
+                    setShownEmbeddedQuestionIdx(0);
+                    setShownAnswers(questionList[i][0].answers)
+                    return;
+                }
+            }
+            navigation.navigate("Dashboard");
         }
     }
 
@@ -67,7 +86,8 @@ export const Questionary = ({ navigation }) => {
                 embedded_question: quest.question,
                 help: quest.help,
                 associatedAnswer: parentAnswer,
-                answers: quest.answers
+                answers: quest.answers,
+                answered: false,
             });
         }
 
@@ -119,7 +139,7 @@ export const Questionary = ({ navigation }) => {
         }
         setQuestionList(qlist);
         setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
-        
+
         const auxArray = [];
         for (let i = 0; i < qlist.length; i++) {
             auxArray.push({});
@@ -145,21 +165,37 @@ export const Questionary = ({ navigation }) => {
                     })}
                 </ScrollView>
             </View>
-            {questionList && questionList.length > 0 && <View style={{ flex: 5, backgroundColor: "#FFF", flexDirection: "column" }}>
-                <View>
-                    <Text style={styles.questionTitle}>Pregunta {selectedQuestion + 1}{shownEmbeddedQuestionIdx > 0 ? `.${shownEmbeddedQuestionIdx}` : ""}</Text>
-                    <Text style={styles.question}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"]}</Text>
-                    {questionList[selectedQuestion].help && <Text style={styles.questionHelp}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx].help}</Text>}
-                </View>
-                <View>
-                    {shownAnswers.map((answer, index) => {
-                        return (
-                            <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={answer.selected} style={styles.answers} />
-                        )
-                    })}
-                </View>
+            {questionList && questionList.length > 0 &&
+                <View style={{ flex: 5, backgroundColor: "#FFF", flexDirection: "column", justifyContent: 'space-around' }}>
+                    <View>
+                        <Text style={styles.questionTitle}>Pregunta {selectedQuestion + 1}{shownEmbeddedQuestionIdx > 0 ? `.${shownEmbeddedQuestionIdx}` : ""}</Text>
+                        <Text style={styles.question}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"]}</Text>
+                        {questionList[selectedQuestion].help && <Text style={styles.questionHelp}>{questionList[selectedQuestion][shownEmbeddedQuestionIdx].help}</Text>}
+                    </View>
+                    <View>
+                        {shownAnswers.map((answer, index) => {
+                            return (
+                                <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={answer.selected} style={styles.answers} />
+                            )
+                        })}
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 30, height: 15 }}>
+                        {questionList[selectedQuestion].length > 1 &&
+                            <>
+                                {
+                                    questionList[selectedQuestion].map((_, index) => {
+                                        if (shownEmbeddedQuestionIdx === index) {
+                                            return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={[styles.miniButtons, { backgroundColor: "#00A6B0", borderWidth: 0 }]} />
+                                        } else {
+                                            return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={styles.miniButtons} />
+                                        }
+                                    })
+                                }
+                            </>
+                        }
+                    </View>
 
-            </View>}
+                </View>}
         </SafeAreaView>
     )
 }
@@ -222,5 +258,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingHorizontal: 30,
         marginBottom: 20
+    },
+    miniButtons: {
+        width: 20,
+        height: 20,
+        borderWidth: 2,
+        borderColor: "#00A6B0",
+        backgroundColor: "#FFF",
+        borderRadius: 50,
+        marginHorizontal: 3
     }
 })
