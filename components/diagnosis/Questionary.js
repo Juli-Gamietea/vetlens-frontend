@@ -28,8 +28,6 @@ export const Questionary = ({ navigation }) => {
 
         let currentAnswer = answers[selectedQuestion]; // objeto de la preg principal respondida
 
-        console.log(questionList[selectedQuestion].length)
-
         if (Object.keys(currentAnswer).length === 0) {
             currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
         }
@@ -53,16 +51,27 @@ export const Questionary = ({ navigation }) => {
                 setSelectedQuestion(selectedQuestion + 1);
             }
             else {
-                for (let i = 0; i < questionList[selectedQuestion].length; i++) {
-                    if (answer.answer === questionList[selectedQuestion][i].associatedAnswer) {
-                        setShownAnswers(questionList[selectedQuestion][i].answers)
-                        setShownEmbeddedQuestionIdx(i);
-                        return;
+                if (answer["embedded_question"] !== null) {
+                    for (let i = index; i < questionList[selectedQuestion].length; i++) {
+                        console.log("ans: " + JSON.stringify(answer["embedded_question"].question));
+                        console.log("q: " + JSON.stringify(questionList[selectedQuestion][i]["embedded_question"]))
+                        if (answer["embedded_question"].question === questionList[selectedQuestion][i]["embedded_question"] &&
+                            answer.answer === questionList[selectedQuestion][i].associatedAnswer) {
+                            const questionListCopy = [...questionList];
+                            questionListCopy[selectedQuestion][i].shown = true;
+                            setQuestionList(questionListCopy);
+                            setShownAnswers(questionList[selectedQuestion][i].answers)
+                            setShownEmbeddedQuestionIdx(i);
+
+                            return;
+                        }
                     }
+                } else {
+
+                    setShownEmbeddedQuestionIdx(0);
+                    setShownAnswers(questionList[selectedQuestion + 1][0].answers);
+                    setSelectedQuestion(selectedQuestion + 1);
                 }
-                setShownEmbeddedQuestionIdx(0);
-                setShownAnswers(questionList[selectedQuestion + 1][0].answers);
-                setSelectedQuestion(selectedQuestion + 1);
 
             }
         } else {
@@ -87,7 +96,7 @@ export const Questionary = ({ navigation }) => {
                 help: quest.help,
                 associatedAnswer: parentAnswer,
                 answers: quest.answers,
-                answered: false,
+                shown: false,
             });
         }
 
@@ -137,6 +146,9 @@ export const Questionary = ({ navigation }) => {
         for (q of questions) {
             qlist.push(extractEmbeddedQuestions(q));
         }
+        for (q of qlist) {
+            q[0].shown = true;
+        }
         setQuestionList(qlist);
         setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
 
@@ -183,11 +195,13 @@ export const Questionary = ({ navigation }) => {
                         {questionList[selectedQuestion].length > 1 &&
                             <>
                                 {
-                                    questionList[selectedQuestion].map((_, index) => {
-                                        if (shownEmbeddedQuestionIdx === index) {
-                                            return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={[styles.miniButtons, { backgroundColor: "#00A6B0", borderWidth: 0 }]} />
-                                        } else {
-                                            return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={styles.miniButtons} />
+                                    questionList[selectedQuestion].map((elem, index) => {
+                                        if (elem.shown) {
+                                            if (shownEmbeddedQuestionIdx === index) {
+                                                return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={[styles.miniButtons, { backgroundColor: "#00A6B0", borderWidth: 0 }]} />
+                                            } else {
+                                                return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={styles.miniButtons} />
+                                            }
                                         }
                                     })
                                 }
