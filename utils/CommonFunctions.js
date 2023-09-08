@@ -20,27 +20,23 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
         },
       }
     } else {
-      const token = await getToken();
+      const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqZ2FtaWV0ZWEiLCJpYXQiOjE2OTQwNDkyNTQsImV4cCI6MTY5NDEzNTY1NH0.hkI1Y6feQUiLj47rYXPt2U-bN24xpJ1YBzyBD1MFFLs";
       config = {
-        url: `${API_URL}${url}`,
         method: method,
-        data: data,
+        url: `${API_URL}${url}`,
         headers: {
           'Content-Type': contentType,
           'Authorization': `Bearer ${token}`,
           ...headers,
         },
+        data: data
       }
     }
-
-    const response = await axios.request(config);
-
-    return response;
-
     
-  
-  } catch (error) {
+    return await axios.request(config);
 
+  } catch (error) {
+    console.log(error)
     const config = {
       url: `${API_URL}${url}`,
       method: method,
