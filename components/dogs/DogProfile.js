@@ -30,7 +30,6 @@ export const DogProfile = ({ route, navigation }) => {
 
     React.useEffect(() => {
         if (action !== 'add') {
-            console.log(dog)
             setCurrentImage(dog.photoUrl)
             dogProfileDispatch({type: "fieldUpdate", field: "name", value: dog.name})
             dogProfileDispatch({type: "fieldUpdate", field: "dogBreed", value: dog.dog_breed})
@@ -41,6 +40,7 @@ export const DogProfile = ({ route, navigation }) => {
             setCurrentImage(vetlenslogo)
         }
         
+        
     }, [])
     
     //DatePicker props & functions
@@ -49,7 +49,9 @@ export const DogProfile = ({ route, navigation }) => {
         "2000/01/01", "YYYY-MM-DD"
     );
     const [selectedStartDate, setSelectedStartDate] = useState("Fecha");
-    const [startedDate, setStartedDate] = useState("12/12/2023");
+    const [startedDate, setStartedDate] = useState(getFormatedDate( 
+        "12/12/2023", "YYYY-MM-DD"
+    ));
     const [isDateValid, setIsDateValid] = useState(true)
 
     function handleChangeStartDate(propDate) {
@@ -93,7 +95,7 @@ export const DogProfile = ({ route, navigation }) => {
     }
 
     const processForm = async () => {
-        console.log("ENTRE")
+        
         let dogId; 
         if (areInputsValid()) {
             try{
@@ -106,9 +108,18 @@ export const DogProfile = ({ route, navigation }) => {
                     sex: sex,
                     is_castrated: castrated
                 }
-                const result = await callBackendAPI("/users/dog/add", "POST", data)
-                dogId = result.data.id;
-                await callBackendAPI(`/users/dog/photo/${dogId}`, "PUT", image, {}, 'multipart/form-data')
+                if (action === 'add') {
+                    const result = await callBackendAPI("/users/dog/add", "POST", data)
+                    dogId = result.data.id;
+                } else {
+                    console.log(data)
+                    const result = await callBackendAPI("/users/dog/update", "PUT", data)
+                    dogId = result.data.id;
+                }
+                if (imageChange) {
+                    await callBackendAPI(`/users/dog/photo/${dogId}`, "PUT", image, {}, 'multipart/form-data')
+                }
+                
             } catch (error) {
                 console.log(error)
             }
