@@ -3,6 +3,7 @@ import { questions } from "./Questions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { ButtonVetLens } from "../common/ButtonVetLens";
+import { NotificationModal } from "../common/NotificationModal";
 
 export const Questionary = ({ navigation }) => {
 
@@ -12,6 +13,7 @@ export const Questionary = ({ navigation }) => {
     const [answers, setAnswers] = React.useState([]);
     const [answeredQuestions, setAnsweredQuestions] = React.useState([]);
     const [shownEmbeddedQuestionIdx, setShownEmbeddedQuestionIdx] = React.useState(0);
+    const [notification, setNotification] = React.useState(false);
 
     const handleQuestionSelection = (selectedQuestion) => {
         setShownEmbeddedQuestionIdx(0);
@@ -24,40 +26,27 @@ export const Questionary = ({ navigation }) => {
         setShownAnswers(questionList[selectedQuestion][index].answers);
     }
 
+    const showNotification = () => {
+        setNotification(true);
+        setTimeout(() => {
+            setNotification(false);
+        }, 5000);
+
+    }
+
     const handleAnswer = (index, answer) => {
 
-        let currentAnswer = answers[selectedQuestion]; // objeto de la preg principal respondida
-
-        if (Object.keys(currentAnswer).length === 0) {
-            currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
-        }
-
-        const newAnswer = {
-            question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
-            answer: answer.answer,
-            isLast: answer["embedded_question"] ? false : true
-        }
-
-        if (newAnswer.isLast) {
-            const answeredQuestionsCopy = [...answeredQuestions];
-            answeredQuestionsCopy[selectedQuestion] = true;
-            setAnsweredQuestions(answeredQuestionsCopy);
-        }
+        const currentAnswer = getCurrentAnswer();
+        
+        const newAnswer = getNewAnswer(answer);
+        
+        checkIfQuestionIsComplete(newAnswer);
 
         fillStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
+        
+        updateAnswers(currentAnswer);
 
-        const updatedAnswers = answers;
-        updatedAnswers[selectedQuestion] = currentAnswer;
-
-        setAnswers(updatedAnswers);
-
-        let allQuestionsAnswered = true;
-
-        for(qa of answeredQuestions) {
-            if (!qa) {
-                allQuestionsAnswered = false;
-            }
-        }
+        const allQuestionsAnswered = isQuestionaryComplete();
 
         if (selectedQuestion + 1 !== questionList.length && !allQuestionsAnswered) {
             if (shownEmbeddedQuestionIdx + 1 === questionList[selectedQuestion].length) {
@@ -91,8 +80,10 @@ export const Questionary = ({ navigation }) => {
             }
 
         } else {
+            
             for (let i = 0; i < answeredQuestions.length; i++) {
                 if (!answeredQuestions[i]) {
+                    showNotification();
                     setSelectedQuestion(i);
                     setShownEmbeddedQuestionIdx(0);
                     setShownAnswers(questionList[i][0].answers)
@@ -103,6 +94,62 @@ export const Questionary = ({ navigation }) => {
         }
     }
 
+    const getNewAnswer = (answer) => {
+        return {
+            question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
+            answer: answer.answer,
+            isLast: answer["embedded_question"] ? false : true
+        }
+    }
+
+    const getCurrentAnswer = () => {
+        let currentAnswer = answers[selectedQuestion];
+
+        if (Object.keys(currentAnswer).length === 0) {
+            currentAnswer = createEmptyStructure(questionList[selectedQuestion].length)
+        }
+
+        return currentAnswer;
+    }
+
+    const checkIfQuestionIsComplete = (answer) => {
+        if (answer.isLast) {
+            const answeredQuestionsCopy = [...answeredQuestions];
+            answeredQuestionsCopy[selectedQuestion] = true;
+            setAnsweredQuestions(answeredQuestionsCopy);
+        }
+    }
+
+    const updateAnswers = (answer) => {
+
+        const updatedAnswers = answers;
+        updatedAnswers[selectedQuestion] = answer;
+        setAnswers(updatedAnswers);
+    }
+
+    const isQuestionaryComplete = () => {
+
+        for (qa of answeredQuestions) {
+            if (!qa) {
+                return false
+            }
+        }
+
+        return true;
+    }
+
+    const updateScreenInfo = (selectedQuestionIdx, shownEmbeddedQstIdx, shownAnswersValue) => {
+        shownEmbeddedQstIdx && setShownEmbeddedQuestionIdx(shownEmbeddedQstIdx);
+        shownAnswersValue && setShownAnswers(shownAnswersValue);
+        selectedQuestionIdx && setSelectedQuestion(selectedQuestionIdx);
+    }
+
+    const markEmbeddedQuestionAsShown = (index) => {
+        const questionListCopy = [...questionList];
+        questionListCopy[selectedQuestion][index].shown = true;
+        setQuestionList(questionListCopy);
+    }
+
     function extractEmbeddedQuestions(quest, parentAnswer = null) {
         const result = [];
 
@@ -110,6 +157,7 @@ export const Questionary = ({ navigation }) => {
             result.push({
                 embedded_question: quest.question,
                 help: quest.help,
+                type: quest.type,
                 associatedAnswer: parentAnswer,
                 answers: quest.answers,
                 shown: false,
@@ -169,6 +217,15 @@ export const Questionary = ({ navigation }) => {
         return false;
     }
 
+    const handleFinalize = () => {
+        if (isQuestionaryComplete()) {
+            navigation.navigate("Dashboard");
+        }
+        else
+        {
+            showNotification();
+        }
+    }
 
     React.useEffect(() => {
         const qlist = []
@@ -192,28 +249,35 @@ export const Questionary = ({ navigation }) => {
         }
 
         setAnswers(auxArray);
-        
+
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={() => console.log(JSON.stringify(answers))}>
+                <TouchableOpacity onPress={handleFinalize}>
                     <Text style={{ fontFamily: "PoppinsRegular", fontSize: 15 }}>Finalizar</Text>
                 </TouchableOpacity>
             )
         })
-        
+
     }, [])
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+            <NotificationModal
+                visible={notification}
+                onRequestClose={() => setNotification(!notification)}
+                onPress={() => setNotification(!notification)}
+                message={"Aún tiene preguntas pendientes por responder. Por favor, respondalas para poder continuar"}
+            />
             <View style={{ flex: 1 }}>
                 <ScrollView style={styles.questionsContainer} horizontal showsHorizontalScrollIndicator={false}>
                     {questions.map((question, index) => {
                         if (index + 1 !== questions.length) {
-                            return (<TouchableOpacity style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)} key={index}>
+                            return (<TouchableOpacity key={index} style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)}>
                                 <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
                         } else {
-                            return (<TouchableOpacity style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : [styles.questionButton, { marginRight: 15 }]} onPress={() => handleQuestionSelection(index)} key={index}>
+                            return (<TouchableOpacity key={index} style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : [styles.questionButton, { marginRight: 15 }]} onPress={() => handleQuestionSelection(index)}>
                                 <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
                         }
@@ -247,9 +311,9 @@ export const Questionary = ({ navigation }) => {
                                     questionList[selectedQuestion].map((elem, index) => {
                                         if (elem.shown) {
                                             if (shownEmbeddedQuestionIdx === index) {
-                                                return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={[styles.miniButtons, { backgroundColor: "#00A6B0", borderWidth: 0 }]} />
+                                                return <TouchableOpacity key={index} onPress={() => handleMiniButtonPress(index)} style={[styles.miniButtons, { backgroundColor: "#00A6B0", borderWidth: 0 }]} />
                                             } else {
-                                                return <TouchableOpacity onPress={() => handleMiniButtonPress(index)} style={styles.miniButtons} />
+                                                return <TouchableOpacity key={index} onPress={() => handleMiniButtonPress(index)} style={styles.miniButtons} />
                                             }
                                         }
                                     })
