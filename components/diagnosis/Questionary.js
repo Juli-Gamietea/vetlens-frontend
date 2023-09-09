@@ -1,9 +1,12 @@
-import { Text, StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, ScrollView, View, TouchableOpacity, Modal } from "react-native";
 import { questions } from "./Questions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import { NotificationModal } from "../common/NotificationModal";
+import DatePicker from "react-native-modern-datepicker";
+import { getFormatedDate } from "react-native-modern-datepicker";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 export const Questionary = ({ navigation }) => {
 
@@ -14,6 +17,30 @@ export const Questionary = ({ navigation }) => {
     const [answeredQuestions, setAnsweredQuestions] = React.useState([]);
     const [shownEmbeddedQuestionIdx, setShownEmbeddedQuestionIdx] = React.useState(0);
     const [notification, setNotification] = React.useState(false);
+    const [openStartDatePicker, setOpenStartDatePicker] = React.useState(false);
+
+
+    const startDate = getFormatedDate(
+        "2000/01/01", "YYYY-MM-DD"
+    );
+
+    const [selectedStartDate, setSelectedStartDate] = React.useState("Fecha");
+    const [startedDate, setStartedDate] = React.useState("12/12/2023");
+    const [isDateValid, setIsDateValid] = React.useState(true)
+
+    function handleChangeStartDate(propDate) {
+        setStartedDate(propDate);
+    }
+
+    const handleOnPressStartDate = () => {
+        setOpenStartDatePicker(!openStartDatePicker);
+    };
+
+    const changeDate = (date) => {
+        setIsDateValid(true)
+        setSelectedStartDate(date)
+    }
+
 
     const handleQuestionSelection = (selectedQuestion) => {
         setShownEmbeddedQuestionIdx(0);
@@ -37,13 +64,13 @@ export const Questionary = ({ navigation }) => {
     const handleAnswer = (index, answer) => {
 
         const currentAnswer = getCurrentAnswer();
-        
+
         const newAnswer = getNewAnswer(answer);
-        
+
         checkIfQuestionIsComplete(newAnswer);
 
         fillStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
-        
+
         updateAnswers(currentAnswer);
 
         const allQuestionsAnswered = isQuestionaryComplete();
@@ -60,9 +87,8 @@ export const Questionary = ({ navigation }) => {
 
                         if (answer["embedded_question"].question === questionList[selectedQuestion][i]["embedded_question"] &&
                             answer.answer === questionList[selectedQuestion][i].associatedAnswer) {
-                            const questionListCopy = [...questionList];
-                            questionListCopy[selectedQuestion][i].shown = true;
-                            setQuestionList(questionListCopy);
+
+                            markEmbeddedQuestionAsShown(i);
                             setShownAnswers(questionList[selectedQuestion][i].answers)
                             setShownEmbeddedQuestionIdx(i);
 
@@ -80,7 +106,7 @@ export const Questionary = ({ navigation }) => {
             }
 
         } else {
-            
+
             for (let i = 0; i < answeredQuestions.length; i++) {
                 if (!answeredQuestions[i]) {
                     showNotification();
@@ -92,6 +118,35 @@ export const Questionary = ({ navigation }) => {
             }
 
         }
+
+    }
+
+    const handleMultiAnswer = (index, answer, isSelected) => {
+
+        const currentAnswer = getCurrentAnswer();
+
+        if (!isSelected) {
+
+            const newAnswer = getNewAnswer(answer);
+
+            checkIfQuestionIsComplete(newAnswer);
+
+            fillMultiStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
+
+        } else {
+
+            deleteSelectedOption(currentAnswer, answer.answer, shownEmbeddedQuestionIdx);
+
+            if (currentAnswer.answers.length === 1) {
+                const answeredQuestionsCopy = [...answeredQuestions];
+                answeredQuestionsCopy[selectedQuestion] = false;
+                setAnsweredQuestions(answeredQuestionsCopy);
+            }
+            setShownAnswers([...shownAnswers])
+
+        }
+
+        updateAnswers(currentAnswer);
     }
 
     const getNewAnswer = (answer) => {
@@ -129,19 +184,17 @@ export const Questionary = ({ navigation }) => {
 
     const isQuestionaryComplete = () => {
 
-        for (qa of answeredQuestions) {
-            if (!qa) {
-                return false
+        if (answeredQuestions.length > 0) {
+            for (qa of answeredQuestions) {
+                if (!qa) {
+                    return false
+                }
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    const updateScreenInfo = (selectedQuestionIdx, shownEmbeddedQstIdx, shownAnswersValue) => {
-        shownEmbeddedQstIdx && setShownEmbeddedQuestionIdx(shownEmbeddedQstIdx);
-        shownAnswersValue && setShownAnswers(shownAnswersValue);
-        selectedQuestionIdx && setSelectedQuestion(selectedQuestionIdx);
+        return false;
     }
 
     const markEmbeddedQuestionAsShown = (index) => {
@@ -193,7 +246,7 @@ export const Questionary = ({ navigation }) => {
 
     const fillStructure = (obj, data, currentLevel) => {
         if (currentLevel === 0) {
-            // Fill the data at the specified level
+
             obj.question = data.question;
             obj.answers[0].answer = data.answer;
             return;
@@ -204,25 +257,77 @@ export const Questionary = ({ navigation }) => {
         }
     }
 
-    const questionIsAnswered = (obj, level, targetAnswer) => {
+    const fillMultiStructure = (obj, data, currentLevel) => {
+        if (currentLevel === 0) {
+            obj.question = data.question;
+            obj.answers.push({ answer: data.answer });
 
-        if (level === 0) {
-            return obj.answers[0].answer === targetAnswer;
+            return;
         }
 
-        if (obj["answers"][0]["embedded_question"]) {
-            return questionIsAnswered(obj["answers"][0]["embedded_question"], level - 1, targetAnswer);
+        if (data.answer) {
+            fillStructure(obj.answers[0].embedded_question, data, currentLevel - 1);
+        }
+    }
+
+    const questionIsAnswered = (obj, level, targetAnswer, isMulti = false) => {
+
+        if (!isMulti) {
+
+            if (level === 0) {
+                return obj.answers[0].answer === targetAnswer;
+            }
+
+            if (obj["answers"][0]["embedded_question"]) {
+                return questionIsAnswered(obj["answers"][0]["embedded_question"], level - 1, targetAnswer);
+            }
+
+            return false;
+
+        } else {
+
+            if (level === 0) {
+
+                for (ans of obj.answers) {
+
+                    if (ans.answer === targetAnswer) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            if (obj["answers"][0]["embedded_question"]) {
+                return questionIsAnswered(obj["answers"][0]["embedded_question"], level - 1, targetAnswer);
+            }
+
+            return false;
+        }
+    }
+
+    const deleteSelectedOption = (obj, targetAnswer, currentLevel) => {
+        if (currentLevel === 0) {
+
+            for (let i = 0; i < obj.answers.length; i++) {
+                if (obj.answers[i].answer === targetAnswer) {
+                    obj.answers.splice(i, 1);
+                }
+            }
+            return;
         }
 
-        return false;
+        if (data.answer) {
+            fillStructure(obj.answers[0].embedded_question, targetAnswer, currentLevel - 1);
+        }
     }
 
     const handleFinalize = () => {
+
         if (isQuestionaryComplete()) {
             navigation.navigate("Dashboard");
         }
-        else
-        {
+        else {
             showNotification();
         }
     }
@@ -269,11 +374,40 @@ export const Questionary = ({ navigation }) => {
                 onPress={() => setNotification(!notification)}
                 message={"Aún tiene preguntas pendientes por responder. Por favor, respondalas para poder continuar"}
             />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={openStartDatePicker}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <DatePicker
+                            mode="calendar"
+                            minimumDate={startDate}
+                            selected={startedDate}
+                            onDateChanged={handleChangeStartDate}
+                            onSelectedChange={(date) => changeDate(date)}
+                            options={{
+                                backgroundColor: "#080516",
+                                textHeaderColor: "#00A6B0",
+                                textDefaultColor: "#FFFFFF",
+                                selectedTextColor: "#FFF",
+                                mainColor: "#00A6B0",
+                                textSecondaryColor: "#FFFFFF",
+                                borderColor: "rgba(122, 146, 165, 0.1)",
+                            }}
+                        />
+                        <TouchableOpacity onPress={handleOnPressStartDate}>
+                            <Text style={{ color: "white" }}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
             <View style={{ flex: 1 }}>
                 <ScrollView style={styles.questionsContainer} horizontal showsHorizontalScrollIndicator={false}>
                     {questions.map((question, index) => {
                         if (index + 1 !== questions.length) {
-                            return (<TouchableOpacity key={index} style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.completedQuestion : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)}>
+                            return (<TouchableOpacity key={index} style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.selectedQuestionButton : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)}>
                                 <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
                         } else {
@@ -293,15 +427,39 @@ export const Questionary = ({ navigation }) => {
                     </View>
                     <View>
                         {shownAnswers.map((answer, index) => {
+
                             let filled = false;
 
-                            if (Object.keys(answers[selectedQuestion]).length > 0) {
-                                filled = questionIsAnswered(answers[selectedQuestion], shownEmbeddedQuestionIdx, answer.answer)
+                            switch (questionList[selectedQuestion][shownEmbeddedQuestionIdx].type) {
+                                case "single":
+                                    if (Object.keys(answers[selectedQuestion]).length > 0) {
+                                        filled = questionIsAnswered(answers[selectedQuestion], shownEmbeddedQuestionIdx, answer.answer)
+                                    }
+                                    return (
+                                        <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={filled} style={styles.answers} />
+                                    )
+                                case "multi":
+                                    if (Object.keys(answers[selectedQuestion]).length > 0) {
+                                        filled = questionIsAnswered(answers[selectedQuestion], shownEmbeddedQuestionIdx, answer.answer, true)
+                                    }
+                                    return (
+                                        <ButtonVetLens key={index} callback={() => { handleMultiAnswer(index, answer, filled) }} text={answer.answer} filled={filled} style={styles.answers} />
+                                    )
+                                case "date":
+                                    return (<View style={styles.formContainerItemDate}>
+                                        <TouchableOpacity
+                                            style={isDateValid ? styles.dateInput : styles.dateInputInvalid}
+                                            onPress={handleOnPressStartDate}
+                                        >
+                                            <Text> {selectedStartDate} </Text>
+                                            <FontAwesome5 name="calendar-alt" size={20} color={isDateValid ? "#00A6B0" : "#FF6D6D"} />
+                                        </TouchableOpacity>
+                                        {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
+                                    </View>)
+
+
                             }
 
-                            return (
-                                <ButtonVetLens key={index} callback={() => handleAnswer(index, answer)} text={answer.answer} filled={filled} style={styles.answers} />
-                            )
                         })}
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 30, height: 15 }}>
@@ -403,5 +561,75 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         borderRadius: 50,
         marginHorizontal: 3
+    },
+    formContainerItemDate: {
+        flex: 1,
+        width: '45%',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        marginVertical: 20,
+        alignSelf: 'center'
+    },
+    dateInputText: {
+        fontFamily: "PoppinsBold",
+        fontSize: 15,
+        color: '#00767D'
+    },
+    dateInput: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: "#F1F0F0",
+        borderRadius: 10,
+        borderColor: "#00A6B0",
+        borderWidth: 2,
+        fontFamily: 'PoppinsRegular',
+        fontSize: 14,
+        padding: 15,
+        textAlign: "left"
+    },
+    dateInputInvalid: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: "#F1F0F0",
+        borderRadius: 10,
+        borderColor: "#FF6D6D",
+        borderWidth: 2,
+        fontFamily: 'PoppinsRegular',
+        fontSize: 14,
+        padding: 15,
+        textAlign: "left"
+    },
+    error: {
+        color: "#FF6D6D",
+        fontFamily: 'PoppinsSemiBold',
+        marginLeft: 10,
+        fontSize: 14
+    },
+    centeredView: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "#080516",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 20,
+        padding: 35,
+        width: "90%",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     }
+
 })

@@ -25,7 +25,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -33,7 +34,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -51,10 +53,13 @@ export const questions = [
                     "question": "¿Cuando fue la fecha de la última vacunación?",
                     "help": null,
                     "answers": [
-                        {"answer": "",
-                        "embedded_question": null
-                    }
-                    ]
+                        {
+                            "answer": "",
+                            "help": null,
+                            "embedded_question": null
+                        }
+                    ],
+                    "type": "date"
                 }
             },
             {
@@ -62,7 +67,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -95,7 +101,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -103,7 +110,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -136,7 +144,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -144,7 +153,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -177,7 +187,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -185,7 +196,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -210,7 +222,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -218,7 +231,7 @@ export const questions = [
             "date": "2023-07-25T23:49:27.000+00:00"
         },
         "question": "¿Cuál/es de las siguientes enfermedades tuvo su perro?",
-        "help": null,
+        "help": "Puede seleccionar más de una",
         "answers": [
             {
                 "answer": "Otitis",
@@ -246,16 +259,12 @@ export const questions = [
                 "embedded_question": null
             },
             {
-                "answer": "Alergias a medicamentos",
-                "help": null,
-                "embedded_question": null
-            },
-            {
                 "answer": "Parásitos",
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "multi"
     },
     {
         "id": {
@@ -275,7 +284,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -311,7 +321,8 @@ export const questions = [
                                         "help": null,
                                         "embedded_question": null
                                     }
-                                ]
+                                ],
+                                "type": "single"
                             }
                         },
                         {
@@ -319,7 +330,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -340,7 +352,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -358,7 +371,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -378,7 +392,8 @@ export const questions = [
                 "help": "El cambio de un día a otro es mínimo",
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -403,7 +418,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -433,7 +449,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -463,7 +480,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -493,7 +511,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -513,7 +532,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -546,7 +566,8 @@ export const questions = [
                             "help": null,
                             "embedded_question": null
                         }
-                    ]
+                    ],
+                    "type": "single"
                 }
             },
             {
@@ -554,7 +575,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -574,7 +596,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -594,7 +617,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -614,7 +638,8 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     },
     {
         "id": {
@@ -634,6 +659,7 @@ export const questions = [
                 "help": null,
                 "embedded_question": null
             }
-        ]
+        ],
+        "type": "single"
     }
 ]
