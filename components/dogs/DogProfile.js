@@ -14,9 +14,10 @@ import { callBackendAPI } from "../../utils/CommonFunctions";
 import * as SecureStore from 'expo-secure-store';
 
 export const DogProfile = ({ route, navigation }) => {
-    
-    const [image, setImage] = useState();
+
     const { action, dog } = route.params;
+
+    const [image, setImage] = useState();
     const [currentImage, setCurrentImage] = useState()
     const [imageChange, setImageChange] = useState(false)
     const [sex, setSex] = useState('MALE');
@@ -28,8 +29,14 @@ export const DogProfile = ({ route, navigation }) => {
         } = dogProfile;
 
     React.useEffect(() => {
-        if( action !== 'add') {
+        if (action !== 'add') {
+            console.log(dog)
             setCurrentImage(dog.photoUrl)
+            dogProfileDispatch({type: "fieldUpdate", field: "name", value: dog.name})
+            dogProfileDispatch({type: "fieldUpdate", field: "dogBreed", value: dog.dog_breed})
+            setSex(dog.sex)
+            setCastrated(dog.is_castrated)
+            setSelectedStartDate(dog.date_of_birth)
         } else {
             setCurrentImage(vetlenslogo)
         }
@@ -50,7 +57,9 @@ export const DogProfile = ({ route, navigation }) => {
     }
 
     const handleOnPressStartDate = () => {
-        setOpenStartDatePicker(!openStartDatePicker);
+        if (action !== 'view') {
+            setOpenStartDatePicker(!openStartDatePicker);
+        }
     };
 
     const changeDate = (date) => {
@@ -77,7 +86,7 @@ export const DogProfile = ({ route, navigation }) => {
 
     function formatDate (input) {
         var datePart = input.match(/\d+/g),
-        year = datePart[0].substring(2), // get only two digits
+        year = datePart[0].substring(2),
         month = datePart[1], day = datePart[2];
       
         return day+'-'+month+'-20'+year;
@@ -109,30 +118,45 @@ export const DogProfile = ({ route, navigation }) => {
     }
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [3, 3],
-            quality: 1,
-        });  
+        if (action !== 'view') {
+            // No permissions request is necessary for launching the image library
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [3, 3],
+                quality: 1,
+            });  
 
-        if (!result.canceled) {
-            const aux = result.uri
-            setCurrentImage(result.uri);
-            setImageChange(true)
-            const data = new FormData();
-            const getType = aux.split(".");
-            const getFileName = aux.split("/");
-            data.append('image', {
-                uri: aux,
-                type: `image/${getType[getType.length - 1]}`,
-                name: getFileName[getFileName.length - 1]
-            });
-            
-            setImage(data)
+            if (!result.canceled) {
+                const aux = result.uri
+                setCurrentImage(result.uri);
+                setImageChange(true)
+                const data = new FormData();
+                const getType = aux.split(".");
+                const getFileName = aux.split("/");
+                data.append('image', {
+                    uri: aux,
+                    type: `image/${getType[getType.length - 1]}`,
+                    name: getFileName[getFileName.length - 1]
+                });
+                
+                setImage(data)
+            }
         }
     }
+
+    const changeSex = (value) => {
+        if (action !== 'view') {
+            setSex(value)
+        }
+    }
+
+    const changeCastrated = (value) => {
+        if (action !== 'view') {
+            setCastrated(value)
+        }
+    }
+
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView>
@@ -145,6 +169,7 @@ export const DogProfile = ({ route, navigation }) => {
                     <View style={styles.formContainerItem}>
                         <Text style={styles.inputTitle}> Nombre </Text>
                         <InputVetlens
+                            editable={(action === 'view') ? false : true}
                             placeholder='Nombre'
                             onChange={(text) => dogProfileDispatch({
                                 type: "fieldUpdate",
@@ -160,6 +185,7 @@ export const DogProfile = ({ route, navigation }) => {
                     <View style={styles.formContainerItem}>
                         <Text style={styles.inputTitle}> Raza </Text>
                         <InputVetlens
+                            editable={(action === 'view') ? false : true}
                             placeholder='Raza'
                             onChange={(text) => dogProfileDispatch({
                                 type: "fieldUpdate",
@@ -178,7 +204,7 @@ export const DogProfile = ({ route, navigation }) => {
                             <RadioButtonGroup
                                 containerStyle={styles.formContainerRadioButtons}
                                 selected={sex}
-                                onSelected={(value) => setSex(value)}
+                                onSelected={(value) => changeSex(value)}
                                 radioBackground="#00A6B0"
                             >
                                 
@@ -191,7 +217,7 @@ export const DogProfile = ({ route, navigation }) => {
                             <RadioButtonGroup
                                 containerStyle={styles.formContainerRadioButtons}
                                 selected={castrated}
-                                onSelected={(value) => setCastrated(value)}
+                                onSelected={(value) => changeCastrated(value)}
                                 radioBackground="#00A6B0"
                             >
                                 <RadioButtonItem value={true} label={<Text style={styles.radioButtonText}>Si</Text>}/>
@@ -240,15 +266,13 @@ export const DogProfile = ({ route, navigation }) => {
                             </View>
                         </View>
                     </Modal>
+                    {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
                     {
-                        (action === 'view')
-                        ? <></>
-                        : 
-                        <>
+                        (action !== 'view') 
+                        && 
                         <View style={styles.formContainerItem2}>
                             <ButtonVetLens callback={processForm} text={(action === 'add') ? "Agregar" : "Editar"} filled={true} />
                         </View>
-                        </>
                     }
                 </View>
             </SafeAreaView>

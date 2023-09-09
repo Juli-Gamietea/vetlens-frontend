@@ -1,7 +1,7 @@
 import { View, TextInput, StyleSheet, Text } from "react-native";
 import React from "react";
 
-export const InputVetlens = ({placeholder, onChange, value, passwrd, isValid, errorMessage, style, multiline, keyboardType, maxLength }) => {
+export const InputVetlens = ({placeholder, onChange, value, passwrd, isValid, errorMessage, style, multiline, keyboardType, maxLength, editable }) => {
     const color = isValid ? "#00A6B0" : "#FF6D6D";
 
     const styles = StyleSheet.create(
@@ -31,6 +31,7 @@ export const InputVetlens = ({placeholder, onChange, value, passwrd, isValid, er
         return(
             <View style = {styles.container}>
                 <TextInput
+                    editable = {editable}
                     style={[styles.input, style]}
                     onChangeText={onChange}
                     value={value}
