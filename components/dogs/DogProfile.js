@@ -14,9 +14,11 @@ import { callBackendAPI } from "../../utils/CommonFunctions";
 import * as SecureStore from 'expo-secure-store';
 
 export const DogProfile = ({ route, navigation }) => {
-
+    
+    const [image, setImage] = useState();
     const { action, dog } = route.params;
     const [currentImage, setCurrentImage] = useState()
+    const [imageChange, setImageChange] = useState(false)
     const [sex, setSex] = useState('MALE');
     const [castrated, setCastrated] = useState(true)
     const [dogProfile, dogProfileDispatch] = React.useReducer(dogProfileReducer, initialState);
@@ -36,10 +38,8 @@ export const DogProfile = ({ route, navigation }) => {
     
     //DatePicker props & functions
     const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-    const today = new Date();
-    const startDate = getFormatedDate(
-        today.setDate(today.getDate() + 1),
-        "YYYY/MM/DD"
+    const startDate = getFormatedDate( 
+        "2000/01/01", "YYYY-MM-DD"
     );
     const [selectedStartDate, setSelectedStartDate] = useState("Fecha");
     const [startedDate, setStartedDate] = useState("12/12/2023");
@@ -75,20 +75,36 @@ export const DogProfile = ({ route, navigation }) => {
         }
     }
 
+    function formatDate (input) {
+        var datePart = input.match(/\d+/g),
+        year = datePart[0].substring(2), // get only two digits
+        month = datePart[1], day = datePart[2];
+      
+        return day+'-'+month+'-20'+year;
+    }
+
     const processForm = async () => {
         console.log("ENTRE")
+        let dogId; 
         if (areInputsValid()) {
-            const storedUsername = await SecureStore.getItemAsync('username');
-            const data = {
-                name: name,
-                dog_breed: dogBreed,
-                date_of_birth: selectedStartDate,
-                owner_username: storedUsername,
-                sex: sex,
-                is_castrated: castrated
+            try{
+                const storedUsername = await SecureStore.getItemAsync('username');
+                const data = {
+                    name: name,
+                    dog_breed: dogBreed,
+                    date_of_birth: formatDate(selectedStartDate),
+                    owner_username: storedUsername,
+                    sex: sex,
+                    is_castrated: castrated
+                }
+                const result = await callBackendAPI("/users/dog/add", "POST", data)
+                dogId = result.data.id;
+                await callBackendAPI(`/users/dog/photo/${dogId}`, "PUT", image, {}, 'multipart/form-data')
+            } catch (error) {
+                console.log(error)
             }
-            console.log(data)
-            //await callBackendAPI("/users/dogs/add", "POST", data)
+            
+            
         }
     }
 
@@ -97,33 +113,32 @@ export const DogProfile = ({ route, navigation }) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [3, 3],
             quality: 1,
         });  
-        
-        if (!result.canceled) {
-            setCurrentImage(result.uri)
-            const getFileName = result.uri.split("/");
-            const getExtension = result.uri.split(".");
-            dogProfileDispatch({
-                type: "fieldUpdate",
-                field: "photo",
-                value: {
-                    uri: result.uri,
-                    type: 'image/' + getExtension[getExtension.length - 1],
-                    name: getFileName[getFileName.length - 1]
-                }
-            })
 
+        if (!result.canceled) {
+            const aux = result.uri
+            setCurrentImage(result.uri);
+            setImageChange(true)
+            const data = new FormData();
+            const getType = aux.split(".");
+            const getFileName = aux.split("/");
+            data.append('image', {
+                uri: aux,
+                type: `image/${getType[getType.length - 1]}`,
+                name: getFileName[getFileName.length - 1]
+            });
+            
+            setImage(data)
         }
-        console.log(result)
     }
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView>
                 <View style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage}>
-                        <Image source={(action !== 'add') ?  {uri:currentImage} : currentImage } style={styles.imageProfile} />  
+                        <Image source={(action === 'add' && !imageChange) ?  currentImage : {uri:currentImage} } style={styles.imageProfile} />  
                     </TouchableOpacity>
                 </View>
                 <View style={styles.formContainer}>
