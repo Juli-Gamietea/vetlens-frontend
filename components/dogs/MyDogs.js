@@ -56,7 +56,7 @@ export const MyDogs = ({ navigation }) => {
 
     const goDogProfile = (index, type) => {
         setCurrentDog(dogs[index])
-        navigation.navigate("DogProfile", {action: type, dog:currentDog})
+        navigation.navigate("DogProfile", {action: type, dog:dogs[index]})
     }
 
     const addDog = () => {

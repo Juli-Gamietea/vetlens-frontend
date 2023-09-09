@@ -1,13 +1,10 @@
 export const initialState = {
     name: "",
     dogBreed: "",
-    birthDate:"",
     isNameValid: true,
     isDogBreedValid: true,
-    isBirthDateValid: true,
     nameErrorMessage: "",
-    dogBreedErrorMessage: "",
-    birthDateErrorMessage: ""
+    dogBreedErrorMessage: ""
 }
 
 export function dogProfileReducer (state = initialState, action) {
@@ -17,8 +14,7 @@ export function dogProfileReducer (state = initialState, action) {
                 ...state,
                 [action.field]: action.value,
                 isNameValid: true,
-                isDogBreedValid: true,
-                isBirthDateValid: true
+                isDogBreedValid: true
             };
         case "nameError":
             return {
@@ -32,12 +28,7 @@ export function dogProfileReducer (state = initialState, action) {
                 isDogBreedValid: false,
                 dogBreedErrorMessage: action.error
             };
-        case "birthDateError":
-            return {
-                ...state,
-                isBirthDateValid: false,
-                birthDateErrorMessage: action.error
-            };
+       
         case "reset":
             return initialState;
         default:

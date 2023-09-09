@@ -20,7 +20,7 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
         },
       }
     } else {
-      const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqZ2FtaWV0ZWEiLCJpYXQiOjE2OTQwNDkyNTQsImV4cCI6MTY5NDEzNTY1NH0.hkI1Y6feQUiLj47rYXPt2U-bN24xpJ1YBzyBD1MFFLs";
+      const token = await getToken();
       config = {
         method: method,
         url: `${API_URL}${url}`,
