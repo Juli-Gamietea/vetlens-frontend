@@ -6,7 +6,8 @@ import { ButtonVetLens } from "../common/ButtonVetLens";
 import { NotificationModal } from "../common/NotificationModal";
 import DatePicker from "react-native-modern-datepicker";
 import { getFormatedDate } from "react-native-modern-datepicker";
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons';
+import { callBackendAPI } from '../../utils/CommonFunctions';
 
 export const Questionary = ({ navigation }) => {
 
@@ -17,28 +18,44 @@ export const Questionary = ({ navigation }) => {
     const [answeredQuestions, setAnsweredQuestions] = React.useState([]);
     const [shownEmbeddedQuestionIdx, setShownEmbeddedQuestionIdx] = React.useState(0);
     const [notification, setNotification] = React.useState(false);
-    const [openStartDatePicker, setOpenStartDatePicker] = React.useState(false);
+    const [openDatePicker, setOpenDatePicker] = React.useState(false);
 
 
     const startDate = getFormatedDate(
-        "2000/01/01", "YYYY-MM-DD"
+        "01/01/2000", "DD-MM-YYYY"
     );
 
-    const [selectedStartDate, setSelectedStartDate] = React.useState("Fecha");
-    const [startedDate, setStartedDate] = React.useState("12/12/2023");
+
+    navigation.setOptions({
+        headerRight: () => (
+            <TouchableOpacity onPress={() => handleFinalize()}>
+                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 15 }}>Finalizar</Text>
+            </TouchableOpacity>
+        )
+    })
+
+    const [selectedDate, setSelectedDate] = React.useState("Fecha");
+    const [initialDate, setInitialDate] = React.useState("12/12/2023");
     const [isDateValid, setIsDateValid] = React.useState(true)
 
-    function handleChangeStartDate(propDate) {
-        setStartedDate(propDate);
+    function handleChangeInitialDate(propDate) {
+        setInitialDate(propDate);
     }
 
-    const handleOnPressStartDate = () => {
-        setOpenStartDatePicker(!openStartDatePicker);
+    const handleOnPressCloseDatePicker = () => {
+        if (openDatePicker) {
+            handleDateAnswer(selectedDate);
+        }
+        setOpenDatePicker(!openDatePicker);
     };
 
     const changeDate = (date) => {
         setIsDateValid(true)
-        setSelectedStartDate(date)
+        const splitDate = date.split("/");
+        const parsedDate = `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
+
+        setSelectedDate(parsedDate);
+
     }
 
 
@@ -109,7 +126,6 @@ export const Questionary = ({ navigation }) => {
 
             for (let i = 0; i < answeredQuestions.length; i++) {
                 if (!answeredQuestions[i]) {
-                    showNotification();
                     setSelectedQuestion(i);
                     setShownEmbeddedQuestionIdx(0);
                     setShownAnswers(questionList[i][0].answers)
@@ -148,6 +164,26 @@ export const Questionary = ({ navigation }) => {
 
         updateAnswers(currentAnswer);
     }
+
+    const handleDateAnswer = (date) => {
+
+        const currentAnswer = getCurrentAnswer();
+
+        const newAnswer = {
+            question: questionList[selectedQuestion][shownEmbeddedQuestionIdx]["embedded_question"],
+            answer: date,
+            isLast: questionList[selectedQuestion][shownEmbeddedQuestionIdx].answers[0]["embedded_question"] ? false : true
+        }
+
+
+        checkIfQuestionIsComplete(newAnswer);
+
+        fillStructure(currentAnswer, newAnswer, shownEmbeddedQuestionIdx);
+
+        updateAnswers(currentAnswer);
+
+    }
+
 
     const getNewAnswer = (answer) => {
         return {
@@ -333,35 +369,41 @@ export const Questionary = ({ navigation }) => {
     }
 
     React.useEffect(() => {
-        const qlist = []
-        const auxList = []
-        for (q of questions) {
-            qlist.push(extractEmbeddedQuestions(q));
-            auxList.push(false);
+        const getQuestions = async () => {
+
+            try {
+                const qlist = []
+                const auxList = []
+
+                const res = await callBackendAPI("/diagnosis", 'GET');
+
+                for (q of res.data) {
+                    qlist.push(extractEmbeddedQuestions(q));
+                    auxList.push(false);
+                }
+                for (q of qlist) {
+                    q[0].shown = true;
+                }
+
+
+                setQuestionList(qlist);
+                setAnsweredQuestions(auxList);
+                setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
+
+                const auxArray = [];
+                for (let i = 0; i < qlist.length; i++) {
+                    auxArray.push({});
+                }
+
+                setAnswers(auxArray);
+
+                
+            }
+            catch (error) {
+                console.log(error.response);
+            }
         }
-        for (q of qlist) {
-            q[0].shown = true;
-        }
-
-
-        setQuestionList(qlist);
-        setAnsweredQuestions(auxList);
-        setShownAnswers(qlist[selectedQuestion][shownEmbeddedQuestionIdx].answers);
-
-        const auxArray = [];
-        for (let i = 0; i < qlist.length; i++) {
-            auxArray.push({});
-        }
-
-        setAnswers(auxArray);
-
-        navigation.setOptions({
-            headerRight: () => (
-                <TouchableOpacity onPress={handleFinalize}>
-                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 15 }}>Finalizar</Text>
-                </TouchableOpacity>
-            )
-        })
+        getQuestions();
 
     }, [])
 
@@ -377,15 +419,15 @@ export const Questionary = ({ navigation }) => {
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={openStartDatePicker}
+                visible={openDatePicker}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <DatePicker
                             mode="calendar"
                             minimumDate={startDate}
-                            selected={startedDate}
-                            onDateChanged={handleChangeStartDate}
+                            selected={initialDate}
+                            onDateChanged={handleChangeInitialDate}
                             onSelectedChange={(date) => changeDate(date)}
                             options={{
                                 backgroundColor: "#080516",
@@ -397,7 +439,7 @@ export const Questionary = ({ navigation }) => {
                                 borderColor: "rgba(122, 146, 165, 0.1)",
                             }}
                         />
-                        <TouchableOpacity onPress={handleOnPressStartDate}>
+                        <TouchableOpacity onPress={handleOnPressCloseDatePicker}>
                             <Text style={{ color: "white" }}>Close</Text>
                         </TouchableOpacity>
                     </View>
@@ -405,8 +447,8 @@ export const Questionary = ({ navigation }) => {
             </Modal>
             <View style={{ flex: 1 }}>
                 <ScrollView style={styles.questionsContainer} horizontal showsHorizontalScrollIndicator={false}>
-                    {questions.map((question, index) => {
-                        if (index + 1 !== questions.length) {
+                    {questionList.length > 0 && questionList.map((question, index) => {
+                        if (index + 1 !== questionList.length) {
                             return (<TouchableOpacity key={index} style={((selectedQuestion === index) && answeredQuestions[index]) ? styles.selectedQuestionButton : (selectedQuestion === index) ? styles.selectedQuestionButton : answeredQuestions[index] ? styles.completedQuestion : styles.questionButton} onPress={() => handleQuestionSelection(index)}>
                                 <Text style={(selectedQuestion === index || answeredQuestions[index]) ? styles.selectedQuestionText : styles.questionText}>Preg. {index + 1}</Text>
                             </TouchableOpacity>)
@@ -446,16 +488,18 @@ export const Questionary = ({ navigation }) => {
                                         <ButtonVetLens key={index} callback={() => { handleMultiAnswer(index, answer, filled) }} text={answer.answer} filled={filled} style={styles.answers} />
                                     )
                                 case "date":
-                                    return (<View style={styles.formContainerItemDate}>
-                                        <TouchableOpacity
-                                            style={isDateValid ? styles.dateInput : styles.dateInputInvalid}
-                                            onPress={handleOnPressStartDate}
-                                        >
-                                            <Text> {selectedStartDate} </Text>
-                                            <FontAwesome5 name="calendar-alt" size={20} color={isDateValid ? "#00A6B0" : "#FF6D6D"} />
-                                        </TouchableOpacity>
-                                        {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
-                                    </View>)
+                                    return (
+                                        <View key={index} style={styles.formContainerItemDate}>
+                                            <TouchableOpacity
+                                                style={isDateValid ? styles.dateInput : styles.dateInputInvalid}
+                                                onPress={handleOnPressCloseDatePicker}
+                                            >
+                                                <FontAwesome5 name="calendar-alt" size={20} color={isDateValid ? "#00A6B0" : "#FF6D6D"} />
+                                                <Text> {selectedDate} </Text>
+                                            </TouchableOpacity>
+                                            {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
+                                        </View>
+                                    )
 
 
                             }
@@ -479,7 +523,6 @@ export const Questionary = ({ navigation }) => {
                             </>
                         }
                     </View>
-
                 </View>}
         </SafeAreaView>
     )
@@ -563,8 +606,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 3
     },
     formContainerItemDate: {
-        flex: 1,
-        width: '45%',
+        width: 200,
+        height: 60,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         marginVertical: 20,
