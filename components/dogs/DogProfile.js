@@ -53,7 +53,7 @@ export const DogProfile = ({ route, navigation }) => {
         "12/12/2023", "YYYY-MM-DD"
     ));
     const [isDateValid, setIsDateValid] = useState(true)
-
+    const [isDateChanged, setIsDateChanged] = useState(false)
     function handleChangeStartDate(propDate) {
         setStartedDate(propDate);
     }
@@ -66,10 +66,9 @@ export const DogProfile = ({ route, navigation }) => {
 
     const changeDate = (date) => {
         setIsDateValid(true)
+        setIsDateChanged(true)
         setSelectedStartDate(date)
     }
-
-    
 
     const areInputsValid = () => {
         if (name === "")
@@ -87,11 +86,14 @@ export const DogProfile = ({ route, navigation }) => {
     }
 
     function formatDate (input) {
-        var datePart = input.match(/\d+/g),
-        year = datePart[0].substring(2),
-        month = datePart[1], day = datePart[2];
-      
-        return day+'-'+month+'-20'+year;
+        if (isDateChanged) {
+            var datePart = input.match(/\d+/g),
+            year = datePart[0].substring(2),
+            month = datePart[1], day = datePart[2];
+            return day+'-'+month+'-20'+year;
+        } else {
+            return input;
+        }
     }
 
     const processForm = async () => {
