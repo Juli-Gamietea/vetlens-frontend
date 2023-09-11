@@ -40,6 +40,9 @@ export const Dashboard = ({ navigation }) => {
         initialSetup();
     }, [])
 
+    const startQuestionary = () => {
+        navigation.navigate("MyDogs", {action: "questionary"})
+    }
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>¡Bienvenido, {userData.name}!</Text>
@@ -80,7 +83,7 @@ export const Dashboard = ({ navigation }) => {
                 </View>
                 <Text style={[styles.subsectionText, {marginTop: 10}]}>¿Qué desea hacer?</Text>
                 <View style={styles.bigButtonsContainer}>
-                    <TouchableOpacity style={[styles.bigButton, { marginRight: 20 }]}>
+                    <TouchableOpacity onPress={()=> startQuestionary()} style={[styles.bigButton, { marginRight: 20 }]}>
                         <Text style={styles.bigButtonText}>Nuevo Cuestionario</Text>
                         <MaterialCommunityIcons name="clipboard-list-outline" size={80} color="#00A6B0" />
                     </TouchableOpacity>

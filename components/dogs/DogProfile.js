@@ -15,7 +15,7 @@ import * as SecureStore from 'expo-secure-store';
 
 export const DogProfile = ({ route, navigation }) => {
 
-    const { action, dog } = route.params;
+    const { action, dog, variant } = route.params;
 
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState();
@@ -121,8 +121,13 @@ export const DogProfile = ({ route, navigation }) => {
                 if (imageChange) {
                     await callBackendAPI(`/users/dog/photo/${dogId}`, "PUT", image, {}, 'multipart/form-data')
                 }
-
-                navigation.navigate('MyDogs', {action: 'mydogs'})
+                
+                if (variant === 'questionary') {
+                    navigation.navigate('Bobo', {dog: data})
+                } else {
+                    navigation.navigate('MyDogs', {action: 'mydogs'})
+                }
+                
                 
             } catch (error) {
                 setModalVisible(!modalVisible)

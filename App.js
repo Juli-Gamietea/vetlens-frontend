@@ -98,7 +98,7 @@ function TabsVet() {
       <Tab.Screen
         name="Dogs"
         component={MyDogs}
-        initialParams={{action: 'questionary'}}
+        initialParams={{action: 'mydogs'}}
         options={{
           tabBarLabel: 'Perros',
           tabBarIcon: ({ color }) => (

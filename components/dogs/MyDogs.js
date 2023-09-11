@@ -68,7 +68,7 @@ export const MyDogs = ({ route, navigation }) => {
     }
 
     const addDog = () => {
-        navigation.navigate("DogProfile", {action: 'add'})
+        navigation.navigate("DogProfile", {action: 'add', variant: action})
     }
 
     return (
