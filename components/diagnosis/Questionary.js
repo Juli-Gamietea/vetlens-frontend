@@ -1,5 +1,4 @@
 import { Text, StyleSheet, ScrollView, View, TouchableOpacity, Modal } from "react-native";
-import { questions } from "./Questions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from 'react';
 import { ButtonVetLens } from "../common/ButtonVetLens";
