@@ -7,14 +7,17 @@ import { ButtonVetLens } from "../common/ButtonVetLens";
 import * as SecureStore from 'expo-secure-store';
 import { callBackendAPI } from "../../utils/CommonFunctions";
 
-export const MyDogs = ({ navigation }) => {
-
+export const MyDogs = ({ route, navigation }) => {
+    const { action } = route.params;
     const [dogs, setDogs] = React.useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentDog, setCurrentDog] = useState();
     const [currentAction, setCurrentAction] = useState();
 
     React.useEffect(() => { 
+        if (action === 'questionary') {
+            setModalVisible(true)
+        }
         const getDogs = async () => {
             try {
                 const StoredUsername = await SecureStore.getItemAsync('username');
@@ -26,7 +29,7 @@ export const MyDogs = ({ navigation }) => {
             }
         }
         getDogs();
-    }, [])
+    }, [action])
 
     const deleteDog = async () => {
         setModalVisible(!modalVisible)
@@ -54,9 +57,14 @@ export const MyDogs = ({ navigation }) => {
         }
     }
 
-    const goDogProfile = (index, type) => {
-        setCurrentDog(dogs[index])
-        navigation.navigate("DogProfile", {action: type, dog:dogs[index]})
+    const goNextScreen = (index, type) => {
+        if (action === 'mydogs') {
+            setCurrentDog(dogs[index])
+            navigation.navigate("DogProfile", {action: type, dog:dogs[index]})
+        } else {
+            navigation.navigate("Bobo", {dog:dogs[index]})
+        }
+        
     }
 
     const addDog = () => {
@@ -67,7 +75,12 @@ export const MyDogs = ({ navigation }) => {
         <ScrollView style={styles.container}>
             <SafeAreaView>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.titleText}>Tus perros</Text>
+                { 
+                    action === 'questionary' 
+                    ? <Text style={styles.titleText}>Seleccione el perro</Text>
+                    : <Text style={styles.titleText}>Tus perros</Text>
+                }
+                    
                 </View>
                 <View style={styles.mainContainer}>
                     <ScrollView style={styles.cardContainer}>
@@ -75,12 +88,13 @@ export const MyDogs = ({ navigation }) => {
                         ? (
                             dogs.map((elem, index) => {
                                 return (
-                                    <TouchableOpacity key={index} style={styles.dogCard} onPress={()=> goDogProfile(index, 'view')} >
+                                    <TouchableOpacity key={index} style={styles.dogCard} onPress={()=> goNextScreen(index, 'view')} >
                                         <View style={styles.cardInfo}>
                                             <Image source={{uri:elem.photoUrl}} style={styles.dogImage} />
                                             <View style={styles.textContainer}>
                                                 <View style={styles.firstLineContainer}>
                                                     <Text style={styles.name}> {elem.name} </Text>
+                                                    { (action === 'mydogs') && 
                                                     <View style={styles.buttonsContainer}>
                                                         <TouchableOpacity style={styles.button}> 
                                                             <MaterialIcons name="edit" size={24} color="#00767D" onPress={() => displayModal(index, "edit")} />
@@ -89,6 +103,7 @@ export const MyDogs = ({ navigation }) => {
                                                             <FontAwesome name="trash" size={24} color="#00767D" />
                                                         </TouchableOpacity>
                                                     </View>
+                                                    }
                                                 </View>
                                                 <Text style={styles.info}> {elem.dog_breed} </Text>
                                                 <Text style={styles.info}> {elem.date_of_birth} </Text>
@@ -117,23 +132,41 @@ export const MyDogs = ({ navigation }) => {
                 }}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}> 
                             {
-                                (currentAction === 'edit') ? '¿Desea editar el perro?' : '¿Desea eliminar el perro?'
+                                (action === 'questionary')
+                                ?
+                                <>
+                                    <Text style={styles.modalText}>Pulse el perro a diagnosticar. {'\n'}
+                                    Si desea registrar uno nuevo pulse "Agregar"</Text>
+                                    <TouchableOpacity 
+                                        style={[styles.buttonModal, styles.buttonConfirm]}
+                                        onPress={() => closeModal()}
+                                    >
+                                        <Text style={styles.textConfirm}>Entendido</Text>
+                                    </TouchableOpacity>
+                                </>
+                                   
+                                :
+                                    <>
+                                        <Text style={styles.modalText}> 
+                                        {
+                                            (currentAction === 'edit') ? '¿Desea editar el perro?' : '¿Desea eliminar el perro?'
+                                        }
+                                        </Text>
+                                            <TouchableOpacity 
+                                                style={[styles.buttonModal, styles.buttonConfirm]}
+                                                onPress={() => closeModal()}
+                                            >
+                                                <Text style={styles.textConfirm}>Confirmar</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity 
+                                                style={[styles.buttonModal, styles.buttonCancel]}
+                                                onPress={() => setModalVisible(!modalVisible)}
+                                            >
+                                                <Text style={styles.textCancel}>Cancelar</Text>
+                                            </TouchableOpacity>
+                                    </>
                             }
-                            </Text>
-                                <TouchableOpacity 
-                                    style={[styles.buttonModal, styles.buttonConfirm]}
-                                    onPress={() => closeModal()}
-                                >
-                                    <Text style={styles.textConfirm}>Confirmar</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity 
-                                    style={[styles.buttonModal, styles.buttonCancel]}
-                                    onPress={() => setModalVisible(!modalVisible)}
-                                >
-                                    <Text style={styles.textCancel}>Cancelar</Text>
-                                </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
@@ -293,6 +326,11 @@ const styles = StyleSheet.create(
             fontFamily: 'PoppinsRegular'
           },
           modalText: {
+            marginBottom: 15,
+            textAlign: 'center',
+            fontFamily: 'PoppinsSemiBold'
+          },
+          modalTextQuestionary: {
             marginBottom: 15,
             textAlign: 'center',
             fontFamily: 'PoppinsSemiBold'

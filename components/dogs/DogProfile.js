@@ -17,6 +17,7 @@ export const DogProfile = ({ route, navigation }) => {
 
     const { action, dog } = route.params;
 
+    const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState();
     const [currentImage, setCurrentImage] = useState()
     const [imageChange, setImageChange] = useState(false)
@@ -114,15 +115,17 @@ export const DogProfile = ({ route, navigation }) => {
                     const result = await callBackendAPI("/users/dog/add", "POST", data)
                     dogId = result.data.id;
                 } else {
-                    console.log(data)
                     const result = await callBackendAPI("/users/dog/update", "PUT", data)
                     dogId = result.data.id;
                 }
                 if (imageChange) {
                     await callBackendAPI(`/users/dog/photo/${dogId}`, "PUT", image, {}, 'multipart/form-data')
                 }
+
+                navigation.navigate('MyDogs', {action: 'mydogs'})
                 
             } catch (error) {
+                setModalVisible(!modalVisible)
                 console.log(error)
             }
             
@@ -182,7 +185,7 @@ export const DogProfile = ({ route, navigation }) => {
                     <View style={styles.formContainerItem}>
                         <Text style={styles.inputTitle}> Nombre </Text>
                         <InputVetlens
-                            editable={(action === 'view') ? false : true}
+                            editable={(action === 'view' || action ==='edit') ? false : true}
                             placeholder='Nombre'
                             onChange={(text) => dogProfileDispatch({
                                 type: "fieldUpdate",
@@ -279,6 +282,7 @@ export const DogProfile = ({ route, navigation }) => {
                             </View>
                         </View>
                     </Modal>
+
                     {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
                     {
                         (action !== 'view') 
@@ -287,6 +291,29 @@ export const DogProfile = ({ route, navigation }) => {
                             <ButtonVetLens callback={processForm} text={(action === 'add') ? "Agregar" : "Editar"} filled={true} />
                         </View>
                     }
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}>
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalViewError}>
+                                <Text style={styles.modalText}> 
+                                    Ocurrió un problema, intente luego.
+                                </Text>
+                                    <TouchableOpacity 
+                                        style={styles.buttonModalError}
+                                        onPress={() => setModalVisible(!modalVisible)}
+                                    >
+                                        <Text style={styles.textConfirm}>Confirmar</Text>
+                                    </TouchableOpacity>
+                                    
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             </SafeAreaView>
         </ScrollView>
@@ -446,7 +473,42 @@ const styles = StyleSheet.create(
             shadowOpacity: 0.25,
             shadowRadius: 4,
             elevation: 5,
-        }
+        },
+        modalViewError: {
+            margin: 20,
+            backgroundColor: '#FDFAFA',
+            borderRadius: 20,
+            padding: 35,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+          },
+          buttonModalError: {
+            borderRadius: 20,
+            padding: 10,
+            elevation: 2,
+            width: 120,
+            marginBottom: 10,
+            backgroundColor: '#00A6B0'
+          },
+          modalText: {
+            marginBottom: 15,
+            textAlign: 'center',
+            fontFamily: 'PoppinsSemiBold'
+          },
+          textConfirm:{
+            color: '#fff',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            fontSize: 15,
+            fontFamily: 'PoppinsRegular'
+          }
 
     }
 )
