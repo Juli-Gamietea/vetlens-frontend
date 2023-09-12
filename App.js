@@ -162,8 +162,9 @@ export default function App() {
   React.useEffect(() => {
     const lookForToken = async () => {
       try {
-        await SecureStore.deleteItemAsync('token');
-        await SecureStore.deleteItemAsync('refreshToken');
+        //await SecureStore.deleteItemAsync('token');
+        
+        //await SecureStore.deleteItemAsync('refreshToken');
 
         await getToken();
         setTimeout(() => { setIsLoading(false); }, 2000)

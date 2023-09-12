@@ -8,8 +8,8 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { callBackendAPI } from '../../utils/CommonFunctions';
 
-export const Questionary = ({ navigation }) => {
-
+export const Questionary = ({ route, navigation }) => {
+    const { dog } = route.params;
     const [selectedQuestion, setSelectedQuestion] = React.useState(0);
     const [questionList, setQuestionList] = React.useState([]);
     const [shownAnswers, setShownAnswers] = React.useState([]);

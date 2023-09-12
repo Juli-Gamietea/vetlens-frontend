@@ -123,7 +123,7 @@ export const DogProfile = ({ route, navigation }) => {
                 }
                 
                 if (variant === 'questionary') {
-                    navigation.navigate('Bobo', {dog: data})
+                    navigation.navigate('Questions', {dog: data})
                 } else {
                     navigation.navigate('MyDogs', {action: 'mydogs'})
                 }

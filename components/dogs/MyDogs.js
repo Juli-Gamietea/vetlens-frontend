@@ -62,7 +62,7 @@ export const MyDogs = ({ route, navigation }) => {
             setCurrentDog(dogs[index])
             navigation.navigate("DogProfile", {action: type, dog:dogs[index]})
         } else {
-            navigation.navigate("Bobo", {dog:dogs[index]})
+            navigation.navigate("Questions", {dog:dogs[index]})
         }
         
     }
