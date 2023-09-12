@@ -49,6 +49,7 @@ function DashboardTabStack() {
         },
         headerTitleAlign: 'center'
       }} />
+      <Stack.Screen name="MyDogs" options={{headerShown: false, title: ""}} initialParams={{action: 'mydogs'}} component={MyDogs}/>
     </Stack.Navigator>
   )
 }

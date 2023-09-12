@@ -77,7 +77,7 @@ export const MyDogs = ({ route, navigation }) => {
                 <View style={styles.titleContainer}>
                 { 
                     action === 'questionary' 
-                    ? <Text style={styles.titleText}>Seleccione el perro</Text>
+                    ? <Text style={[styles.titleText, {marginTop: 0}]}>Seleccione el perro</Text>
                     : <Text style={styles.titleText}>Tus perros</Text>
                 }
                     
