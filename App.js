@@ -27,6 +27,8 @@ import { RegisterSuccess } from './components/register/RegisterSuccess';
 import { MyDogs } from './components/dogs/MyDogs';
 import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
+import { MessageScreen } from './components/diagnosis/MessageScreen';
+import { TakePicture } from './components/diagnosis/TakePicture';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,6 +52,7 @@ function DashboardTabStack() {
         headerTitleAlign: 'center'
       }} />
       <Stack.Screen name="MyDogs" options={{headerShown: false, title: ""}} initialParams={{action: 'mydogs'}} component={MyDogs}/>
+      <Stack.Screen name="MessageScreen" options={{headerShown: true}} component={MessageScreen}/>
     </Stack.Navigator>
   )
 }
@@ -84,18 +87,18 @@ function TabsVet() {
 
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          height: 64,
-          borderTopColor: "rgba(170, 170, 170, .66)",
-          borderTopWidth: 1,
-          fontFamily: "PoppinsSemiBold",
-          paddingBottom: 2
-        },
-        tabBarActiveTintColor: "#00A6B0",
-        tabBarInactiveTintColor: "#949494"
-      }}
+    screenOptions={{
+      headerShown: false,
+      tabBarStyle: {
+        height: 64,
+        borderTopColor: "rgba(170, 170, 170, .66)",
+        borderTopWidth: 1,
+        fontFamily: "PoppinsSemiBold",
+        paddingBottom: 2
+      },
+      tabBarActiveTintColor: "#00A6B0",
+      tabBarInactiveTintColor: "#949494"
+    }}
     >
       <Tab.Screen
         name="DashboardTab"
@@ -104,8 +107,8 @@ function TabsVet() {
           tabBarLabel: 'Inicio',
           tabBarIcon: ({ color }) => (
             <Entypo name="home" size={35} color={color} />
-          ),
-
+            ),
+            
         }}
       />
       <Tab.Screen
@@ -115,10 +118,10 @@ function TabsVet() {
           tabBarLabel: 'Historial',
           tabBarIcon: ({ color }) => (
             <Ionicons name="md-file-tray-full-outline" size={35} color={color} />
-          ),
-
-
-        }}
+            ),
+            
+            
+          }}
       />
       <Tab.Screen
         name="Scan"
@@ -130,8 +133,8 @@ function TabsVet() {
               <MaterialCommunityIcons name="qrcode-scan" size={35} color="white" />
             </View>
           ),
-
-
+          
+          
         }}
       />
       <Tab.Screen
@@ -141,8 +144,8 @@ function TabsVet() {
           tabBarLabel: 'Perros',
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="dog" size={35} color={color} />
-          ),
-        }}
+            ),
+          }}
       />
       <Tab.Screen
         name="Profile"
@@ -151,8 +154,8 @@ function TabsVet() {
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (
             <Ionicons name="person" size={35} color={color} />
-          ),
-        }}
+            ),
+          }}
       />
     </Tab.Navigator>
   );
@@ -169,26 +172,26 @@ export default function App() {
     PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf'),
     PoppinsSemiBold: require('./assets/fonts/Poppins-SemiBold.ttf')
   });
-
+  
   const authContext = { isLoading, setIsLoading, isSignedIn, setIsSignedIn };
-
+  
   React.useEffect(() => {
     const lookForToken = async () => {
       try {
         //await SecureStore.deleteItemAsync('token');
         
         //await SecureStore.deleteItemAsync('refreshToken');
-
+        
         await getToken();
         setTimeout(() => { setIsLoading(false); }, 2000)
         setIsSignedIn(true);
-
+        
       } catch (error) {
         //this means there is no token
-
+        
         if (error.message === 'no_valid_tokens' || error.message === 'no_token_saved') {
           setTimeout(() => { setIsLoading(false); }, 2000)
-
+          
         } else {
           console.log("uncatched_error_" + error.message);
         }
@@ -196,11 +199,11 @@ export default function App() {
     }
     lookForToken();
   }, []);
-
+  
   if (!loaded) {
     return null;
   }
-
+  
   return (
 
     <AuthContext.Provider value={authContext}>
@@ -225,7 +228,7 @@ export default function App() {
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
-                
+                <Stack.Screen name="Picture" options={{headerShown: true, title: "Tomar Foto", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={TakePicture}/>
               </>
             )}
           </Stack.Navigator>
