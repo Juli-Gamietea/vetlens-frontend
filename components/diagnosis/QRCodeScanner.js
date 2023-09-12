@@ -39,12 +39,6 @@ export const QRCodeScanner = ({ navigation }) => {
 
     return (
             <View style={styles.container}>
-                {/* <Button title={'go back'} onPress={() => navigation.navigate('Bobo')} /> */}
-                <View style={[styles.topContainer, {paddingTop: 15, paddingBottom: 15}]}>
-                    <AntDesign name={"arrowleft"} size={50} color={"#000"} style={{alignSelf: 'flex-end'}}/>
-                    <Text style={[styles.textContainer, { marginTop: 1 }]}>Encontrar diagnóstico</Text>
-                    <View style={{height: 50, width: 50}}></View>
-                </View>
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                     style={[{}, styles.cameraFeed]}

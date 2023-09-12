@@ -16,18 +16,26 @@ export async function setToken(username, password) {
                 'Content-Type': 'application/json'
             }
         }
+        
+        console.log("setToken() - config: " + JSON.stringify(config));
 
         const res = await axios(config);
         
+        console.log("setToken() - server response: " + JSON.stringify(res.data));
+
         const access_token = {
             token: res.data.accessToken,
             expiryDate: Date.now() + 86400000,
         };
 
+        console.log("setToken() - token: " + JSON.stringify(access_token));
+
         const refresh_token = {
             token: res.data.refreshToken,
             expiryDate: Date.now() + 31536000000,
         };
+
+        console.log("setToken() - refresh: " + JSON.stringify(refresh_token));
 
         await storeToken(access_token, refresh_token);
         return res;
@@ -51,8 +59,11 @@ export async function getToken() {
         const token = await SecureStore.getItemAsync('token');
         const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
 
+        console.log("getToken() - stored token: " + token);
+
         if (token && expiryDate) {
-            if (Date.now() > Date.parse(expiryDate)) {
+            if (Date.now() > expiryDate) {
+                console.log("TOKEN IS EXPIRED");
                 throw Error('token_expired');
             }
             return token;
@@ -65,7 +76,7 @@ export async function getToken() {
         if (error.message === 'token_expired') {
             const rtExpiryDate = await SecureStore.getItemAsync('refreshTokenExpiryDate');
 
-            if (Date.now() > Date.parse(rtExpiryDate)) {
+            if (Date.now() > rtExpiryDate) {
                 throw Error('no_valid_tokens');
 
             } else {
@@ -83,7 +94,8 @@ export async function renewToken() {
     try {
 
         const refresh_token = await SecureStore.getItemAsync('refreshToken');
-        
+        console.log("renewToken() - refreshToken: " + refresh_token);
+
         const config = {
             url: `${API_URL}/auth/refresh`,
             method: 'post',
@@ -94,20 +106,29 @@ export async function renewToken() {
             }
         }
         
+        console.log("renewToken() - config: " + JSON.stringify(config))
+
         const res = await axios(config);
+
+        console.log("renewToken() - response: " + JSON.stringify(res.data))
+        
 
         if (res.data) {
             
             const access_token = {
-                token: res.data.acces_token,
-                expiryDate: Date.now + 86400000,
-            };
-            
-            const refresh_token = {
-                token: res.data.refresh_token,
-                expiryDate: Date.now + 31536000000,
+                token: res.data.accessToken,
+                expiryDate: Date.now() + 86400000,
             };
 
+            console.log("renewToken() - new token: " + JSON.stringify(access_token))
+            
+            const refresh_token = {
+                token: res.data.refreshToken,
+                expiryDate: Date.now() + 31536000000,
+            };
+
+            console.log("renewToken() - new refresh: " + JSON.stringify(refresh_token));
+       
             await storeToken(access_token, refresh_token);
             return access_token.token;
 
@@ -117,7 +138,6 @@ export async function renewToken() {
         }
 
     } catch (error) {
-
-        throw Error(error.message);
+        throw Error("TokenManager_error_" + error.message);
     }
 }

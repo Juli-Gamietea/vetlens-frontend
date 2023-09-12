@@ -1,8 +1,6 @@
 import axios from "axios";
 import { getToken, renewToken } from "./auth/TokenManager.js";
 import { API_URL } from '@env';
-import { useContext } from "react";
-import { AuthContext } from "./auth/AuthContext.js";
 
 export const callBackendAPI = async (url, method = 'GET', data = null, headers = {}, contentType = 'application/json') => {
   try {
