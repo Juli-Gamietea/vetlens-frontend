@@ -35,7 +35,7 @@ export const History = () => {
                             <WhiteButtonCard key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                         );
                     }))
-                : <Text style={styles.defaultText}> Aún no tiene{'\n'} diagnósticos realizados :( </Text>
+                : <Text style={styles.defaultText}> Aún no tiene diagnósticos {'\n'}realizados :( </Text>
             }
             </ScrollView>
         </ScrollView>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create(
             fontFamily: 'PoppinsBold',
             color: '#00767D',
             textAlign: 'center',
-            marginTop: 240
+            marginTop: 220
         }
     }
 )
