@@ -27,6 +27,7 @@ import { RegisterSuccess } from './components/register/RegisterSuccess';
 import { MyDogs } from './components/dogs/MyDogs';
 import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
+import { History } from './components/diagnosis/History';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -110,7 +111,7 @@ function TabsVet() {
       />
       <Tab.Screen
         name="History"
-        component={Bobo}
+        component={History}
         options={{
           tabBarLabel: 'Historial',
           tabBarIcon: ({ color }) => (
@@ -225,7 +226,7 @@ export default function App() {
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
-                
+                <Stack.Screen name="History" component={History} />
               </>
             )}
           </Stack.Navigator>
