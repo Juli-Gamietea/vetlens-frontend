@@ -18,7 +18,7 @@ export const TakePicture = ({ navigation, route }) => {
     }
 
     if (!permission.granted) {
-        return <Text>No diste permisos crack</Text>
+        return <Text>No diste permisos</Text>
     }
 
     const takePicture = async () => {
@@ -38,7 +38,8 @@ export const TakePicture = ({ navigation, route }) => {
 
                     const obj = await callBackendAPI(`/diagnosis/conclude/${diagnosisId}`, "POST", data, {}, 'multipart/form-data')
                     if (obj) {
-                        navigation.navigate("MessageScreen", {action: "finishDiagnosis"})
+                        console.log(obj.data);
+                        navigation.navigate("MessageScreen", {action: "finishDiagnosis", diagnosisId: obj.data.id})
                     }
                 }
             } catch (error) {

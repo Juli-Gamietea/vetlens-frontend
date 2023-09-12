@@ -19,6 +19,20 @@ export const Dashboard = ({ navigation }) => {
     const [role, setRole] = React.useState("");
     const [cardsList, setCardsList] = React.useState([]);
 
+
+    const startQuestionary = () => {
+        navigation.navigate("MyDogs", {action: "questionary"})
+    }
+
+    const handleOnPressQR = () => {
+        if (role === "VET") {
+            navigation.navigate("QRScanner");
+        } else {
+            // navigation.navigate("GenerateQR", {diagnosisId: 16})
+            //debería ir a un listado de diagnósticos y luego de seleccionarlo, se generaría el QR.
+        }
+    }
+
     React.useEffect(() => {
 
         const initialSetup = async () => {
@@ -44,9 +58,8 @@ export const Dashboard = ({ navigation }) => {
         initialSetup();
     }, [])
 
-    const startQuestionary = () => {
-        navigation.navigate("MyDogs", {action: "questionary"})
-    }
+    
+
     return (
         <SafeAreaView style={styles.container}>
             {/* <Button title={"Cerrar sesión"} onPress={async () => {
@@ -105,11 +118,11 @@ export const Dashboard = ({ navigation }) => {
                 </View>
                 <Text style={[styles.subsectionText, { marginTop: 10 }]}>¿Qué desea hacer?</Text>
                 <View style={styles.bigButtonsContainer}>
-                    <TouchableOpacity onPress={()=> startQuestionary()} style={[styles.bigButton, { marginRight: 20 }]}>        
+                    <TouchableOpacity onPress={startQuestionary} style={[styles.bigButton, { marginRight: 20 }]}>        
                         <Text style={styles.bigButtonText}>Nuevo Cuestionario</Text>
                         <MaterialCommunityIcons name="clipboard-list-outline" size={80} color="#00A6B0" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("MessageScreen")} style={styles.bigButton}>
+                    <TouchableOpacity onPress={handleOnPressQR} style={styles.bigButton}>
                         <Text style={styles.bigButtonText}>{role === "VET" ? "Escaneo\n" : "Generar QR\n"} </Text>
                         <AntDesign name="qrcode" size={80} color="#00A6B0" />
                     </TouchableOpacity>

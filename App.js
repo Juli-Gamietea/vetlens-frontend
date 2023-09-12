@@ -29,6 +29,7 @@ import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
 import { MessageScreen } from './components/diagnosis/MessageScreen';
 import { TakePicture } from './components/diagnosis/TakePicture';
+import { GenerateQR } from './components/diagnosis/GenerateQR';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,7 @@ function DashboardTabStack() {
       }} />
       <Stack.Screen name="MyDogs" options={{headerShown: false, title: ""}} initialParams={{action: 'mydogs'}} component={MyDogs}/>
       <Stack.Screen name="MessageScreen" options={{headerShown: true}} component={MessageScreen}/>
+      <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
     </Stack.Navigator>
   )
 }

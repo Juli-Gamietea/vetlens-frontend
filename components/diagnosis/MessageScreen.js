@@ -24,7 +24,7 @@ export const MessageScreen = ({ route, navigation }) => {
         if (action === "questionary") {
             navigation.goBack();
         } else {
-            navigation.navigate('Bobo');
+            navigation.navigate('GenerateQR', {diagnosisId: route.params.diagnosisId});
         }
     }
 
