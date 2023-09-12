@@ -109,7 +109,7 @@ export const Dashboard = ({ navigation }) => {
                         <Text style={styles.bigButtonText}>Nuevo Cuestionario</Text>
                         <MaterialCommunityIcons name="clipboard-list-outline" size={80} color="#00A6B0" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.bigButton}>
+                    <TouchableOpacity onPress={() => navigation.navigate("QRScanner")} style={styles.bigButton}>
                         <Text style={styles.bigButtonText}>{role === "VET" ? "Escaneo\n" : "Generar QR\n"} </Text>
                         <AntDesign name="qrcode" size={80} color="#00A6B0" />
                     </TouchableOpacity>

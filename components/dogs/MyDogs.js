@@ -203,9 +203,6 @@ const styles = StyleSheet.create(
         },
         mainContainer:{
             flex:1,
-            marginLeft: 15,
-            marginRight: 15,
-            marginBottom: 40,
             marginTop: 25,
         },
         cardContainer: {
@@ -214,7 +211,8 @@ const styles = StyleSheet.create(
             minHeight: 585
         },
         addButton: {
-            marginTop: 20
+            marginTop: 20,
+            marginHorizontal: 15
         },
         dogCard: {
             flex: 1,

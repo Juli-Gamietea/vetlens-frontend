@@ -29,7 +29,25 @@ export const DogProfile = ({ route, navigation }) => {
             nameErrorMessage, dogBreedErrorMessage
         } = dogProfile;
 
-    React.useEffect(() => {
+    switch (action) {
+        case "add":
+            navigation.setOptions({
+                title: "Agregar Perro"
+            }) 
+            break;  
+        case "edit":
+            navigation.setOptions({
+                title: "Editar Perro"
+            }) 
+            break;
+        case "view":
+            navigation.setOptions({
+                title: "Datos del Perro"
+            }) 
+            break;
+    }
+    
+        React.useEffect(() => {
         if (action !== 'add') {
             setCurrentImage(dog.photoUrl)
             dogProfileDispatch({type: "fieldUpdate", field: "name", value: dog.name})
@@ -288,7 +306,6 @@ export const DogProfile = ({ route, navigation }) => {
                         </View>
                     </Modal>
 
-                    {!isDateValid && <Text style={styles.error}>Fecha inválida</Text>}
                     {
                         (action !== 'view') 
                         && 
@@ -415,7 +432,6 @@ const styles = StyleSheet.create(
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'space-evenly',
-            marginTop: 30
         },
         imageProfile: {
             width: 140,

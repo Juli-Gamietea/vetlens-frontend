@@ -42,7 +42,13 @@ function DashboardTabStack() {
         },
         headerTitleAlign: 'center'
       }} name="Questions" component={Questionary}/>
-      <Stack.Screen name="QRScanner" component={QRCodeScanner} />
+      <Stack.Screen name="QRScanner" component={QRCodeScanner} options={{
+        title: "Encontrar un diagnóstico",
+        headerTitleStyle: {
+          fontFamily: "PoppinsRegular"
+        },
+        headerTitleAlign: 'center'
+      }} />
     </Stack.Navigator>
   )
 }
@@ -59,6 +65,15 @@ function ScannerTabStack() {
         },
         headerTitleAlign: 'center'
       }}/>
+    </Stack.Navigator>
+  )
+}
+
+function DogsTabStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="MyDogs" options={{headerShown: false}} initialParams={{action: 'mydogs'}} component={MyDogs}/>
+      <Stack.Screen name="DogProfile" options={{headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={DogProfile} />
     </Stack.Navigator>
   )
 }
@@ -120,15 +135,12 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Dogs"
-        component={MyDogs}
-        initialParams={{action: 'mydogs'}}
+        component={DogsTabStack}
         options={{
           tabBarLabel: 'Perros',
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="dog" size={35} color={color} />
           ),
-
-
         }}
       />
       <Tab.Screen
@@ -212,7 +224,7 @@ export default function App() {
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
-                <Stack.Screen name="DogProfile" component={DogProfile} />
+                
               </>
             )}
           </Stack.Navigator>
