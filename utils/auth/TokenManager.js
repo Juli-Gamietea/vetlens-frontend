@@ -56,7 +56,6 @@ async function storeToken(acces_token, refresh_token) {
 
 export async function getToken() {
     try {
-
         const token = await SecureStore.getItemAsync('token');
         const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
 
@@ -129,7 +128,7 @@ export async function renewToken() {
             };
 
             console.log("renewToken() - new refresh: " + JSON.stringify(refresh_token));
-            
+       
             await storeToken(access_token, refresh_token);
             return access_token.token;
 

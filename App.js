@@ -24,6 +24,8 @@ import { View } from 'react-native';
 import { RegisterFormVet } from './components/register/RegisterFormVet';
 import { TermsAndConditions } from './components/register/TermsAndConditions';
 import { RegisterSuccess } from './components/register/RegisterSuccess';
+import { MyDogs } from './components/dogs/MyDogs';
+import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
  
 const Stack = createNativeStackNavigator();
@@ -118,7 +120,8 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Dogs"
-        component={Bobo}
+        component={MyDogs}
+        initialParams={{action: 'mydogs'}}
         options={{
           tabBarLabel: 'Perros',
           tabBarIcon: ({ color }) => (
@@ -159,8 +162,8 @@ export default function App() {
   React.useEffect(() => {
     const lookForToken = async () => {
       try {
-        // await SecureStore.deleteItemAsync('token');
-        // await SecureStore.deleteItemAsync('refreshToken');
+        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('refreshToken');
 
         await getToken();
         setTimeout(() => { setIsLoading(false); }, 2000)
@@ -207,6 +210,8 @@ export default function App() {
                 <Stack.Screen name="TabsVet" component={TabsVet} />
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
+                <Stack.Screen name="MyDogs" component={MyDogs} />
+                <Stack.Screen name="DogProfile" component={DogProfile} />
               </>
             )}
           </Stack.Navigator>
