@@ -9,13 +9,13 @@ export const Diagnosis = ({ route, navigation}) => {
         diagnosis.anamnesis.inferences.forEach(element => {
             if (element.disease.name.toUpperCase() === diagnosis.anamnesis.result.toUpperCase() && (diagnosis.anamnesis.result.toUpperCase() !== "NO DISCERNIBLE")) {
                 setProbability((parseFloat(element.probability.replace(",", "."))*100).toFixed(2));
+                setTreatments(element.disease.treatments)
             }
-            console.log(role)
         });
     }, [])
    
     const [probability, setProbability] = React.useState();
-
+    const [treatments, setTreatments] = React.useState();
     const getAge = (fecha) => {
         
         var splitDate = fecha.split('-');
@@ -39,7 +39,13 @@ export const Diagnosis = ({ route, navigation}) => {
         }
     }
 
-    const goQuestionary = () => {
+    const firstButton = () => {
+
+    }
+    const secondButton = () => {
+        navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments})
+    }
+    const thirdButton = () => {
 
     }
 
@@ -90,12 +96,12 @@ export const Diagnosis = ({ route, navigation}) => {
                     :
                         <Text style={styles.resultText}>
                             Según VetLens, {diagnosis.dog.name} padece de
-                            "{diagnosis.anamnesis.result.toUpperCase()}", con un {probability}% de confiabilidad
+                            "{diagnosis.anamnesis.result[0].toUpperCase() + diagnosis.anamnesis.result.slice(1)}" con un {probability}% de confiabilidad
                         </Text>
                  }
             </View>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => goQuestionary()}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => firstButton()}>
                 <View>
                     <Text style={styles.buttonTitle}>Ir al cuestionario</Text>  
                 </View>
@@ -104,7 +110,7 @@ export const Diagnosis = ({ route, navigation}) => {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => goQuestionary()}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => secondButton()}>
                 <View>
                     <Text style={styles.buttonTitle}>{role === 'VET' ? 'Ver tratamientos' : 'Estado de validación'}</Text>  
                 </View>
@@ -113,7 +119,7 @@ export const Diagnosis = ({ route, navigation}) => {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => goQuestionary()}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => thirdButton()}>
                 <View>
                     <Text style={styles.buttonTitle}>{role === 'VET' ? 'Validar' : 'Generar código QR'}</Text>  
                 </View>

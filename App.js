@@ -29,6 +29,7 @@ import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
 import { History } from './components/diagnosis/History';
 import { Diagnosis } from './components/diagnosis/Diagnosis';
+import { Treatments } from './components/diagnosis/Treatments';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -228,6 +229,7 @@ export default function App() {
                 <Stack.Screen name="MyDogs" component={MyDogs} />
                 <Stack.Screen name="History" component={History} />
                 <Stack.Screen name="Diagnosis" component={Diagnosis} />
+                <Stack.Screen name="Treatments" component={Treatments} />
               </>
             )}
           </Stack.Navigator>
