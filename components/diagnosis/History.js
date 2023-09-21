@@ -4,16 +4,19 @@ import * as SecureStore from 'expo-secure-store';
 import { callBackendAPI } from "../../utils/CommonFunctions";
 import { WhiteButtonCard } from "../common/WhiteButtonCard";
 
-export const History = () => {
+export const History = ({navigation}) => {
     const [diagnosis, setDiagnosis] = useState([])
+    const [role, setRole] = useState([])
     React.useEffect(() => { 
         
         const getDiagnosis = async () => {
             try {
-                const StoredUsername = await SecureStore.getItemAsync('username');
-                const diagnosisData = await callBackendAPI(`/diagnosis/user/${StoredUsername}`, 'GET');
+                const storedUsername = await SecureStore.getItemAsync('username');
+                const storedRole = await SecureStore.getItemAsync('role');
+                const diagnosisData = await callBackendAPI(`/diagnosis/user/${storedUsername}`, 'GET');
                 const aux = diagnosisData.data
                 setDiagnosis(aux.reverse())
+                setRole(storedRole)
                 
             } catch(error) {
                 console.log(error)
@@ -21,6 +24,10 @@ export const History = () => {
         }
         getDiagnosis();
     }, [])
+
+    const viewDiagnosis = (index) => {
+        navigation.navigate("Diagnosis", {diagnosis: diagnosis[index], role: role})
+    }
 
     return (
         <ScrollView style = {styles.container}>
@@ -32,7 +39,7 @@ export const History = () => {
                 (diagnosis.length !== 0)
                 ?   (diagnosis.map((elem, index) => {
                         return(
-                            <WhiteButtonCard key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
+                            <WhiteButtonCard callback={()=> viewDiagnosis(index)} key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                         );
                     }))
                 : <Text style={styles.defaultText}> Aún no tiene diagnósticos {'\n'}realizados :( </Text>

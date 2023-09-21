@@ -28,6 +28,7 @@ import { MyDogs } from './components/dogs/MyDogs';
 import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
 import { History } from './components/diagnosis/History';
+import { Diagnosis } from './components/diagnosis/Diagnosis';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -177,7 +178,6 @@ export default function App() {
     const lookForToken = async () => {
       try {
         //await SecureStore.deleteItemAsync('token');
-        
         //await SecureStore.deleteItemAsync('refreshToken');
 
         await getToken();
@@ -227,6 +227,7 @@ export default function App() {
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
                 <Stack.Screen name="History" component={History} />
+                <Stack.Screen name="Diagnosis" component={Diagnosis} />
               </>
             )}
           </Stack.Navigator>
