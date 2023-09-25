@@ -30,6 +30,7 @@ import { Questionary } from './components/diagnosis/Questionary';
 import { History } from './components/diagnosis/History';
 import { Diagnosis } from './components/diagnosis/Diagnosis';
 import { Treatments } from './components/diagnosis/Treatments';
+import { Profile } from './components/profile/Profile';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -149,7 +150,7 @@ function TabsVet() {
       />
       <Tab.Screen
         name="Profile"
-        component={Bobo}
+        component={Profile}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (
