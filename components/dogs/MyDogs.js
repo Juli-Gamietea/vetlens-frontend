@@ -6,9 +6,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import * as SecureStore from 'expo-secure-store';
 import { callBackendAPI } from "../../utils/CommonFunctions";
+import { useIsFocused } from '@react-navigation/native';
 
 export const MyDogs = ({ route, navigation }) => {
     const { action } = route.params;
+    const isFocused = useIsFocused();
     const [dogs, setDogs] = React.useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentDog, setCurrentDog] = useState();
@@ -29,7 +31,7 @@ export const MyDogs = ({ route, navigation }) => {
             }
         }
         getDogs();
-    }, [action])
+    }, [action, isFocused])
 
     const deleteDog = async () => {
         setModalVisible(!modalVisible)

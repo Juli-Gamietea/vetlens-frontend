@@ -93,6 +93,16 @@ function ProfileTabStack() {
   )
 }
 
+function HistoryTabStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
+      <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
+      <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
+    </Stack.Navigator>
+  )
+}
+
 function TabsVet() {
 
   return (
@@ -122,8 +132,8 @@ function TabsVet() {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={History}
+        name="HistoryUser"
+        component={HistoryTabStack}
         options={{
           tabBarLabel: 'Historial',
           tabBarIcon: ({ color }) => (
@@ -237,9 +247,6 @@ export default function App() {
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
-                <Stack.Screen name="History" component={History} />
-                <Stack.Screen name="Diagnosis" component={Diagnosis} />
-                <Stack.Screen name="Treatments" component={Treatments} />
               </>
             )}
           </Stack.Navigator>

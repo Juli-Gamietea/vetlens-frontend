@@ -6,9 +6,9 @@ import { ButtonVetLens } from "../common/ButtonVetLens";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { callBackendAPI } from "../../utils/CommonFunctions";
-
-export const Profile = ( { route, navigation } ) => {
-
+import { useIsFocused } from '@react-navigation/native';
+export const Profile = ( { navigation } ) => {
+    const isFocused = useIsFocused();
     React.useEffect(() => {
         const getData = async() => {
             const data = await SecureStore.getItemAsync('user');
@@ -19,7 +19,7 @@ export const Profile = ( { route, navigation } ) => {
             profileDispatch({type: "fieldUpdate", field: "username", value: userSaved.username})
         }
         getData();
-    }, [])
+    }, [isFocused])
 
     const [profileState, profileDispatch] = React.useReducer(profileReducer, initialState);
     const { firstname, lastname, email, username,
