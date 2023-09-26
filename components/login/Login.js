@@ -40,6 +40,7 @@ export const Login = ({ navigation }) => {
                 await setToken(username, password);
                 const res = await CommonFunctions.callBackendAPI(`/users/${username}`, 'GET');
                 await SecureStore.setItemAsync('username', username);
+                await SecureStore.setItemAsync('user', JSON.stringify(res.data));
                 await SecureStore.setItemAsync('role', String(res.data.role));
                 setIsPendingRequest(false);
                 setIsSignedIn(true);

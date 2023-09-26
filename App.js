@@ -27,6 +27,11 @@ import { RegisterSuccess } from './components/register/RegisterSuccess';
 import { MyDogs } from './components/dogs/MyDogs';
 import { DogProfile } from './components/dogs/DogProfile';
 import { Questionary } from './components/diagnosis/Questionary';
+import { History } from './components/diagnosis/History';
+import { Diagnosis } from './components/diagnosis/Diagnosis';
+import { Treatments } from './components/diagnosis/Treatments';
+import { Profile } from './components/profile/Profile';
+import { ChangePassword } from './components/profile/ChangePassword';
 import { MessageScreen } from './components/diagnosis/MessageScreen';
 import { TakePicture } from './components/diagnosis/TakePicture';
 import { GenerateQR } from './components/diagnosis/GenerateQR';
@@ -86,6 +91,24 @@ function DogsTabStack() {
   )
 }
 
+function ProfileTabStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="Profile" options={{headerShown: false}} component={Profile}/>
+      <Stack.Screen name="ChangePassword" options={{headerShown: false}} component={ChangePassword}/>
+    </Stack.Navigator>
+  )
+}
+
+function HistoryTabStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
+      <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
+      <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
+    </Stack.Navigator>
+  )
+}
 
 function TabsVet() {
 
@@ -116,8 +139,8 @@ function TabsVet() {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={Bobo}
+        name="HistoryUser"
+        component={HistoryTabStack}
         options={{
           tabBarLabel: 'Historial',
           tabBarIcon: ({ color }) => (
@@ -152,8 +175,8 @@ function TabsVet() {
           }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Bobo}
+        name="ProfileUser"
+        component={ProfileTabStack}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (
@@ -183,7 +206,6 @@ export default function App() {
     const lookForToken = async () => {
       try {
         //await SecureStore.deleteItemAsync('token');
-        
         //await SecureStore.deleteItemAsync('refreshToken');
         
         await getToken();

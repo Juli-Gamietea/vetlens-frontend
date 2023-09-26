@@ -17,25 +17,25 @@ export async function setToken(username, password) {
             }
         }
         
-        console.log("setToken() - config: " + JSON.stringify(config));
+        //console.log("setToken() - config: " + JSON.stringify(config));
 
         const res = await axios(config);
         
-        console.log("setToken() - server response: " + JSON.stringify(res.data));
+        //console.log("setToken() - server response: " + JSON.stringify(res.data));
 
         const access_token = {
             token: res.data.accessToken,
             expiryDate: Date.now() + 86400000,
         };
 
-        console.log("setToken() - token: " + JSON.stringify(access_token));
+        //console.log("setToken() - token: " + JSON.stringify(access_token));
 
         const refresh_token = {
             token: res.data.refreshToken,
             expiryDate: Date.now() + 31536000000,
         };
 
-        console.log("setToken() - refresh: " + JSON.stringify(refresh_token));
+        //console.log("setToken() - refresh: " + JSON.stringify(refresh_token));
 
         await storeToken(access_token, refresh_token);
         return res;
