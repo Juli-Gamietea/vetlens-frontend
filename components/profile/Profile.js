@@ -1,10 +1,11 @@
 import React from "react";
 import { profileReducer, initialState } from "./profileReducer";
 import { InputVetlens } from "../common/InputVetLens";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Alert } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
+import { callBackendAPI } from "../../utils/CommonFunctions";
 
 export const Profile = ( { route, navigation } ) => {
 
@@ -56,10 +57,28 @@ export const Profile = ( { route, navigation } ) => {
         }
     }
 
-    const nextScreen = async () => {
+    const changePassword = async () => {
         const inputs = await areInputsValid();
         if (inputs) {
-            console.log("OK")
+            navigation.navigate("ChangePassword", {username: username});
+        }
+    }
+
+    const updateProfile = async () => {
+        const inputs = await areInputsValid();
+        if (inputs) {
+            try {
+                const body = {
+                    first_name: firstname,
+                    last_name: lastname,
+                    username: username,
+                    email: email
+                }
+                await callBackendAPI("/users", "PUT", body)
+                Alert.alert("Éxito", "Se ha actualizado el perfil."); 
+            } catch (error) {
+                Alert.alert("Error", "Se ha producido un error.");
+            }    
         }
     }
     
@@ -127,8 +146,8 @@ export const Profile = ( { route, navigation } ) => {
                         />
                     </View>
                     <View style={styles.formContainerItem2}>
-                        <ButtonVetLens  callback={nextScreen} text={"Cambiar contraseña"} filled={false} />
-                        <ButtonVetLens style={{marginTop: 15}}callback={nextScreen} text={"Actualizar"} filled={true} />
+                        <ButtonVetLens  callback={changePassword} text={"Cambiar contraseña"} filled={false} />
+                        <ButtonVetLens style={{marginTop: 15}}callback={updateProfile} text={"Actualizar"} filled={true} />
                     </View>
                     
                 </View>

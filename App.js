@@ -31,6 +31,7 @@ import { History } from './components/diagnosis/History';
 import { Diagnosis } from './components/diagnosis/Diagnosis';
 import { Treatments } from './components/diagnosis/Treatments';
 import { Profile } from './components/profile/Profile';
+import { ChangePassword } from './components/profile/ChangePassword';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,6 +84,14 @@ function DogsTabStack() {
   )
 }
 
+function ProfileTabStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="Profile" options={{headerShown: false}} component={Profile}/>
+      <Stack.Screen name="ChangePassword" options={{headerShown: false}} component={ChangePassword}/>
+    </Stack.Navigator>
+  )
+}
 
 function TabsVet() {
 
@@ -149,8 +158,8 @@ function TabsVet() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileUser"
+        component={ProfileTabStack}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (

@@ -4,19 +4,19 @@ export const initialState = {
     email:"",
     username: "",
     password: "",
-    rePassword: "",
+    newPassword: "",
     isFirstnameValid: true,
     isLastnameValid: true,
     isEmailValid: true,
     isUsernameValid: true,
     isPasswordValid: true,
-    isRePasswordValid: true,
+    isNewPasswordValid: true,
     firstnameErrorMessage: "",
     lastnameErrorMessage: "",
     emailErrorMessage: "",
     usernameErrorMessage: "",
     passwordErrorMessage: "",
-    rePasswordErrorMessage: ""
+    newPasswordErrorMessage: ""
 }
 
 export function profileReducer (state = initialState, action) {
@@ -30,7 +30,7 @@ export function profileReducer (state = initialState, action) {
                 isEmailValid: true,
                 isUsernameValid: true,
                 isPasswordValid: true,
-                isRePasswordValid: true
+                isNewPasswordValid: true
             };
         case "firstnameError":
             return {
@@ -56,20 +56,13 @@ export function profileReducer (state = initialState, action) {
                 isPasswordValid: false,
                 passwordErrorMessage: action.error
             };
-        case "rePasswordError":
+        case "newPasswordError":
             return {
                 ...state,
-                isRePasswordValid: false,
-                rePasswordErrorMessage: action.error
+                isNewPasswordValid: false,
+                newPasswordErrorMessage: action.error
             };
-        case "passwordNotEqualError":
-            return {
-                ...state,
-                isPasswordValid: false,
-                isRePasswordValid: false,
-                passwordErrorMessage: action.error,
-                rePasswordErrorMessage: action.error
-            };
+        
         case "emailSyntaxError":
             return {
                 ...state,
