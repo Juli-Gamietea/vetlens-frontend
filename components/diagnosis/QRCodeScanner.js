@@ -23,8 +23,7 @@ export const QRCodeScanner = ({ navigation }) => {
         setScanned(true);
         const res = await CommmonFunctions.callBackendAPI(`/diagnosis/${data}`, 'GET', {}, {}, 'application/json');
         if (res.status === 200) {
-            Alert.alert("Éxito", "El diagnóstico fue encontrado!");
-            // aca habría que poner el cambio de pantalla
+            navigation.navigate("Bobo", {diagnosisId: res.data.id});
         } else {
             Alert.alert("Error", "No se ha encontrado el diagnóstico.")
         }
@@ -48,7 +47,6 @@ export const QRCodeScanner = ({ navigation }) => {
                         <Text style={styles.text}>Esceneá el código QR</Text>
                     </View>
                 </BarCodeScanner>
-                {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
             </View>
     );
 }

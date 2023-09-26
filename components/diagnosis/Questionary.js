@@ -7,8 +7,10 @@ import DatePicker from "react-native-modern-datepicker";
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { callBackendAPI } from '../../utils/CommonFunctions';
+import * as SecureStore from 'expo-secure-store';
 
 export const Questionary = ({ route, navigation }) => {
+    
     const { dog } = route.params;
     const [selectedQuestion, setSelectedQuestion] = React.useState(0);
     const [questionList, setQuestionList] = React.useState([]);
@@ -357,10 +359,24 @@ export const Questionary = ({ route, navigation }) => {
         }
     }
 
-    const handleFinalize = () => {
+    const handleFinalize = async () => {
 
         if (isQuestionaryComplete()) {
-            navigation.navigate("Dashboard");
+            const username = await SecureStore.getItemAsync('username');
+            if (username) {
+                try {
+                    const res = await callBackendAPI(`/diagnosis/start`, 'POST', {
+                     username: username,
+                     dog_id: dog.id,
+                     questions: answers   
+                    })
+                    if (res) {
+                        navigation.navigate("MessageScreen", {action: 'questionary', diagnosisId: res.data.id});
+                    }
+                } catch (error) {
+                    console.log("ERROR");
+                }
+            }
         }
         else {
             showNotification();
