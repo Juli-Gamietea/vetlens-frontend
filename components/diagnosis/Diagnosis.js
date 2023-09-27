@@ -40,13 +40,18 @@ export const Diagnosis = ({ route, navigation}) => {
     }
 
     const firstButton = () => {
-
+        navigation.navigate('Anamnesis', {diagnosisId: diagnosis.id});
     }
     const secondButton = () => {
-        navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments})
+        navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments});
     }
     const thirdButton = () => {
-
+        if (role === 'VET') {
+            navigation.navigate('Validation');
+        } else {
+            navigation.navigate('GenerateQR', {diagnosisId: diagnosis});
+        }
+        
     }
 
     return(
@@ -174,7 +179,7 @@ const styles = StyleSheet.create(
         },
         dogBioContainer:{
             flex: 1,
-            backgroundColor: '#FDFAFA',
+            backgroundColor: '#FDFFFF',
             borderRadius: 5,
             elevation: 4,
             shadowColor: 'black',
