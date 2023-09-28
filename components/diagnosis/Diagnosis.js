@@ -49,19 +49,26 @@ export const Diagnosis = ({ route, navigation}) => {
             navigation.navigate("ValidationSelection");
         }
     }
+    
     const thirdButton = () => {
         if (role === 'VET') {
             navigation.navigate('Validation');
         } else {
-            navigation.navigate('GenerateQR', {diagnosisId: diagnosis});
+            navigation.navigate('GenerateQR', {diagnosisId: diagnosis.id});
         }
         
+    }
+
+    const parseDate = (date) => {
+        let newDate = date.split("-");
+        newDate = `${newDate[2]}/${newDate[1]}/${newDate[0]}`
+        return newDate;
     }
 
     return(
         <ScrollView style={styles.container}>
             <View style={styles.titleContainer}>
-                 <Text style={styles.titleText}>Diagnóstico de{'\n'} {diagnosis.dog.name} - {diagnosis.date.replaceAll("-", "/")}</Text>
+                 <Text style={styles.titleText}>Diagnóstico de{'\n'} {diagnosis.dog.name} - {parseDate(diagnosis.date)}</Text>
             </View>
             <View style={styles.dogInfoContainer}>
                 <View style={styles.dogPhotoContainer}>
