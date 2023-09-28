@@ -37,6 +37,7 @@ import { TakePicture } from './components/diagnosis/TakePicture';
 import { GenerateQR } from './components/diagnosis/GenerateQR';
 import { Anamnesis } from './components/diagnosis/Anamnesis';
 import { Validation } from './components/diagnosis/Validation';
+import { ValidationSelection } from './components/diagnosis/ValidationSelection';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,6 +67,7 @@ function DashboardTabStack() {
       <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
       <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
       <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
+      <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
     </Stack.Navigator>
   )
 }

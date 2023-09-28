@@ -3,7 +3,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { Link } from '@react-navigation/native';
 
-export const WhiteButtonCard = ({ containerStyle, title, subtext, callback, image }) => {
+export const WhiteButtonCard = ({ containerStyle, title, subtext, callback, image, dontShowChevron }) => {
     return (
         <TouchableOpacity style={[styles.container, containerStyle]} onPress={callback}>
             <View>
@@ -12,7 +12,7 @@ export const WhiteButtonCard = ({ containerStyle, title, subtext, callback, imag
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {image && <Image source={{uri: image}} style={{height: 60, width: 60, marginRight: 30, borderRadius: 5}}/>}
-                <FontAwesome name="chevron-right" size={30} color="#00767D" />
+                {!dontShowChevron && <FontAwesome name="chevron-right" size={30} color="#00767D" />}
             </View>
         </TouchableOpacity>
     )

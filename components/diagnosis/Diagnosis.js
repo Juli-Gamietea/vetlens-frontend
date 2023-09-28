@@ -43,7 +43,11 @@ export const Diagnosis = ({ route, navigation}) => {
         navigation.navigate('Anamnesis', {diagnosisId: diagnosis.id});
     }
     const secondButton = () => {
-        navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments});
+        if (role === "VET") {
+            navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments});
+        } else {
+            navigation.navigate("ValidationSelection");
+        }
     }
     const thirdButton = () => {
         if (role === 'VET') {
