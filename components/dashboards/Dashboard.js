@@ -75,9 +75,9 @@ export const Dashboard = ({ navigation }) => {
                         {role === "VET" && cardsList.length !== 0 ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
                                 }
                             }
                             )
