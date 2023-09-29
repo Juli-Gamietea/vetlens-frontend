@@ -53,7 +53,7 @@ export const Diagnosis = ({ route, navigation}) => {
     
     const thirdButton = () => {
         if (role === 'VET') {
-            navigation.navigate('Validation');
+            navigation.navigate('Validation', {diagnosis: diagnosis});
         } else {
             navigation.navigate('GenerateQR', {diagnosisId: diagnosis.id});
         }

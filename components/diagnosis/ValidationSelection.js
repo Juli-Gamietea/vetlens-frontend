@@ -51,9 +51,9 @@ export const ValidationSelection = ({ route, navigation }) => {
     }
 
     React.useEffect(() => {
-        const getData = () => {
+        const getData = async () => {
             try {
-                const res = callBackendAPI(`/diagnosis/validations/${diagnosisId}`);
+                const res = await callBackendAPI(`/diagnosis/validations/${diagnosisId}`);
                 if (res.data) {
                     setValidations(parseData(res.data));
                 }
@@ -71,7 +71,7 @@ export const ValidationSelection = ({ route, navigation }) => {
             <View style={{ alignItems: 'center', backgroundColor: '#FFF', flex: 1 }}>
                 {validations.length > 0 ? <ScrollView>
                     {validations && validations.map((validation, index) => {
-                        return <WhiteButtonCard title={`${validation.vetName} - ${validation.value === "VALIDATED" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value)} />
+                        return <WhiteButtonCard key={index} title={`${validation.vetName} - ${validation.value === "VALIDATED" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value)} />
                     })}
                 </ScrollView> : (
                     <Text style={styles.nothingToShowText}>Ningún Veterinario ha visto el diagnóstico aún :(</Text>
