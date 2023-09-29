@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import { AuthContext } from "../../utils/auth/AuthContext";
+import { parseDate } from "../../utils/CommonFunctions";
 
 export const Dashboard = ({ navigation }) => {
     const { setIsSignedIn } = React.useContext(AuthContext);
@@ -75,18 +76,18 @@ export const Dashboard = ({ navigation }) => {
                         {role === "VET" && cardsList.length !== 0 ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={parseDate(elem.diagnosis.date)} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={parseDate(elem.diagnosis.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
                                 }
                             }
                             )
                         ) : ( role === "DEFAULT" && cardsList.length !== 0) ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                                 }
                             })
                         ) : (

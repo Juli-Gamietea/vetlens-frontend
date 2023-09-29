@@ -5,43 +5,44 @@ import { ButtonVetLens } from "../common/ButtonVetLens";
 import { InputVetlens } from "../common/InputVetLens";
 import { WhiteButtonCard } from "../common/WhiteButtonCard";
 import { ScrollView } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+import { parseDate } from "../../utils/CommonFunctions";
 
-export const ValidationSelection = ({ navigation }) => {
+export const ValidationSelection = ({ route, navigation }) => {
 
-    const data = [{
-        value: "NOT_VALIDATED",
-        vetName: "Nombre1"
-    }, {
-        value: "NOT_VALIDATED",
-        vetName: "Nombre2"
-    }, {
-        value: "NOT_VALIDATED",
-        vetName: "Nombre3"
-    }, {
-        value: "NOT_VALIDATED",
-        vetName: "Nombre4"
-    }, {
-        value: "VALIDATED",
-        vetName: "Nombre5"
-    }, {
-        value: "NOT_VALIDATED",
-        vetName: "Nombre6"
-    }, {
-        value: "VALIDATED",
-        vetName: "Nombre7"
-    }]
+    const isFocused = useIsFocused();
+    
+    const { diagnosisId, dogName, date } = route.params;
 
-    const sortedData = data.sort((a, b) => {
-        if (a.value === "VALIDATED" && b.value !== "VALIDATED") {
-            return -1;
-        } else if (a.value !== "VALIDATED" && b.value === "VALIDATED") {
-            return 1;
-        } else {
-            return a.vetName.localeCompare(b.vetName);
-        }
-    });
+    const [validations, setValidations] = React.useState([]);
 
-    const [validations, setValidations] = React.useState(sortedData);
+
+
+    const parseData = (data) => {
+
+        const parsedData = [];
+
+        data.map((elem) => {
+            parsedData.push({
+                value: elem.value,
+                vetName: elem.vet["first_name"] + " " + elem.vet["last_name"],
+            })
+        })
+
+        const sortedData = parsedData.sort((a, b) => {
+            if (a.value === "VALIDATED" && b.value !== "VALIDATED") {
+                return -1;
+            } else if (a.value !== "VALIDATED" && b.value === "VALIDATED") {
+                return 1;
+            } else {
+                return a.vetName.localeCompare(b.vetName);
+            }
+        });
+
+        return sortedData;
+    }
+
+
 
     const goToValidation = (status) => {
         if (status === "VALIDATED") {
@@ -49,16 +50,32 @@ export const ValidationSelection = ({ navigation }) => {
         }
     }
 
+    React.useEffect(() => {
+        const getData = () => {
+            try {
+                const res = callBackendAPI(`/diagnosis/validations/${diagnosisId}`);
+                if (res.data) {
+                    setValidations(parseData(res.data));
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getData();
+    }, [isFocused])
+
     return (
         <View style={styles.mainContainer}>
-            <Text style={styles.titleText}>Diagnóstico de:{'\n'} {"Tito"} - {"10/10/2023"}</Text>
+            <Text style={styles.titleText}>Diagnóstico de:{'\n'} {dogName} - {parseDate(date)}</Text>
             <Text style={styles.subtitle}>Veterinarios que han visto el diagnóstico</Text>
             <View style={{ alignItems: 'center', backgroundColor: '#FFF', flex: 1 }}>
-                <ScrollView>
+                {validations.length > 0 ? <ScrollView>
                     {validations && validations.map((validation, index) => {
-                        return <WhiteButtonCard title={`${validation.vetName} - ${validation.value === "VALIDATED" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value)}/>
+                        return <WhiteButtonCard title={`${validation.vetName} - ${validation.value === "VALIDATED" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value)} />
                     })}
-                </ScrollView>
+                </ScrollView> : (
+                    <Text style={styles.nothingToShowText}>Ningún Veterinario ha visto el diagnóstico aún :(</Text>
+                )}
             </View>
         </View>
     )
@@ -94,5 +111,11 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'center'
+    },
+    nothingToShowText: {
+        fontFamily: "PoppinsBold", 
+        fontSize: 18, 
+        textAlign: 'center', 
+        marginTop: 50
     }
 })

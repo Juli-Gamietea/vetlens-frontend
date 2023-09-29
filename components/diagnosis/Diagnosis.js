@@ -2,6 +2,7 @@ import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from "rea
 import React from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { parseDate } from "../../utils/CommonFunctions";
 
 export const Diagnosis = ({ route, navigation}) => {
     const { diagnosis, role } = route.params;
@@ -46,7 +47,7 @@ export const Diagnosis = ({ route, navigation}) => {
         if (role === "VET") {
             navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments});
         } else {
-            navigation.navigate("ValidationSelection");
+            navigation.navigate("ValidationSelection", {diagnosisId: diagnosis.id, dogName: diagnosis.dog.name, date: diagnosis.date});
         }
     }
     
@@ -57,12 +58,6 @@ export const Diagnosis = ({ route, navigation}) => {
             navigation.navigate('GenerateQR', {diagnosisId: diagnosis.id});
         }
         
-    }
-
-    const parseDate = (date) => {
-        let newDate = date.split("-");
-        newDate = `${newDate[2]}/${newDate[1]}/${newDate[0]}`
-        return newDate;
     }
 
     return(

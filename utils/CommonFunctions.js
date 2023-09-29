@@ -55,3 +55,9 @@ export const callBackendAPI = async (url, method = 'GET', data = null, headers =
     }
   }
 }
+
+export const parseDate = (date) => {
+  let newDate = date.split("-");
+  newDate = `${newDate[2]}/${newDate[1]}/${newDate[0]}`
+  return newDate;
+}
