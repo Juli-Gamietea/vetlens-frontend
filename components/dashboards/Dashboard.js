@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import { AuthContext } from "../../utils/auth/AuthContext";
+import { parseDate } from "../../utils/CommonFunctions";
 
 export const Dashboard = ({ navigation }) => {
     const { setIsSignedIn } = React.useContext(AuthContext);
@@ -28,9 +29,14 @@ export const Dashboard = ({ navigation }) => {
         if (role === "VET") {
             navigation.navigate("QRScanner");
         } else {
+            navigation.navigate("History", {qr: true});
             // navigation.navigate("GenerateQR", {diagnosisId: 16})
             //debería ir a un listado de diagnósticos y luego de seleccionarlo, se generaría el QR.
         }
+    }
+
+    const goToDiagnosis = (diagnosis) => {
+        navigation.navigate("Diagnosis", {diagnosis: diagnosis, role: role});
     }
 
     React.useEffect(() => {
@@ -62,14 +68,6 @@ export const Dashboard = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <Button title={"Cerrar sesión"} onPress={async () => {
-
-                await SecureStore.deleteItemAsync('token');
-                await SecureStore.deleteItemAsync('refreshToken');
-                await SecureStore.deleteItemAsync('role');
-                await SecureStore.deleteItemAsync('username');
-                setIsSignedIn(false)
-            }} /> */}
             <Text style={styles.title}>¡Bienvenido, {userData.name}!</Text>
             <View style={{ width: '100%' }}>
                 <Text style={styles.subsectionText}>{role === "VET" ? "Diagnósticos pendientes de validación" : "Diagnósticos recientes"}</Text>
@@ -79,18 +77,18 @@ export const Dashboard = ({ navigation }) => {
                         {role === "VET" && cardsList.length !== 0 ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard key={index} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={parseDate(elem.diagnosis.date)} containerStyle={{ alignSelf: 'center' }} image={elem.diagnosis.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard key={index} title={elem.diagnosis.dog.name} subtext={elem.diagnosis.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem.diagnosis)} title={elem.diagnosis.dog.name} subtext={parseDate(elem.diagnosis.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.diagnosis.dog.photoUrl} />
                                 }
                             }
                             )
                         ) : ( role === "DEFAULT" && cardsList.length !== 0) ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
-                                    return <WhiteButtonCard key={index} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />
                                 } else {
-                                    return <WhiteButtonCard key={index} title={elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
+                                    return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                                 }
                             })
                         ) : (

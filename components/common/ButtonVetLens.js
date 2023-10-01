@@ -2,22 +2,40 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font'
 
-export const ButtonVetLens = ({text, callback, style, filled}) => {
+export const ButtonVetLens = ({text, callback, style, filled, disabled}) => {
     
 
     if (filled) {
-        return (
-            <TouchableOpacity onPress={callback} style={[styles.containerFilled, style]}>
-                <Text style={styles.buttonFilled}>{text}</Text>
-            </TouchableOpacity>
-        );
+        if (disabled) {
+            return (
+                <TouchableOpacity onPress={callback} style={[styles.containerFilledDisabled, style]} disabled>
+                    <Text style={styles.buttonFilled}>{text}</Text>
+                </TouchableOpacity>
+            );
+        } else {
+
+            return (
+                <TouchableOpacity onPress={callback} style={[styles.containerFilled, style]} >
+                    <Text style={styles.buttonFilled}>{text}</Text>
+                </TouchableOpacity>
+            );
+        }
     }
     else {
-        return (
-            <TouchableOpacity onPress={callback} style={[styles.containerEmpty, style]}>
-                <Text style={styles.buttonEmpty}>{text}</Text>
-            </TouchableOpacity>
-        );
+        if (disabled) {
+            return (
+                <TouchableOpacity onPress={callback} style={[styles.containerEmptyDisabled, style]} disabled>
+                    <Text style={styles.buttonEmpty}>{text}</Text>
+                </TouchableOpacity>
+            );
+        } else {
+
+            return (
+                <TouchableOpacity onPress={callback} style={[styles.containerEmpty, style]}>
+                    <Text style={styles.buttonEmpty}>{text}</Text>
+                </TouchableOpacity>
+            );
+        }
     }
 
     
@@ -47,6 +65,18 @@ const styles = StyleSheet.create({
         fontFamily: 'PoppinsRegular',
         color: "#00A6B0",
         alignSelf: "center"
+    },
+    containerFilledDisabled: { 
+        backgroundColor: "#d8e6e8",
+        borderRadius: 15,
+        padding: 8
+    },
+    containerEmptyDisabled: {
+        backgroundColor: "#FFFFFF",
+        borderWidth: 2,
+        borderColor: "#d8e6e8",
+        borderRadius: 15,
+        padding: 8
     },
 
 })

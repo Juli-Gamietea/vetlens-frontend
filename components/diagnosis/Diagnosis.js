@@ -2,6 +2,7 @@ import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from "rea
 import React from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { parseDate } from "../../utils/CommonFunctions";
 
 export const Diagnosis = ({ route, navigation}) => {
     const { diagnosis, role } = route.params;
@@ -40,19 +41,29 @@ export const Diagnosis = ({ route, navigation}) => {
     }
 
     const firstButton = () => {
-
+        navigation.navigate('Anamnesis', {diagnosisId: diagnosis.id});
     }
     const secondButton = () => {
-        navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments})
+        if (role === "VET") {
+            navigation.navigate('Treatments', {diagnosis: diagnosis, treatments: treatments});
+        } else {
+            navigation.navigate("ValidationSelection", {diagnosisId: diagnosis.id, dogName: diagnosis.dog.name, date: diagnosis.date});
+        }
     }
+    
     const thirdButton = () => {
-
+        if (role === 'VET') {
+            navigation.navigate('Validation', {diagnosis: diagnosis});
+        } else {
+            navigation.navigate('GenerateQR', {diagnosisId: diagnosis.id});
+        }
+        
     }
 
     return(
         <ScrollView style={styles.container}>
             <View style={styles.titleContainer}>
-                 <Text style={styles.titleText}>Diagnóstico de{'\n'} {diagnosis.dog.name} - {diagnosis.date.replaceAll("-", "/")}</Text>
+                 <Text style={styles.titleText}>Diagnóstico de{'\n'} {diagnosis.dog.name} - {parseDate(diagnosis.date)}</Text>
             </View>
             <View style={styles.dogInfoContainer}>
                 <View style={styles.dogPhotoContainer}>
@@ -174,7 +185,7 @@ const styles = StyleSheet.create(
         },
         dogBioContainer:{
             flex: 1,
-            backgroundColor: '#FDFAFA',
+            backgroundColor: '#FDFFFF',
             borderRadius: 5,
             elevation: 4,
             shadowColor: 'black',

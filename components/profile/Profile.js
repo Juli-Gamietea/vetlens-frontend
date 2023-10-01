@@ -7,7 +7,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { callBackendAPI } from "../../utils/CommonFunctions";
 import { useIsFocused } from '@react-navigation/native';
+import { AuthContext } from "../../utils/auth/AuthContext";
+
 export const Profile = ( { navigation } ) => {
+
+    const {setIsSignedIn} = React.useContext(AuthContext);
+
     const isFocused = useIsFocused();
     React.useEffect(() => {
         const getData = async() => {
@@ -82,6 +87,19 @@ export const Profile = ( { navigation } ) => {
         }
     }
     
+    const logout = async () => {
+        await deleteStoredData();
+        setIsSignedIn(false);
+    }
+
+    const deleteStoredData = async () => {
+        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('refreshToken');
+        await SecureStore.deleteItemAsync('user');
+        await SecureStore.deleteItemAsync('username');
+        await SecureStore.deleteItemAsync('role');
+    }
+
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView>
@@ -147,7 +165,8 @@ export const Profile = ( { navigation } ) => {
                     </View>
                     <View style={styles.formContainerItem2}>
                         <ButtonVetLens  callback={changePassword} text={"Cambiar contraseña"} filled={false} />
-                        <ButtonVetLens style={{marginTop: 15}}callback={updateProfile} text={"Actualizar"} filled={true} />
+                        <ButtonVetLens style={{marginTop: 15}} callback={updateProfile} text={"Actualizar"} filled={true} />
+                        <ButtonVetLens style={{marginTop: 20}} callback={logout} text={"Cerrar sesión"} />
                     </View>
                     
                 </View>

@@ -3,9 +3,14 @@ import React, {useState} from "react";
 import * as SecureStore from 'expo-secure-store';
 import { callBackendAPI } from "../../utils/CommonFunctions";
 import { WhiteButtonCard } from "../common/WhiteButtonCard";
+import { parseDate } from "../../utils/CommonFunctions";
 
-export const History = ({navigation}) => {
+export const History = ({route, navigation}) => {
     const [diagnosis, setDiagnosis] = useState([])
+    let qr;
+    if (route.params) {
+        qr = route.params.qr;
+    }
     const [role, setRole] = useState([])
     React.useEffect(() => { 
         
@@ -26,7 +31,12 @@ export const History = ({navigation}) => {
     }, [])
 
     const viewDiagnosis = (index) => {
-        navigation.navigate("Diagnosis", {diagnosis: diagnosis[index], role: role})
+        if (qr) {
+            console.log(diagnosis[index].id)
+            navigation.navigate("GenerateQR", {diagnosisId: diagnosis[index].id})
+        } else {
+            navigation.navigate("Diagnosis", {diagnosis: diagnosis[index], role: role})
+        }
     }
 
     return (
@@ -39,7 +49,7 @@ export const History = ({navigation}) => {
                 (diagnosis.length !== 0)
                 ?   (diagnosis.map((elem, index) => {
                         return(
-                            <WhiteButtonCard callback={()=> viewDiagnosis(index)} key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={elem.date.replaceAll("-", "/")} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
+                            <WhiteButtonCard callback={()=> viewDiagnosis(index)} key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                         );
                     }))
                 : <Text style={styles.defaultText}> Aún no tiene diagnósticos {'\n'}realizados :( </Text>

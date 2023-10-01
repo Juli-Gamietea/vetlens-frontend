@@ -5,10 +5,13 @@ import * as CommmonFunctions from '../../utils/CommonFunctions'
 import qrFrame from '../../assets/icons/png/QR-Frame-Round.png'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
+import { Camera } from 'expo-camera';
 
 export const QRCodeScanner = ({ navigation }) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
@@ -17,17 +20,21 @@ export const QRCodeScanner = ({ navigation }) => {
         };
 
         getBarCodeScannerPermissions();
-    }, []);
+        setScanned(false);
+        console.log("went back");
+    }, [isFocused]);
 
     const handleBarCodeScanned = async ({ type, data }) => {
         setScanned(true);
-        const res = await CommmonFunctions.callBackendAPI(`/diagnosis/${data}`, 'GET', {}, {}, 'application/json');
+        const res = await CommmonFunctions.callBackendAPI(`/diagnosis/${data}`);
         if (res.status === 200) {
-            navigation.navigate("Bobo", {diagnosisId: res.data.id});
+            navigation.navigate("Diagnosis", { diagnosis: res.data, role: 'VET' });
         } else {
             Alert.alert("Error", "No se ha encontrado el diagnóstico.")
         }
     };
+
+    setTimeout(() => setScanned(false), 5000)
 
     if (hasPermission === null) {
         return <Text>Requesting for camera permission</Text>;
@@ -37,17 +44,21 @@ export const QRCodeScanner = ({ navigation }) => {
     }
 
     return (
-            <View style={styles.container}>
-                <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    style={[{}, styles.cameraFeed]}
-                >
-                    <Image source={qrFrame} style={{ height: 250, width: 250}} />
-                    <View style={styles.frame}>
-                        <Text style={styles.text}>Esceneá el código QR</Text>
-                    </View>
-                </BarCodeScanner>
-            </View>
+        <View style={styles.container}>
+            {isFocused && <Camera
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                barCodeScannerSettings={{
+                    barCodeTypes: ['qr'],
+                }}
+                style={[{}, styles.cameraFeed]}
+                ratio='16:9'
+            >
+                <Image source={qrFrame} style={{ height: 250, width: 250 }} />
+                <View style={styles.frame}>
+                    <Text style={styles.text}>Esceneá el código QR</Text>
+                </View>
+            </Camera>}
+        </View>
     );
 }
 

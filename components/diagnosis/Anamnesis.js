@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { callBackendAPI } from '../../utils/CommonFunctions';
 import { ButtonVetLens } from '../common/ButtonVetLens';
 import * as React from 'react';
+import { parseDate } from '../../utils/CommonFunctions';
 
 
 export const Anamnesis = ({ navigation, route }) => {
@@ -10,11 +11,6 @@ export const Anamnesis = ({ navigation, route }) => {
     const { diagnosisId } = route.params;
     const [answers, setAnswers] = React.useState(null);
     const [diagnosis, setDiagnosis] = React.useState(null);
-
-    const parseDate = (date) => {
-        const splitDate = date.split("-");
-        return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
-    }
 
     function processQuestions(questions) {
         const result = [];

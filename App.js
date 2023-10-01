@@ -36,6 +36,8 @@ import { MessageScreen } from './components/diagnosis/MessageScreen';
 import { TakePicture } from './components/diagnosis/TakePicture';
 import { GenerateQR } from './components/diagnosis/GenerateQR';
 import { Anamnesis } from './components/diagnosis/Anamnesis';
+import { Validation } from './components/diagnosis/Validation';
+import { ValidationSelection } from './components/diagnosis/ValidationSelection';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +64,12 @@ function DashboardTabStack() {
       <Stack.Screen name="MessageScreen" options={{headerShown: true}} component={MessageScreen}/>
       <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
       <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>
+      <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
+      <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
+      <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
+      <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
+      <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
+
     </Stack.Navigator>
   )
 }
@@ -78,6 +86,11 @@ function ScannerTabStack() {
         },
         headerTitleAlign: 'center'
       }}/>
+      <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
+      <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
+      <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>
+      <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
+      <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
     </Stack.Navigator>
   )
 }
@@ -106,6 +119,9 @@ function HistoryTabStack() {
       <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
       <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
       <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
+      <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>
+      <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
+      <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
     </Stack.Navigator>
   )
 }
