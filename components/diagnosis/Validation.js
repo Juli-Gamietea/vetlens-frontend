@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import * as React from 'react';
-import { callBackendAPI } from "../../utils/CommonFunctions";
+import { callBackendAPI, parseDate } from "../../utils/CommonFunctions";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import { InputVetlens } from "../common/InputVetLens";
 import * as SecureStore from 'expo-secure-store';
@@ -9,12 +9,13 @@ export const Validation = ({ route, navigation }) => {
 
     const [notes, setNotes] = React.useState("");
     const [validatedOption, setValidatedOption] = React.useState("");
-    const { diagnosis } = route.params;
+    const { diagnosis, vetUsername } = route.params;
     const [role, setRole] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [disease, setDisease] = React.useState("");
     const [diseaseError, setDiseaseError] = React.useState("");
     const [validationId, setValidationId] = React.useState("");
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const handleYes = () => {
         setValidatedOption("Si");
@@ -66,32 +67,43 @@ export const Validation = ({ route, navigation }) => {
     React.useEffect(() => {
         const getData = async () => {
             try {
+                setIsLoading(true);
                 const role = await SecureStore.getItemAsync("role");
                 const username = await SecureStore.getItemAsync("username");
                 setRole(role);
                 setUsername(username);
-                const res = await callBackendAPI(`/diagnosis/${diagnosis.id}/${username}`)
-                if (res.data.disease === diagnosis.anamnesis.result) {
-                    setValidatedOption("Si");
-                } else if ( res.data.disease ){
-                    setValidatedOption("No");
+                if (role === "VET") {
+                    const res = await callBackendAPI(`/diagnosis/${diagnosis.id}/${username}`)
+                    if (res.data.disease === diagnosis.anamnesis.result) {
+                        setValidatedOption("Si");
+                    } else if ( res.data.disease ){
+                        setValidatedOption("No");
+                        setDisease(res.data.disease);
+                    }
+                    setValidationId(res.data.id)
+                    if (res.data.notes) {
+                        setNotes(res.data.notes);
+                    }
+                } else {
+                    const res = await callBackendAPI(`/diagnosis/${diagnosis.id}/${vetUsername}`)
                     setDisease(res.data.disease);
-                }
-                setValidationId(res.data.id)
-                if (res.data.notes) {
-                    setNotes(res.data.notes);
                 }
             } catch (error) {
                 console.log(error)
             }
         }
         getData();
+        setIsLoading(false);
     }, [])
+
+    if (isLoading) {
+        return <Text>Loading...</Text>
+    }
 
     if (role === "VET") {
         return (
             <ScrollView style={styles.mainContainer}>
-                <Text style={styles.titleText}>Diagnóstico de:{'\n'} {"Tito"} - {"10/10/2023"}</Text>
+                <Text style={styles.titleText}>Diagnóstico de:{'\n'} {diagnosis.dog.name} - {parseDate(diagnosis.date)}</Text>
                 <Text style={styles.subtitle}>Resultados</Text>
                 <Text style={styles.text}>VetLens propuso "{diagnosis.anamnesis.result}" como diagnóstico.</Text>
                 <Text style={styles.text}>¿Está de acuerdo?</Text>
@@ -138,12 +150,12 @@ export const Validation = ({ route, navigation }) => {
     else {
         return (
             <View style={styles.mainContainer}>
-                <Text style={styles.titleText}>Diagnóstico de:{'\n'} {"Tito"} - {"10/10/2023"}</Text>
+                <Text style={styles.titleText}>Diagnóstico de:{'\n'} {diagnosis.dog.name} - {parseDate(diagnosis.date)}</Text>
                 <Text style={styles.subtitle}>Resultados</Text>
-                <Text style={styles.text}>El veterinario ha confirmado que su perro padece de "{"dermatofitosis"}".</Text>
+                {disease && <Text style={styles.text}>El veterinario ha determinado que su perro padece de "{disease}".</Text>}
                 <Text style={styles.text}>Contáctese con su veterinario si aún no lo ha hecho para tener más detalles.</Text>
                 <View style={{ height: 320 }} />
-                <ButtonVetLens text={"Volver"} />
+                <ButtonVetLens text={"Volver"} callback={() => navigation.goBack()} />
             </View>)
     }
 }

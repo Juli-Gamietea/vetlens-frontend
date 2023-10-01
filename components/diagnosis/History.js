@@ -5,8 +5,12 @@ import { callBackendAPI } from "../../utils/CommonFunctions";
 import { WhiteButtonCard } from "../common/WhiteButtonCard";
 import { parseDate } from "../../utils/CommonFunctions";
 
-export const History = ({navigation}) => {
+export const History = ({route, navigation}) => {
     const [diagnosis, setDiagnosis] = useState([])
+    let qr;
+    if (route.params) {
+        qr = route.params.qr;
+    }
     const [role, setRole] = useState([])
     React.useEffect(() => { 
         
@@ -27,7 +31,12 @@ export const History = ({navigation}) => {
     }, [])
 
     const viewDiagnosis = (index) => {
-        navigation.navigate("Diagnosis", {diagnosis: diagnosis[index], role: role})
+        if (qr) {
+            console.log(diagnosis[index].id)
+            navigation.navigate("GenerateQR", {diagnosisId: diagnosis[index].id})
+        } else {
+            navigation.navigate("Diagnosis", {diagnosis: diagnosis[index], role: role})
+        }
     }
 
     return (

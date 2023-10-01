@@ -26,6 +26,7 @@ export const ValidationSelection = ({ route, navigation }) => {
             parsedData.push({
                 value: elem.value,
                 vetName: elem.vet["first_name"] + " " + elem.vet["last_name"],
+                vetUsername: elem.vet.username
             })
         })
 
@@ -44,9 +45,10 @@ export const ValidationSelection = ({ route, navigation }) => {
 
 
 
-    const goToValidation = (status) => {
-        if (status === "VALIDATED") {
-            navigation.navigate("Validation");
+    const goToValidation = async (status, username) => {
+        if (status === "CORRECT" || status === "INCORRECT") {
+            const res = await callBackendAPI(`/diagnosis/${diagnosisId}`);
+            navigation.navigate("Validation", {diagnosis: res.data, vetUsername: username});
         }
     }
 
@@ -71,7 +73,7 @@ export const ValidationSelection = ({ route, navigation }) => {
             <View style={{ alignItems: 'center', backgroundColor: '#FFF', flex: 1 }}>
                 {validations.length > 0 ? <ScrollView>
                     {validations && validations.map((validation, index) => {
-                        return <WhiteButtonCard key={index} title={`${validation.vetName} - ${validation.value === "VALIDATED" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value)} />
+                        return <WhiteButtonCard key={index} title={`${validation.vetName} - ${validation.value === "CORRECT" || validation.value === "INCORRECT" ? "Validado" : "No Validado"}`} containerStyle={{ marginHorizontal: 5, marginVertical: 6 }} dontShowChevron={validation.value === "NOT_VALIDATED"} callback={() => goToValidation(validation.value, validation.vetUsername)} />
                     })}
                 </ScrollView> : (
                     <Text style={styles.nothingToShowText}>Ningún Veterinario ha visto el diagnóstico aún :(</Text>

@@ -68,6 +68,8 @@ function DashboardTabStack() {
       <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
       <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
       <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
+      <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
+
     </Stack.Navigator>
   )
 }

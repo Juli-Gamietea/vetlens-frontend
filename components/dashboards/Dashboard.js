@@ -29,6 +29,7 @@ export const Dashboard = ({ navigation }) => {
         if (role === "VET") {
             navigation.navigate("QRScanner");
         } else {
+            navigation.navigate("History", {qr: true});
             // navigation.navigate("GenerateQR", {diagnosisId: 16})
             //debería ir a un listado de diagnósticos y luego de seleccionarlo, se generaría el QR.
         }
