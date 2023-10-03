@@ -108,7 +108,7 @@ export const MyDogs = ({ route, navigation }) => {
                                                     }
                                                 </View>
                                                 <Text style={styles.info}> {elem.dog_breed} </Text>
-                                                <Text style={styles.info}> {elem.date_of_birth} </Text>
+                                                <Text style={styles.info}> {elem.date_of_birth.replaceAll("-","/")} </Text>
                                                 { (elem.sex === "MALE")
                                                     ? <Text style={styles.info}> Macho </Text>
                                                     : <Text style={styles.info}> Hembra </Text>

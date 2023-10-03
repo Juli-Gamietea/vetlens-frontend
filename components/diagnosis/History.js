@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { callBackendAPI } from "../../utils/CommonFunctions";
 import { WhiteButtonCard } from "../common/WhiteButtonCard";
 import { parseDate } from "../../utils/CommonFunctions";
+import { useIsFocused } from '@react-navigation/native';
 
 export const History = ({route, navigation}) => {
     const [diagnosis, setDiagnosis] = useState([])
@@ -12,6 +13,7 @@ export const History = ({route, navigation}) => {
         qr = route.params.qr;
     }
     const [role, setRole] = useState([])
+    const isFocused = useIsFocused();
     React.useEffect(() => { 
         
         const getDiagnosis = async () => {
@@ -28,7 +30,7 @@ export const History = ({route, navigation}) => {
             }
         }
         getDiagnosis();
-    }, [])
+    }, [isFocused])
 
     const viewDiagnosis = (index) => {
         if (qr) {

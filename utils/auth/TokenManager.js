@@ -59,7 +59,7 @@ export async function getToken() {
         const token = await SecureStore.getItemAsync('token');
         const expiryDate = await SecureStore.getItemAsync('tokenExpiryDate');
 
-        console.log("getToken() - stored token: " + token);
+        //console.log("getToken() - stored token: " + token);
 
         if (token && expiryDate) {
             if (Date.now() > expiryDate) {
@@ -94,7 +94,7 @@ export async function renewToken() {
     try {
 
         const refresh_token = await SecureStore.getItemAsync('refreshToken');
-        console.log("renewToken() - refreshToken: " + refresh_token);
+        //console.log("renewToken() - refreshToken: " + refresh_token);
 
         const config = {
             url: `${API_URL}/auth/refresh`,
@@ -106,11 +106,11 @@ export async function renewToken() {
             }
         }
         
-        console.log("renewToken() - config: " + JSON.stringify(config))
+        //console.log("renewToken() - config: " + JSON.stringify(config))
 
         const res = await axios(config);
 
-        console.log("renewToken() - response: " + JSON.stringify(res.data))
+        //console.log("renewToken() - response: " + JSON.stringify(res.data))
         
 
         if (res.data) {
@@ -120,14 +120,14 @@ export async function renewToken() {
                 expiryDate: Date.now() + 86400000,
             };
 
-            console.log("renewToken() - new token: " + JSON.stringify(access_token))
+            //console.log("renewToken() - new token: " + JSON.stringify(access_token))
             
             const refresh_token = {
                 token: res.data.refreshToken,
                 expiryDate: Date.now() + 31536000000,
             };
 
-            console.log("renewToken() - new refresh: " + JSON.stringify(refresh_token));
+            //console.log("renewToken() - new refresh: " + JSON.stringify(refresh_token));
        
             await storeToken(access_token, refresh_token);
             return access_token.token;

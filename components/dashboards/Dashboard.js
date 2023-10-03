@@ -1,5 +1,5 @@
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context"
+import { Text, View, StyleSheet } from 'react-native';
 import { callBackendAPI } from "../../utils/CommonFunctions";
 import * as SecureStore from 'expo-secure-store';
 import * as React from 'react';
@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import { AuthContext } from "../../utils/auth/AuthContext";
 import { parseDate } from "../../utils/CommonFunctions";
+import { useIsFocused } from '@react-navigation/native';
 
 export const Dashboard = ({ navigation }) => {
     const { setIsSignedIn } = React.useContext(AuthContext);
@@ -19,7 +20,7 @@ export const Dashboard = ({ navigation }) => {
     })
     const [role, setRole] = React.useState("");
     const [cardsList, setCardsList] = React.useState([]);
-
+    const isFocused = useIsFocused();
 
     const startQuestionary = () => {
         navigation.navigate("MyDogs", {action: "questionary"})
@@ -62,7 +63,7 @@ export const Dashboard = ({ navigation }) => {
             }
         }
         initialSetup();
-    }, [])
+    }, [isFocused])
 
     
 
