@@ -62,6 +62,7 @@ function DashboardTabStack() {
         headerTitleAlign: 'center'
       }} />
       <Stack.Screen name="MyDogs" options={{headerShown: false, title: ""}} initialParams={{action: 'mydogs'}} component={MyDogs}/>
+      <Stack.Screen name="DogProfile" options={{headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={DogProfile} />
       <Stack.Screen name="MessageScreen" options={{headerShown: true}} component={MessageScreen}/>
       <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
       <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>

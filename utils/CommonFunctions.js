@@ -61,3 +61,17 @@ export const parseDate = (date) => {
   newDate = `${newDate[2]}/${newDate[1]}/${newDate[0]}`
   return newDate;
 }
+
+export const compareDiseaseName = (disease, result) => {
+  if (disease.replace(" ", "_").replace("á", "a").toUpperCase() === result.toUpperCase()) {
+    return true
+  }
+  return false
+}
+
+export const isNotDiscernible = (result) => {
+  if (result.toUpperCase() === "NO_DISCERNIBLE") {
+    return true;
+  }
+  return false;
+} 
