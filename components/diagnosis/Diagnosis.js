@@ -9,6 +9,7 @@ export const Diagnosis = ({ route, navigation}) => {
     React.useEffect(() => {
         diagnosis.anamnesis.inferences.forEach(element => {
             if (element.disease.name.toUpperCase() === diagnosis.anamnesis.result.toUpperCase() && (diagnosis.anamnesis.result.toUpperCase() !== "NO DISCERNIBLE")) {
+                console.log((parseFloat(element.probability.replace(",", "."))*100).toFixed(2));
                 setProbability((parseFloat(element.probability.replace(",", "."))*100).toFixed(2));
                 setTreatments(element.disease.treatments)
             }

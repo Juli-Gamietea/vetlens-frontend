@@ -38,6 +38,7 @@ import { GenerateQR } from './components/diagnosis/GenerateQR';
 import { Anamnesis } from './components/diagnosis/Anamnesis';
 import { Validation } from './components/diagnosis/Validation';
 import { ValidationSelection } from './components/diagnosis/ValidationSelection';
+import { GalleryPictureSelection } from './components/diagnosis/GalleryPictureSelection';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,6 +70,7 @@ function DashboardTabStack() {
       <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
       <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
       <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
+      <Stack.Screen name="GallerySelection" options={{headerShown: true, title: "Seleccionar Foto", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GalleryPictureSelection}/>
 
     </Stack.Navigator>
   )
