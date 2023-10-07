@@ -141,7 +141,7 @@ export const DogProfile = ({ route, navigation }) => {
                 }
                 
                 if (variant === 'questionary') {
-                    navigation.navigate('Questions', {dog: data})
+                    navigation.navigate('Questions', {dog: {id: dogId, ...data}})
                 } else {
                     navigation.navigate('MyDogs', {action: 'mydogs'})
                 }

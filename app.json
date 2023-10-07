@@ -8,9 +8,9 @@
         }
       ]
     ],
-    "name": "vetlens-frontend",
-    "slug": "vetlens-frontend",
-    "version": "1.0.0",
+    "name": "VetLens",
+    "slug": "VetLens",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icons/png/vetlens-logo.png",
     "userInterfaceStyle": "light",
@@ -21,18 +21,17 @@
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["android.permission.CAMERA"],
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "package": "com.frsiciliano.vetlensfrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "82528da1-b318-41c8-b225-13569ef0cb57"
+        "projectId": "ae78c968-372e-46c3-9499-4566cfccf044"
       }
     },
     "owner": "vetlens"

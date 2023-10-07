@@ -39,6 +39,7 @@ import { Anamnesis } from './components/diagnosis/Anamnesis';
 import { Validation } from './components/diagnosis/Validation';
 import { ValidationSelection } from './components/diagnosis/ValidationSelection';
 import { GalleryPictureSelection } from './components/diagnosis/GalleryPictureSelection';
+import { StatusBar } from 'react-native';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -243,6 +244,15 @@ export default function App() {
       }
     }
     lookForToken();
+  }, []);
+
+  React.useEffect(() => {
+
+    StatusBar.setBarStyle('dark-content');
+
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    };
   }, []);
   
   if (!loaded) {

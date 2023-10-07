@@ -17,7 +17,7 @@ export const MyDogs = ({ route, navigation }) => {
     const [currentAction, setCurrentAction] = useState();
 
     React.useEffect(() => { 
-        if (action === 'questionary') {
+        if (action === 'questionary' && isFocused) {
             setModalVisible(true)
         }
         const getDogs = async () => {

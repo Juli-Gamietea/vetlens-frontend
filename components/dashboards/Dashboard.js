@@ -46,11 +46,16 @@ export const Dashboard = ({ navigation }) => {
             try {
                 const StoredUsername = await SecureStore.getItemAsync('username');
                 const StoredRole = await SecureStore.getItemAsync('role');
-
+                console.log(StoredUsername, StoredRole);
                 const resUserData = await callBackendAPI(`/users/${StoredUsername}`, 'GET');
+                console.log("user: " + resUserData.data['first_name'])
                 if (StoredRole === "VET") {
-                    const resDiagnosisValidationData = await callBackendAPI(`/diagnosis/validation/${StoredUsername}/notValidated`, 'GET');
-                    setCardsList(resDiagnosisValidationData.data);
+                    try {
+                        const resDiagnosisValidationData = await callBackendAPI(`/diagnosis/validation/${StoredUsername}/notValidated`, 'GET');
+                        setCardsList(resDiagnosisValidationData.data);
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
                 else {
                     const resRecentDiagnosis = await callBackendAPI(`/diagnosis/recent/${StoredUsername}`, 'GET');
