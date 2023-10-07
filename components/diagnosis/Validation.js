@@ -55,6 +55,8 @@ export const Validation = ({ route, navigation }) => {
 
                 const res = await callBackendAPI('/diagnosis/validate', 'PUT', data);
 
+                navigation.goBack();
+
             } else {
                 setDiseaseError("Por favor, ingrese una enfermedad");
             }

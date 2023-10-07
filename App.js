@@ -40,6 +40,7 @@ import { Validation } from './components/diagnosis/Validation';
 import { ValidationSelection } from './components/diagnosis/ValidationSelection';
 import { GalleryPictureSelection } from './components/diagnosis/GalleryPictureSelection';
 import { StatusBar } from 'react-native';
+import { LogBox } from 'react-native';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -213,6 +214,7 @@ export default function App() {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
+  LogBox.ignoreAllLogs();
 
   const [loaded] = useFonts({
     PoppinsBold: require('./assets/fonts/Poppins-Bold.ttf'),
@@ -225,8 +227,6 @@ export default function App() {
   React.useEffect(() => {
     const lookForToken = async () => {
       try {
-        //await SecureStore.deleteItemAsync('token');
-        //await SecureStore.deleteItemAsync('refreshToken');
         
         await getToken();
         setTimeout(() => { setIsLoading(false); }, 2000)
