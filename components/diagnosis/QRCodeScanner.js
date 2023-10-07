@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Image, Alert } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as CommmonFunctions from '../../utils/CommonFunctions'
 import qrFrame from '../../assets/icons/png/QR-Frame-Round.png'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 
@@ -15,7 +12,7 @@ export const QRCodeScanner = ({ navigation }) => {
 
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
-            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            const { status } = await Camera.requestCameraPermissionsAsync();
             setHasPermission(status === 'granted');
         };
 
