@@ -31,8 +31,6 @@ export const Dashboard = ({ navigation }) => {
             navigation.navigate("QRScanner");
         } else {
             navigation.navigate("History", {qr: true});
-            // navigation.navigate("GenerateQR", {diagnosisId: 16})
-            //debería ir a un listado de diagnósticos y luego de seleccionarlo, se generaría el QR.
         }
     }
 
@@ -49,6 +47,9 @@ export const Dashboard = ({ navigation }) => {
                 console.log(StoredUsername, StoredRole);
                 const resUserData = await callBackendAPI(`/users/${StoredUsername}`, 'GET');
                 console.log("user: " + resUserData.data['first_name'])
+                if (!resUserData.data['is_validated']) {
+                    navigation.navigate("NotValidated");
+                }
                 if (StoredRole === "VET") {
                     try {
                         const resDiagnosisValidationData = await callBackendAPI(`/diagnosis/validation/${StoredUsername}/notValidated`, 'GET');

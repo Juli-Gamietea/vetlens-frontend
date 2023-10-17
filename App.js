@@ -41,6 +41,7 @@ import { ValidationSelection } from './components/diagnosis/ValidationSelection'
 import { GalleryPictureSelection } from './components/diagnosis/GalleryPictureSelection';
 import { StatusBar } from 'react-native';
 import { LogBox } from 'react-native';
+import { NotValidated } from './components/dashboards/NotValidated';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,7 +75,6 @@ function DashboardTabStack() {
       <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
       <Stack.Screen name="History" options={{headerShown: false}} component={History}/>
       <Stack.Screen name="GallerySelection" options={{headerShown: true, title: "Seleccionar Foto", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GalleryPictureSelection}/>
-
     </Stack.Navigator>
   )
 }
@@ -280,6 +280,7 @@ export default function App() {
             ) : (
               <>
                 <Stack.Screen name="TabsVet" component={TabsVet} />
+                <Stack.Screen name="NotValidated" options={{headerShown: false}} component={NotValidated}/>
                 <Stack.Screen name="Bobo" component={Bobo} />
                 <Stack.Screen name="QRScanner" component={QRCodeScanner} />
                 <Stack.Screen name="MyDogs" component={MyDogs} />
