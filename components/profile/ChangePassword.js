@@ -41,7 +41,6 @@ export const ChangePassword = ({ route, navigation }) => {
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView>
-                <Text style={styles.title}>Actualizar contraseña</Text>
                 <View style={styles.formContainer}>
                     <View style={styles.formContainerItem}>
                         <Text style={styles.inputTitle}> Contraseña actual </Text>

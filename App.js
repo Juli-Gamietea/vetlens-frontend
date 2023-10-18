@@ -41,6 +41,8 @@ import { ValidationSelection } from './components/diagnosis/ValidationSelection'
 import { GalleryPictureSelection } from './components/diagnosis/GalleryPictureSelection';
 import { StatusBar } from 'react-native';
 import { LogBox } from 'react-native';
+import { ViewTermsAndConditions } from './components/profile/ViewTermsAndConditions';
+import { MySubscriptions } from './components/profile/MySubscriptions';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,8 +114,10 @@ function DogsTabStack() {
 function ProfileTabStack() {
   return (
     <Stack.Navigator >
-      <Stack.Screen name="Profile" options={{headerShown: false}} component={Profile}/>
-      <Stack.Screen name="ChangePassword" options={{headerShown: false}} component={ChangePassword}/>
+      <Stack.Screen name="Profile" options={{title: "Perfil", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Profile}/>
+      <Stack.Screen name="ChangePassword" options={{title: "Cambiar Contraseña", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ChangePassword}/>
+      <Stack.Screen name="ViewTermsAndConditions" options={{headerShown: false}} component={ViewTermsAndConditions}/>
+      <Stack.Screen name="MySubscriptions" options={{title: 'Planes de Suscripción', headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={MySubscriptions}/>
     </Stack.Navigator>
   )
 }
