@@ -82,9 +82,12 @@ function DashboardTabStack() {
 }
 
 function ScannerTabStack() {
+
+  const {loggedRole} = React.useContext(AuthContext);
+
   return (
     <Stack.Navigator screenOptions={{headerShown: true}}>
-      <Stack.Screen name="QRScanner" 
+      {loggedRole === "VET" && <Stack.Screen name="QRScanner" 
       component={QRCodeScanner}
       options={{
         title: "Encontrar un diagnóstico",
@@ -92,12 +95,14 @@ function ScannerTabStack() {
           fontFamily: "PoppinsRegular"
         },
         headerTitleAlign: 'center'
-      }}/>
+      }}/>}
+      <Stack.Screen name="History" options={{headerShown: true, title: "Seleccionar un diagnóstico", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} initialParams={{qr: true}} component={History}/>
+      <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
       <Stack.Screen name="Diagnosis" options={{headerShown: false}} component={Diagnosis} />
       <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
       <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>
       <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
-      <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
+
     </Stack.Navigator>
   )
 }
@@ -218,6 +223,7 @@ export default function App() {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
+  const [loggedRole, setLoggedRole] = React.useState(null);
   LogBox.ignoreAllLogs();
 
   const [loaded] = useFonts({
@@ -226,16 +232,18 @@ export default function App() {
     PoppinsSemiBold: require('./assets/fonts/Poppins-SemiBold.ttf')
   });
   
-  const authContext = { isLoading, setIsLoading, isSignedIn, setIsSignedIn };
+  const authContext = { isLoading, setIsLoading, isSignedIn, setIsSignedIn, loggedRole, setLoggedRole };
   
   React.useEffect(() => {
     const lookForToken = async () => {
       try {
         
         await getToken();
+        const role = await SecureStore.getItemAsync('role');
         setTimeout(() => { setIsLoading(false); }, 2000)
         setIsSignedIn(true);
-        
+        setLoggedRole(role);
+
       } catch (error) {
         //this means there is no token
         

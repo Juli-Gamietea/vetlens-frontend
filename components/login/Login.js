@@ -15,7 +15,7 @@ export const Login = ({ navigation }) => {
     const [loginState, loginDispatch] = React.useReducer(loginReducer, initialState);
     const { username, password, isUsernameValid, isPasswordValid, userErrorMessage, passwordErrorMessage } = loginState;
     const [isPendingRequest, setIsPendingRequest] = React.useState(false);
-    const {isLoading, setIsLoading, isSignedIn, setIsSignedIn} = React.useContext(AuthContext);
+    const {isLoading, setIsLoading, isSignedIn, setIsSignedIn, setLoggedRole} = React.useContext(AuthContext);
 
     const areInputsValid = () => {
         if (username === "")
@@ -43,6 +43,7 @@ export const Login = ({ navigation }) => {
                 await SecureStore.setItemAsync('user', JSON.stringify(res.data));
                 await SecureStore.setItemAsync('role', String(res.data.role));
                 setIsPendingRequest(false);
+                setLoggedRole(String(res.data.role));
                 setIsSignedIn(true);
             }
             catch (error) {
