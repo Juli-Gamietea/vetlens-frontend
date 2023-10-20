@@ -44,6 +44,7 @@ import { LogBox } from 'react-native';
 import { NotValidated } from './components/dashboards/NotValidated';
 import { ViewTermsAndConditions } from './components/profile/ViewTermsAndConditions';
 import { MySubscriptions } from './components/profile/MySubscriptions';
+import { ForgotPassword } from './components/login/ForgotPassword';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -288,6 +289,7 @@ export default function App() {
                 <Stack.Screen name="RegisterFormVet" component={RegisterFormVet} />
                 <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
                 <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
               </>
             ) : (
               <>

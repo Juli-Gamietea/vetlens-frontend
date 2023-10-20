@@ -17,7 +17,7 @@ export const RegisterForm = ( { route, navigation } ) => {
 
     const {type} = route.params;
     
-    const areInputsValid = async() => {
+    const areInputsValid = async () => {
         
         const available =  await checkUsernameAvailability();
 
@@ -31,8 +31,8 @@ export const RegisterForm = ( { route, navigation } ) => {
             registerDispatch({ type: "usernameError", error: "No puede dejar este campo vacío" });
         if (!validateEmail(email))
             registerDispatch({ type: "emailSyntaxError", error: "Ingrese un email válido"});
-         if (!available && username !== "")
-             registerDispatch({ type: "usernameError", error: "El nombre de usuario esta en uso"});
+        if (!available && username !== "")
+            registerDispatch({ type: "usernameError", error: "El nombre de usuario esta en uso"});
 
         if (firstname !== "" && lastname !== "" && validateEmail(email) && username !== "" && available) {
             return true;

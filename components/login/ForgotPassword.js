@@ -1,56 +1,46 @@
 import React from "react";
 import { loginReducer, initialState } from "./loginReducer";
 import { InputVetlens } from "../common/InputVetLens";
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { ButtonVetLens } from "../common/ButtonVetLens";
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
-import { Link } from '@react-navigation/native';
-import { setToken } from "../../utils/auth/TokenManager";
-import { AuthContext } from "../../utils/auth/AuthContext";
-import * as CommonFunctions from "../../utils/CommonFunctions";
-import * as SecureStore from "expo-secure-store";
+import { callBackendAPI } from "../../utils/CommonFunctions";
 
-export const Login = ({ navigation }) => {
-
+export const ForgotPassword = ({ navigation }) => {
+    
     const [loginState, loginDispatch] = React.useReducer(loginReducer, initialState);
-    const { username, password, isUsernameValid, isPasswordValid, userErrorMessage, passwordErrorMessage } = loginState;
-    const [isPendingRequest, setIsPendingRequest] = React.useState(false);
-    const {isLoading, setIsLoading, isSignedIn, setIsSignedIn, setLoggedRole} = React.useContext(AuthContext);
+    const { username, isUsernameValid, userErrorMessage } = loginState;
 
-    const areInputsValid = () => {
+    const areInputsValid = async () => {
+        const available =  await checkUsernameAvailability();
         if (username === "")
             loginDispatch({ type: "usernameError", error: "No puede dejar este campo vacío" });
-        if (password === "")
-            loginDispatch({ type: "passwordError", error: "No puede dejar este campo vacío" });
-        if (username !== "" && password !== "") {
+        if (available && username !== "")
+            loginDispatch({ type: "usernameError", error: "El usuario no está registrado"});
+        if (username !== "") {
             return true;
         } else {
             return false;
         }
     }
-    const register = () => {
-        navigation.navigate('Register');
+
+    const checkUsernameAvailability = async () => {
+        if (username === "") {
+            return false;
+        } else {
+            const res = await callBackendAPI(`/auth/available/${username}`)
+            return res.data;
+        }
+        
     }
-
-    const login = async () => {
-
-        if (areInputsValid()) {
-            setIsPendingRequest(true);
+    const sendEmail = async () => {
+        if (await areInputsValid()) {
             try {
-                await setToken(username, password);
-                const res = await CommonFunctions.callBackendAPI(`/users/${username}`, 'GET');
-                await SecureStore.setItemAsync('username', username);
-                await SecureStore.setItemAsync('user', JSON.stringify(res.data));
-                await SecureStore.setItemAsync('role', String(res.data.role));
-                setIsPendingRequest(false);
-                setLoggedRole(String(res.data.role));
-                setIsSignedIn(true);
+                await callBackendAPI(`/auth/password/restore/${username}`, "PUT")
+                navigation.navigate("Login")
             }
             catch (error) {
                 console.log(error);
-                loginDispatch({ type: "usernameError", error: "Usuario Incorrecto" });
-                loginDispatch({ type: "passwordError", error: "Contraseña Incorrecta" });
-                setIsPendingRequest(false);
             }
         }
     }
@@ -62,6 +52,9 @@ export const Login = ({ navigation }) => {
                 <Text style={styles.logoText}>VetLens</Text>
             </View>
             <View style={styles.formContainer}>
+                <Text style={styles.text}>Ingrese su nombre de usuario, en caso de ser
+                válido un mail se enviará a la casilla con la que
+                se registró. Gracias!</Text>
                 <View style={styles.formContainerItem}>
                     <InputVetlens
                         placeholder='Nombre de usuario'
@@ -76,32 +69,8 @@ export const Login = ({ navigation }) => {
                     />
                 </View>
 
-                <View style={styles.formContainerItem}>
-                    <InputVetlens
-                        placeholder='Contraseña'
-                        onChange={(text) => loginDispatch({
-                            type: "fieldUpdate",
-                            field: "password",
-                            value: text
-                        })}
-                        value={password}
-                        isValid={isPasswordValid}
-                        errorMessage={passwordErrorMessage}
-                        passwrd
-                    />
-                </View >
-
-
-                <View style={styles.formContainerItem2}>
-                    {!isPendingRequest && <ButtonVetLens callback={login} text={"Iniciar Sesión"} filled={true} />}
-                    {isPendingRequest &&
-                        <TouchableOpacity style={styles.spinner}>
-                            <ActivityIndicator color={"#FFF"} />
-                        </TouchableOpacity>}
-                </View>
-                <Link to={{ screen: 'ForgotPassword' }} style={styles.link}>¿Olvidaste tu contraseña?</Link>
                 <View style={styles.formContainerItem3}>
-                    <ButtonVetLens callback={register} text={"Crear una cuenta"} filled={false} style={styles.createAccountStyle} />
+                    <ButtonVetLens callback={sendEmail} text={"Recuperar contraseña"} filled={true} style={styles.createAccountStyle} />
                 </View>
             </View>
         </ScrollView>
@@ -125,9 +94,10 @@ const styles = StyleSheet.create(
         }
         ,
         text: {
-            fontFamily: "PoppinsSemiBold",
-            fontSize: 36,
+            fontFamily: "PoppinsRegular",
+            fontSize: 18,
             paddingBottom: 10,
+            textAlign: 'center'
         }
         ,
         textContainer: {
@@ -148,8 +118,7 @@ const styles = StyleSheet.create(
         formContainerItem: {
             flex: 2,
             flexDirection: 'column',
-            justifyContent: 'flex-start',
-            marginVertical: 5
+            justifyContent: 'flex-start'
         }
         ,
         formContainerItem2: {
