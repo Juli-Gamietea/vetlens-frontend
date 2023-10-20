@@ -85,7 +85,23 @@ export const History = ({route, navigation}) => {
                             <WhiteButtonCard callback={()=> viewDiagnosis(index)} key={index} title={'Diagnóstico - ' + elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center', marginBottom: 8 }} image={elem.dog.photoUrl} />
                         );
                     }))
-                : <Text style={styles.defaultText}> Aún no tiene diagnósticos {'\n'}realizados :( </Text>
+                : <View style={{
+                    width: 370,
+                    height: 80,
+                    backgroundColor: '#FDFFFF',
+                    borderRadius: 5,
+                    paddingHorizontal: (role === "VET" ? 15 : 30),
+                    paddingVertical: 15,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    elevation: 8,
+                    marginTop: 10,
+                    alignSelf: 'center',
+                    marginBottom: 11
+                }}>
+                    <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 15 }}>Aún no tiene diagnosticos realizados</Text>
+                </View>
             }
             </ScrollView>
 
@@ -111,7 +127,7 @@ export const History = ({route, navigation}) => {
                         paddingVertical: 15,
                         flexDirection: 'row',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         elevation: 8,
                         marginTop: 10,
                         alignSelf: 'center',
@@ -141,7 +157,7 @@ export const History = ({route, navigation}) => {
                         paddingVertical: 15,
                         flexDirection: 'row',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         elevation: 8,
                         marginTop: 10,
                         alignSelf: 'center',
