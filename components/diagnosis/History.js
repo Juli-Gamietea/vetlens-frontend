@@ -133,7 +133,7 @@ export const History = ({route, navigation}) => {
                         alignSelf: 'center',
                         marginBottom: 11
                     }}>
-                        <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 15 }}>No tiene diagnósticos pendientes por validar</Text>
+                        <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 15 }}>Aún no tiene diagnósticos pendientes{'\n'} por validar</Text>
                     </View>
                 }
                 </ScrollView>
@@ -163,7 +163,7 @@ export const History = ({route, navigation}) => {
                         alignSelf: 'center',
                         marginBottom: 30
                     }}>
-                        <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 16, marginLeft: 40 }}>Aún no ha validado ningún diagnóstico</Text>
+                        <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 16 }}>Aún no ha validado ningún{'\n'} diagnóstico</Text>
                     </View>
                     
                 }
