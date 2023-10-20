@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, ImageBackground, Dimensions } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { callBackendAPI } from '../../utils/CommonFunctions';
 import * as React from 'react';
@@ -12,6 +12,7 @@ export const TakePicture = ({ navigation, route }) => {
     const [permission, setPermission] = Camera.useCameraPermissions();
     const [cameraReady, setCameraReady] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [image, setImage] = React.useState(null);
 
     if (!permission) {
         return <View><Text>Cargando...</Text></View>
@@ -27,6 +28,7 @@ export const TakePicture = ({ navigation, route }) => {
                 const image = await camera.takePictureAsync({ ratio: '16:3' });
                 if (image) {
                     setIsLoading(true);
+                    setImage(image);
                     const data = new FormData();
                     const getType = image.uri.split(".");
                     const getFileName = image.uri.split("/");
@@ -48,27 +50,27 @@ export const TakePicture = ({ navigation, route }) => {
         }
     }
 
-
-
-
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={type} ratio='16:9'
-                onCameraReady={() => setCameraReady(true)}
-                ref={ref => setCamera(ref)}>
-                {!isLoading ?
-                    (<View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={takePicture} />
-                    </View>) : (
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            {image ? (
+                <ImageBackground source={{uri: image.uri}} style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height}}>
+                    {isLoading && <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{backgroundColor: 'rgba(0, 0, 0, 0.7)', width: 250, height: 40, borderRadius: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Text style={{fontFamily: 'PoppinsRegular', color: '#FFF', fontSize: 20, textAlign: 'center'}}>Subiendo imagen...</Text>
                             </View>
                             <ActivityIndicator size={200} color="#00A6B0" />
-                        </View>
-                    )}
-
+                    </View>}
+                </ImageBackground>
+            ) : 
+            (
+                <Camera style={styles.camera} type={type} ratio='16:9'
+                onCameraReady={() => setCameraReady(true)}
+                ref={ref => setCamera(ref)}>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={takePicture} />
+                    </View>
             </Camera>
+            )}
         </View>
     );
 }
