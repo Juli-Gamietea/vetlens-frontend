@@ -47,7 +47,7 @@ export const Dashboard = ({ navigation }) => {
                 console.log(StoredUsername, StoredRole);
                 const resUserData = await callBackendAPI(`/users/${StoredUsername}`, 'GET');
                 console.log("user: " + resUserData.data['first_name'])
-                if (!resUserData.data['is_validated']) {
+                if ( StoredRole === "VET" && !resUserData.data['is_validated']) {
                     navigation.navigate("NotValidated");
                 }
                 if (StoredRole === "VET") {
@@ -114,7 +114,7 @@ export const Dashboard = ({ navigation }) => {
                                 alignSelf: 'center',
                                 marginBottom: 11
                             }}>
-                                <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 16 }}>{role === "VET" ? "Actualmente no posee diagnósticos sin validar" : "No ha generado diagnósticos en los últimos 7 días"}</Text>
+                                <Text style={{ textAlign: 'center', fontFamily: 'PoppinsSemiBold', fontSize: 16 }}>{role === "VET" ? "Actualmente no tiene diagnósticos que validar" : "No ha generado diagnósticos en los últimos 7 días"}</Text>
                             </View>
                         )
                         }
