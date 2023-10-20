@@ -108,7 +108,7 @@ export const Dashboard = ({ navigation }) => {
                                 paddingVertical: 15,
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
+                                justifyContent: 'center',
                                 elevation: 8,
                                 marginTop: 10,
                                 alignSelf: 'center',
