@@ -7,7 +7,7 @@ Para poder utilizar la aplicación usted debe:
 2. Descargar el repositorio en la ruta en la que se encuentra en su dispositivo mediante 'git clone https://github.com/Juli-Gamietea/vetlens-frontend.git'
 3. Asegurarse de encontrarse sobre la branch 'master' (con git checkout master en caso de no estarlo)
 4. Una vez dentro del proyecto instalar todas las dependencias necesarias mediante 'npm i'
-5. Asegurarse que el backend se encuentre corriendo en el mismo puerto que se encuentra configurado en el archivo `.env`
+5. Asegurarse que el backend se encuentre corriendo en el mismo puerto que se encuentra configurado en el archivo [`.env`](https://github.com/Juli-Gamietea/vetlens-frontend/blob/master/.env)
 6. Encender el emulador y una vez listo correr el frontend con 'npx expo start'. Cada vez que se modifica algo en el archivo `.env` correr el frontend con 'npx expo start -c'
 
 ## Consideraciones
