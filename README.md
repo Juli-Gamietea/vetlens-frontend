@@ -3,7 +3,7 @@ Este repositorio es el frontend para la aplicación VetLens, el mismo esta desar
 Se recomienda tener instalado un IDE para facilitar la lectura del código y ejecución del mismo, el utilizado en el desarrollo fue Visual Studio Code.
 También se sugiere instalar un emulador en caso de no utilizar un telefóno Android, el utilizado en el desarrollo fue creado mediante Android Studio.
 Para poder utilizar la aplicación usted debe:
-1. Tener instalado Node (importante tener npm) y Expo
+1. Tener instalado Git, Node (importante tener npm) y Expo
 2. Descargar el repositorio en la ruta en la que se encuentra en su dispositivo mediante 'git clone https://github.com/Juli-Gamietea/vetlens-frontend.git'
 3. Asegurarse de encontrarse sobre la branch 'master' (con git checkout master en caso de no estarlo)
 4. Una vez dentro del proyecto instalar todas las dependencias necesarias mediante 'npm i'
