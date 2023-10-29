@@ -1,19 +1,23 @@
 import { ScrollView, View, Text, StyleSheet, Linking, TouchableOpacity } from "react-native";
 import React from "react";
 
-export const Treatments = ({route, navigation}) => {
+export const Treatments = ({ route, navigation }) => {
     const { diagnosis, treatments } = route.params;
-    return(
-         <ScrollView style={styles.container}>
+    return (
+        <ScrollView style={styles.container}>
             <View style={styles.titleContainer}>
-                 <Text style={styles.titleText}>Tratamientos de {diagnosis.anamnesis.result[0].toUpperCase() + diagnosis.anamnesis.result.slice(1)}</Text>
+                <Text style={styles.titleText}>Tratamientos de {diagnosis.anamnesis.result[0].toUpperCase() + diagnosis.anamnesis.result.slice(1)}</Text>
             </View>
             <View style={styles.treatmentsContainer}>
                 <ScrollView style={styles.treatmentsList}>
                     {
                         treatments.map((elem, index) => {
-                            return(
-                                <TouchableOpacity key={index} style={styles.treatmentCard} onPress={() => Linking.openURL(elem.source)}>
+                            return (
+                                <TouchableOpacity key={index} style={styles.treatmentCard} onPress={() => {
+                                    if (elem.source) {
+                                        Linking.openURL(elem.source)
+                                    }
+                                }}>
                                     <View style={styles.treatmentInfo}>
                                         <Text style={styles.treatmentTitleText}>{elem.name}</Text>
                                         <Text style={styles.treatmentInfoText}>{elem.summary}</Text>
@@ -25,7 +29,7 @@ export const Treatments = ({route, navigation}) => {
                             )
                         })
                     }
-                    
+
                 </ScrollView>
             </View>
         </ScrollView>
@@ -51,7 +55,7 @@ const styles = StyleSheet.create(
             textAlign: 'center',
         },
         treatmentsContainer: {
-            flex:1,
+            flex: 1,
             marginTop: 25,
         },
         treatmentsList: {
@@ -83,14 +87,14 @@ const styles = StyleSheet.create(
         },
         treatmentTitleText: {
             fontFamily: 'PoppinsBold',
-            fontSize: 20, 
+            fontSize: 20,
             color: '#00767D',
             alignSelf: 'center',
             marginTop: 10
         },
         treatmentInfoText: {
             fontFamily: 'PoppinsRegular',
-            fontSize: 18, 
+            fontSize: 18,
             marginLeft: 10,
             marginRight: 10,
             marginBottom: 10
@@ -98,7 +102,7 @@ const styles = StyleSheet.create(
         treatmentLinkText: {
             position: 'absolute',
             fontFamily: 'PoppinsRegular',
-            fontSize: 18, 
+            fontSize: 18,
             color: '#00767D',
             alignSelf: 'center',
             bottom: 0
