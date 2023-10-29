@@ -20,6 +20,7 @@ export const Diagnosis = ({ route, navigation }) => {
   React.useEffect(() => {
     diagnosis.anamnesis.inferences.forEach((element) => {
       if (isNotDiscernible(diagnosis.anamnesis.result)) {
+        console.log("pase")
         setNotDiscernible(true);
       }
       if (
@@ -56,7 +57,7 @@ export const Diagnosis = ({ route, navigation }) => {
     );
     var monthsDifference = Math.floor(
       (difference % (1000 * 60 * 60 * 24 * 365.25)) /
-        (1000 * 60 * 60 * 24 * 30.4375)
+      (1000 * 60 * 60 * 24 * 30.4375)
     );
 
     if (monthsDifference === 1) {
@@ -175,7 +176,7 @@ export const Diagnosis = ({ route, navigation }) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {((role === "VET" && !notDiscernible) || (role === "DEFAULT")) && <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => secondButton()}
       >
@@ -187,7 +188,7 @@ export const Diagnosis = ({ route, navigation }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <FontAwesome name="chevron-right" size={30} color="#00767D" />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity>}
 
       <TouchableOpacity
         style={styles.buttonContainer}
