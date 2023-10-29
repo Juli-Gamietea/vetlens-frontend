@@ -21,7 +21,7 @@ export const Validation = ({ route, navigation }) => {
         setValidatedOption("Si");
         setDisease("");
     }
-    
+
     const handleNo = () => {
         setValidatedOption("No");
     }
@@ -29,7 +29,7 @@ export const Validation = ({ route, navigation }) => {
     const handleWrite = (text) => {
         setDisease(text);
         setDiseaseError("");
-    } 
+    }
 
     const validateInputs = () => {
         if (validatedOption === "No") {
@@ -78,7 +78,7 @@ export const Validation = ({ route, navigation }) => {
                     const res = await callBackendAPI(`/diagnosis/${diagnosis.id}/${username}`)
                     if (res.data.disease === diagnosis.anamnesis.result) {
                         setValidatedOption("Si");
-                    } else if ( res.data.disease ){
+                    } else if (res.data.disease) {
                         setValidatedOption("No");
                         setDisease(res.data.disease);
                     }
@@ -95,6 +95,9 @@ export const Validation = ({ route, navigation }) => {
             }
         }
         getData();
+        if (diagnosis.anamnesis.result === "no_discernible") {
+            setValidatedOption("No");
+        }
         setIsLoading(false);
     }, [])
 
@@ -107,31 +110,38 @@ export const Validation = ({ route, navigation }) => {
             <ScrollView style={styles.mainContainer}>
                 <Text style={styles.titleText}>Diagnóstico de:{'\n'} {diagnosis.dog.name} - {parseDate(diagnosis.date)}</Text>
                 <Text style={styles.subtitle}>Resultados</Text>
-                <Text style={styles.text}>VetLens propuso "{diagnosis.anamnesis.result}" como diagnóstico.</Text>
-                <Text style={styles.text}>¿Está de acuerdo?</Text>
-                <View style={styles.buttonsContainer}>
+                {diagnosis.anamnesis.result === "no_discernible" ?
+                    (<Text style={styles.text}>VetLens no pudo determinar la enfermedad correspondiente.</Text>) :
+                    (<Text style={styles.text}>VetLens propuso "{diagnosis.anamnesis.result}" como diagnóstico.</Text>)
+                }
+                {diagnosis.anamnesis.result !== "no_discernible" &&
+                    <>
+                        <Text style={styles.text}>¿Está de acuerdo?</Text>
+                        <View style={styles.buttonsContainer}>
 
-                    <ButtonVetLens text={"Si"}
-                        style={{ width: 80, marginRight: 10 }}
-                        filled={validatedOption === "Si"}
-                        callback={handleYes} />
+                            <ButtonVetLens text={"Si"}
+                                style={{ width: 80, marginRight: 10 }}
+                                filled={validatedOption === "Si"}
+                                callback={handleYes} />
 
-                    <ButtonVetLens text={"No"}
-                        style={{ width: 80, marginLeft: 10 }}
-                        filled={validatedOption === "No"}
-                        callback={handleNo} />
+                            <ButtonVetLens text={"No"}
+                                style={{ width: 80, marginLeft: 10 }}
+                                filled={validatedOption === "No"}
+                                callback={handleNo} />
 
-                </View>
-                {validatedOption === "No" && 
-                <>
-                <Text style={styles.subtitle}>Enfermedad propuesta</Text>
-                <InputVetlens placeholder={"Escriba la enferemdad aqui..."}
-                onChange={(text) => handleWrite(text)}
-                value={disease}
-                isValid={diseaseError === ""}
-                errorMessage={diseaseError}
-                />
-                </>}
+                        </View>
+                    </>
+                }
+                {validatedOption === "No" &&
+                    <>
+                        <Text style={styles.subtitle}>Enfermedad propuesta</Text>
+                        <InputVetlens placeholder={"Escriba la enferemdad aqui..."}
+                            onChange={(text) => handleWrite(text)}
+                            value={disease}
+                            isValid={diseaseError === ""}
+                            errorMessage={diseaseError}
+                        />
+                    </>}
                 <Text style={styles.subtitle}>Notas</Text>
                 <InputVetlens placeholder='Escriba notas relevantes aqui...'
                     onChange={(text) => setNotes(text)}
@@ -140,11 +150,11 @@ export const Validation = ({ route, navigation }) => {
                     style={{ height: 200, textAlignVertical: 'top', marginVertical: 15 }}
                     multiline={true}
                 />
-                <ButtonVetLens text={"Hecho"} 
-                filled 
-                style={{marginBottom: 50}}
-                callback={handleDone}
-                disabled={validatedOption === ""}
+                <ButtonVetLens text={"Hecho"}
+                    filled
+                    style={{ marginBottom: 50 }}
+                    callback={handleDone}
+                    disabled={validatedOption === ""}
                 />
             </ScrollView>
         )
