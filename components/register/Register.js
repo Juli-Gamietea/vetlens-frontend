@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity} from "reac
 import vetlensLogo from '../../assets/icons/png/vetlens-logo.png';
 import dog from '../../assets/icons/png/dog-walking.png';
 import vetimage from '../../assets/icons/png/vet.png';
+import schoolHat from '../../assets/icons/png/school-hat.png';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export const Register = ({navigation}) => {
@@ -14,8 +16,13 @@ export const Register = ({navigation}) => {
     const vet = () => {
         navigation.navigate("RegisterForm", {type: "vet"});
     }
+
+    const student = () => {
+        navigation.navigate("RegisterForm", {type: "student"});
+    }
+
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
                 <Image source={vetlensLogo} style={styles.logo} />
                 <Text style={styles.logoText}>¿Cómo deseas{'\n'} registrarte?</Text>
@@ -30,8 +37,12 @@ export const Register = ({navigation}) => {
                     <Text style={styles.buttonText}>Veterinario</Text>
                     <Image source={vetimage} style={styles.buttonImage} />  
                 </TouchableOpacity>
+                <TouchableOpacity onPress={student} style={styles.button}>
+                    <Text style={styles.buttonText}>Estudiante</Text>
+                    <Image source={schoolHat} style={styles.buttonHat} />   
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -57,14 +68,14 @@ const styles = StyleSheet.create(
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'space-evenly',
-            marginTop: 90,
+            marginTop: 50,
             marginBottom: 60
         },
         logoText: {
             fontSize: 36,
             fontFamily: 'PoppinsBold',
             color: '#00A6B0',
-            marginTop: 20,
+            marginTop: 30,
             textAlign: 'center',
         },
         logo: {
@@ -96,6 +107,11 @@ const styles = StyleSheet.create(
         },
         buttonImage: {
             width: 65,
+            height: 65,
+            marginBottom: 15
+        },
+        buttonHat: {
+            width: 80,
             height: 65,
             marginBottom: 15
         }

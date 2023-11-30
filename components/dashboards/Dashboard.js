@@ -44,12 +44,13 @@ export const Dashboard = ({ navigation }) => {
             try {
                 const StoredUsername = await SecureStore.getItemAsync('username');
                 const StoredRole = await SecureStore.getItemAsync('role');
-                console.log(StoredUsername, StoredRole);
+                
                 const resUserData = await callBackendAPI(`/users/${StoredUsername}`, 'GET');
-                console.log("user: " + resUserData.data['first_name'])
-                if ( StoredRole === "VET" && !resUserData.data['is_validated']) {
+                
+                if ( (StoredRole === "VET" || StoredRole === "STUDENT") && !resUserData.data['is_validated']) {
                     navigation.navigate("NotValidated");
                 }
+
                 if (StoredRole === "VET") {
                     try {
                         const resDiagnosisValidationData = await callBackendAPI(`/diagnosis/validation/${StoredUsername}/notValidated`, 'GET');
@@ -58,6 +59,7 @@ export const Dashboard = ({ navigation }) => {
                         console.log(e);
                     }
                 }
+
                 else {
                     const resRecentDiagnosis = await callBackendAPI(`/diagnosis/recent/${StoredUsername}`, 'GET');
                     setCardsList(resRecentDiagnosis.data);
@@ -90,7 +92,7 @@ export const Dashboard = ({ navigation }) => {
                                 }
                             }
                             )
-                        ) : ( role === "DEFAULT" && cardsList.length !== 0) ? (
+                        ) : ( (role === "DEFAULT" || role === "STUDENT") && cardsList.length !== 0) ? (
                             cardsList.map((elem, index) => {
                                 if (index + 1 !== cardsList.length) {
                                     return <WhiteButtonCard key={index} callback={() => goToDiagnosis(elem)} title={elem.dog.name} subtext={parseDate(elem.date)} containerStyle={{ alignSelf: 'center' }} image={elem.dog.photoUrl} />

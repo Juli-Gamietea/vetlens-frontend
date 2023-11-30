@@ -45,6 +45,7 @@ import { NotValidated } from './components/dashboards/NotValidated';
 import { ViewTermsAndConditions } from './components/profile/ViewTermsAndConditions';
 import { MySubscriptions } from './components/profile/MySubscriptions';
 import { ForgotPassword } from './components/login/ForgotPassword';
+import { RegisterFormStudent } from './components/register/RegisterFormStudent';
  
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,7 +89,7 @@ function ScannerTabStack() {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: true}}>
-      {loggedRole === "VET" && <Stack.Screen name="QRScanner" 
+      {(loggedRole === "VET" || loggedRole === "STUDENT")&& <Stack.Screen name="QRScanner" 
       component={QRCodeScanner}
       options={{
         title: "Encontrar un diagnóstico",
@@ -136,6 +137,7 @@ function HistoryTabStack() {
       <Stack.Screen name="Treatments" options={{headerShown: false}} component={Treatments} />
       <Stack.Screen name="Anamnesis" options={{headerShown: true, title: "Cuestionario", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Anamnesis}/>
       <Stack.Screen name="Validation" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={Validation} />
+      <Stack.Screen name="ValidationSelection" options={{headerShown: true, title: "Validación", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={ValidationSelection} />
       <Stack.Screen name="GenerateQR" options={{headerShown: true, title: "Código QR", headerTitleAlign: 'center', headerTitleStyle: { fontFamily: 'PoppinsRegular'}}} component={GenerateQR}/>
     </Stack.Navigator>
   )
@@ -287,6 +289,7 @@ export default function App() {
                 <Stack.Screen name="RegisterForm" component={RegisterForm} />
                 <Stack.Screen name="RegisterFormPassword" component={RegisterFormPassword} />
                 <Stack.Screen name="RegisterFormVet" component={RegisterFormVet} />
+                <Stack.Screen name="RegisterFormStudent" component={RegisterFormStudent} />
                 <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
                 <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} />
                 <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

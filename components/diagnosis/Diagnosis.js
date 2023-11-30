@@ -71,7 +71,7 @@ export const Diagnosis = ({ route, navigation }) => {
     navigation.navigate("Anamnesis", { diagnosisId: diagnosis.id });
   };
   const secondButton = () => {
-    if (role === "VET") {
+    if (role === "VET" || role === "STUDENT") {
       navigation.navigate("Treatments", {
         diagnosis: diagnosis,
         treatments: treatments,
@@ -92,6 +92,14 @@ export const Diagnosis = ({ route, navigation }) => {
       navigation.navigate("GenerateQR", { diagnosisId: diagnosis.id });
     }
   };
+
+  const fourthButton = () => {
+    navigation.navigate("ValidationSelection", {
+      diagnosisId: diagnosis.id,
+      dogName: diagnosis.dog.name,
+      date: diagnosis.date,
+    });
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -146,7 +154,7 @@ export const Diagnosis = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-      {role === "VET" && (
+      {(role === "VET" || role === "STUDENT") && (
         <View style={styles.resultContainer}>
           <Text style={styles.titleText}>Resultados</Text>
           {notDiscernible ? (
@@ -176,13 +184,27 @@ export const Diagnosis = ({ route, navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {((role === "VET" && !notDiscernible) || (role === "DEFAULT")) && <TouchableOpacity
+      {(((role === "VET" || role === "STUDENT") && !notDiscernible) || (role === "DEFAULT")) && <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => secondButton()}
       >
         <View>
           <Text style={styles.buttonTitle}>
-            {role === "VET" ? "Ver tratamientos" : "Estado de validación"}
+            {(role === "VET" || role === "STUDENT") ? "Ver tratamientos" : "Estado de validación"}
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <FontAwesome name="chevron-right" size={30} color="#00767D" />
+        </View>
+      </TouchableOpacity>}
+
+      {role === "STUDENT" && <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => fourthButton()}
+      >
+        <View>
+          <Text style={styles.buttonTitle}>
+            Ver validaciones
           </Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -203,6 +225,7 @@ export const Diagnosis = ({ route, navigation }) => {
           <FontAwesome name="chevron-right" size={30} color="#00767D" />
         </View>
       </TouchableOpacity>
+
     </ScrollView>
   );
 };

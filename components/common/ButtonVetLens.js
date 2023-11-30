@@ -25,7 +25,7 @@ export const ButtonVetLens = ({text, callback, style, filled, disabled}) => {
         if (disabled) {
             return (
                 <TouchableOpacity onPress={callback} style={[styles.containerEmptyDisabled, style]} disabled>
-                    <Text style={styles.buttonEmpty}>{text}</Text>
+                    <Text style={[styles.buttonEmpty, {color: "#d8e6e8" }]}>{text}</Text>
                 </TouchableOpacity>
             );
         } else {

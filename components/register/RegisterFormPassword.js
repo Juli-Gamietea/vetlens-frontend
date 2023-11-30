@@ -31,6 +31,7 @@ export const RegisterFormPassword = ({ route, navigation }) => {
     const { firstname, lastname, email, username, type } = route.params;
 
     const nextScreen = async () => {
+        console.log(type)
         if (areInputsValid()) {
             if (type === "vet") {
                 navigation.navigate("RegisterFormVet", {
@@ -41,7 +42,18 @@ export const RegisterFormPassword = ({ route, navigation }) => {
                     type: type,
                     password: password
                 } )
-            } else {
+            } 
+            else if (type === "student") {
+                navigation.navigate("RegisterFormStudent", {
+                    firstname: firstname,
+                    lastname: lastname,
+                    email: email,
+                    username: username,
+                    type: type,
+                    password: password
+                } )
+            }
+            else {
                 navigation.navigate("TermsAndConditions", {
                     firstname: firstname,
                     lastname: lastname,
