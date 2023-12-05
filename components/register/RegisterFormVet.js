@@ -8,20 +8,34 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export const RegisterFormVet = ({ route, navigation }) => {
 
-    const [registerState, registerDispatch] = React.useReducer(registerReducer, initialState);
-    const { license,
-            isLicenseValid,
-            licenseErrorMessage
-        } = registerState;
+    const [licenseNmbr, setLicenseNmbr] = React.useState("");
+    const [licenseNmbrError, setLicenseNmbrError] = React.useState({
+        hasError: false,
+        message: ""
+    });
+    const [licenseSchool, setLicenseSchool] = React.useState("");
+    const [licenseSchoolError, setLicenseSchoolError] = React.useState({
+        hasError: false,
+        message: ""
+    });
 
     const areInputsValid = () => {
-        if (license === "")
-            registerDispatch({ type: "licenseError", error: "No puede dejar este campo vacío" });
-        if (license !== "") {
-            return true;
-        } else {
-            return false;
+
+        const error = {
+            hasError: true,
+            message: "No puede dejar este campo vacío"
         }
+
+        if (licenseNmbr === "") {
+            setLicenseNmbrError(error)
+        }
+
+        if (licenseSchool === "") {
+            setLicenseSchoolError(error)
+        }
+
+        return licenseSchool !== "" && licenseNmbr !== "";
+
     }
 
     const { firstname, lastname, email, username, type, password } = route.params;
@@ -35,7 +49,7 @@ export const RegisterFormVet = ({ route, navigation }) => {
                 username: username,
                 type: type,
                 password: password,
-                license: license
+                license: `${licenseNmbr}-${licenseSchool}`
             })
         }
     }
@@ -53,14 +67,32 @@ export const RegisterFormVet = ({ route, navigation }) => {
                         <Text style={styles.inputTitle}> N° Matrícula </Text>
                         <InputVetlens
                             placeholder='N° Matrícula'
-                            onChange={(text) => registerDispatch({
-                                type: "fieldUpdate",
-                                field: "license",
-                                value: text
-                            })}
-                            value={license}
-                            isValid={isLicenseValid}
-                            errorMessage={licenseErrorMessage}
+                            onChange={(text) => {
+                                setLicenseNmbrError({
+                                    hasError: false,
+                                    message: "",
+                                })
+                                setLicenseNmbr(text)
+                            }}
+                            value={licenseNmbr}
+                            isValid={!licenseNmbrError.hasError}
+                            errorMessage={licenseNmbrError.message}
+                        />
+                    </View>
+                    <View style={styles.formContainerItem}>
+                        <Text style={styles.inputTitle}>Colegio de matriculación</Text>
+                        <InputVetlens
+                            placeholder='Colegio de matriculación'
+                            onChange={(text) => {
+                                setLicenseSchoolError({
+                                    hasError: false,
+                                    message: ""
+                                })
+                                setLicenseSchool(text)
+                            }}
+                            value={licenseSchool}
+                            isValid={!licenseSchoolError.hasError}
+                            errorMessage={licenseSchoolError.message}
                         />
                     </View>
 
@@ -99,7 +131,7 @@ const styles = StyleSheet.create(
             marginTop: 70,
             alignItems: 'center'
         },
-        inputTitle:{
+        inputTitle: {
             fontFamily: "PoppinsBold",
             fontSize: 15,
             paddingBottom: 4,
