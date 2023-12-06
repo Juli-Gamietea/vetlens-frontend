@@ -16,14 +16,14 @@ export const MySubscriptions = ({ navigation }) => {
                     <Image source={basicBanner} style={{ width: 350, height: 100 }} />
                     <View style={styles.whiteCard}>
                         <Text style={styles.features}> • Hasta 15 diagnósticos al mes</Text>
-                        <Text style={[styles.price, { color: "#00A6B0" }]}>$5 USD/mes</Text>
+                        <Text style={[styles.price, { color: "#00A6B0" }]}>$8 USD/mes</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.card}>
                     <Image source={fullBanner} style={{ width: 350, height: 100 }} />
                     <View style={styles.whiteCard}>
                         <Text style={styles.features}> • Cantidad ilimitada de diagnósticos al mes</Text>
-                        <Text style={[styles.price, { color: "#E2CC00" }]}>$10 USD/mes</Text>
+                        <Text style={[styles.price, { color: "#E2CC00" }]}>$15 USD/mes</Text>
 
                     </View>
                 </TouchableOpacity>
@@ -32,7 +32,7 @@ export const MySubscriptions = ({ navigation }) => {
                     <View style={styles.whiteCard}>
                         <Text style={styles.features}> • Cantidad ilimitada de diagnósticos al mes al mes</Text>
                         <Text style={styles.features}> • Requiere de un mínimo de 3 cuentas de veterinario</Text>
-                        <Text style={[styles.price, { color: "#B04DFF" }]}>$8 USD/mes</Text>
+                        <Text style={[styles.price, { color: "#B04DFF" }]}>$12 USD/mes</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>
