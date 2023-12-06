@@ -32,10 +32,10 @@ export const NotValidated = () => {
             <View style={styles.formContainer}>
                 <View style={styles.formContainerItem}>
                     <Text style={styles.text}>
-                        ¡Aún el equipo de VetLens esta validando su información, le 
+                        ¡Aún el equipo de VetLens esta validando su información! le 
                         notificaremos por e-mail cuando pueda disfrutar de la 
                         aplicación.
-                        Disculpe las molestias!
+                        Disculpe las molestias.
                     </Text>
                 </View>
                 <View style={styles.formContainerItem2}>

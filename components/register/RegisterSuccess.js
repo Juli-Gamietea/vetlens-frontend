@@ -20,7 +20,7 @@ export const RegisterSuccess = ({ route, navigation }) => {
             </View>
             <View style={styles.formContainer}>
                 <View style={styles.formContainerItem}>
-                    <Text style={type === 'vet' ? (styles.text) : (styles.textInvisible)}>
+                    <Text style={type === 'vet' || type === 'student' ? (styles.text) : (styles.textInvisible)}>
                         En los siguientes días estaremos{"\n"}
                         verificando que tus datos sean correctos.{"\n"}
                         Una vez finalizado el proceso de{"\n"}

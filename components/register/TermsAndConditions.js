@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export const TermsAndConditions = ({ route, navigation }) => {
 
-    const { firstname, lastname, email, username, type, password, license } = route.params;
+    const { firstname, lastname, email, username, type, password, license, file } = route.params;
     const [isScrolledToBottom, setIsScrolledToBottom] = React.useState(false);
     const [isAcceptEnabled, setIsAcceptEnabled] = React.useState(false);
 
@@ -40,6 +40,15 @@ export const TermsAndConditions = ({ route, navigation }) => {
                     role: "VET",
                     license_number: license
                 }
+            } else if (type === "student") {
+                body = {
+                    first_name: firstname,
+                    last_name: lastname,
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: "STUDENT",
+                }
             } else {
                 body = {
                     first_name: firstname,
@@ -50,12 +59,36 @@ export const TermsAndConditions = ({ route, navigation }) => {
                     role: "DEFAULT"
                 }
             }
+            
             const res = await callBackendAPI("/auth/register", "POST", body)
-
+            
             if (res.status !== 200) {
                 Alert.alert("Error", "Se ha producido un error.");
             } else {
-                navigation.navigate("RegisterSuccess", { type: type })
+
+                if (type === "student") {
+                    console.log(file)
+                    const data = new FormData();
+                    data.append('file', {
+                        uri: file.uri,
+                        type: file['mimeType'],
+                        name: file.name
+                    });
+
+                    console.log(JSON.stringify(data))
+
+                    const obj = await callBackendAPI(`/auth/student/${body.username}/file`, "PUT", data, {}, 'multipart/form-data')
+                    
+                    if (obj.status !== 200) {
+                        Alert.alert("Error", "Se ha producido un error con la seg.");
+                    } else {
+                        navigation.navigate("RegisterSuccess", { type: type })
+                    }
+
+                } else {
+                    navigation.navigate("RegisterSuccess", { type: type })
+                }
+
             }
         } catch (error) {
             Alert.alert("Error", "Se ha producido un error.")
